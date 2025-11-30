@@ -686,8 +686,8 @@
                 <div class="slider-group">
                     <label>Per-Ring Rotation (r/M × 2π)</label>
                     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center; margin-top: 8px;">
-                        <input type="number" id="ringRotR" placeholder="r" value="0" min="0" step="1" style="width: 100%; padding: 6px; border: 1px solid #b0b0b0; border-radius: 2px;">
-                        <input type="number" id="ringRotM" placeholder="M" value="1" min="1" step="1" style="width: 100%; padding: 6px; border: 1px solid #b0b0b0; border-radius: 2px;">
+                        <input type="number" id="ringRotR" placeholder="r" value="0" min="0" step="1" oninput="updateRingRotDegrees()" style="width: 100%; padding: 6px; border: 1px solid #b0b0b0; border-radius: 2px;">
+                        <input type="number" id="ringRotM" placeholder="M" value="1" min="1" step="1" oninput="updateRingRotDegrees()" style="width: 100%; padding: 6px; border: 1px solid #b0b0b0; border-radius: 2px;">
                         <span style="text-align: center; color: #666; font-size: 0.85em;" id="ringRotDegrees">0°</span>
                         <button onclick="applyRingRotation()" style="padding: 6px 12px; white-space: nowrap;">Apply</button>
                     </div>
@@ -985,26 +985,7 @@
             draw();
         }
         
-        function updatePerRingAngle() {
-            const r = parseFloat(document.getElementById('perRingR').value) || 0;
-            const m = parseFloat(document.getElementById('perRingM').value) || 1;
-            
-            // Calculate angle: (r/m) × 2π radians = (r/m) × 360 degrees
-            const angleDegrees = (r / m) * 360;
-            
-            document.getElementById('perRingAngleDisplay').textContent = angleDegrees.toFixed(1) + '°';
-            
-            if (document.getElementById('enablePerRingRotation').checked) {
-                draw();
-            }
-        }
-        
-        function togglePerRingRotation() {
-            const enabled = document.getElementById('enablePerRingRotation').checked;
-            document.getElementById('perRingRotationControls').style.display = enabled ? 'block' : 'none';
-            draw();
-        }
-        
+
         // Update ring rotation degree display
         function updateRingRotDegrees() {
             const r = parseFloat(document.getElementById('ringRotR').value) || 0;
@@ -1121,13 +1102,8 @@
                     angle = (2 * Math.PI * residue) / modulus;
             }
             
-            // Apply per-ring rotation if enabled
-            if (document.getElementById('enablePerRingRotation').checked) {
-                const r = parseFloat(document.getElementById('perRingR').value) || 0;
-                const m = parseFloat(document.getElementById('perRingM').value) || 1;
-                const perRingAngle = (r / m) * 2 * Math.PI;
-                angle += ringIndex * perRingAngle;
-            }
+            // Apply per-ring rotation (uses global perRingRotation variable)
+            angle += ringIndex * perRingRotation;
             
             return angle;
         }
@@ -1165,29 +1141,8 @@
                 const coprimes = ring.coprimes;
 
                 coprimes.forEach((residue, residueIndex) => {
-                    // Calculate angle based on selected mode
-                    const angularMode = document.getElementById('angularMode').value;
-                    let angle;
-                    
-                    switch(angularMode) {
-                        case 'standard':
-                            angle = (2 * Math.PI * residue) / ring.mod;
-                            break;
-                        case 'negative':
-                            angle = -(2 * Math.PI * residue) / ring.mod;
-                            break;
-                        case 'complement':
-                            angle = (2 * Math.PI * (ring.mod - residue)) / ring.mod;
-                            break;
-                        case 'index':
-                            angle = (2 * Math.PI * residueIndex) / coprimes.length;
-                            break;
-                        default:
-                            angle = (2 * Math.PI * residue) / ring.mod;
-                    }
-                    
-                    // Apply per-ring rotation (each ring rotated by same amount)
-                    angle += perRingRotation;
+                    // Calculate angle using helper function
+                    const angle = calculateAngleWithRotation(residue, residueIndex, ring.mod, coprimes, ringIndex);
                     
                     const x = radius * Math.cos(angle);
                     const y = radius * Math.sin(angle);
@@ -1282,14 +1237,16 @@
                     const nextRing = rings[ringIndex + 1];
                     const nextRadius = radiusStep * (ringIndex + 2);
 
-                    coprimes.forEach(r1 => {
-                        const angle1 = (2 * Math.PI * r1) / ring.mod;
-                        const x1 = radius * Math.cos(angle1);
-                        const y1 = radius * Math.sin(angle1);
-
+                    coprimes.forEach((r1, r1Index) => {
                         // Find r1 in next ring (if it exists as coprime)
                         if (nextRing.coprimes.includes(r1)) {
-                            const angle2 = (2 * Math.PI * r1) / nextRing.mod;
+                            const r1NextIndex = nextRing.coprimes.indexOf(r1);
+                            
+                            const angle1 = calculateAngleWithRotation(r1, r1Index, ring.mod, coprimes, ringIndex);
+                            const x1 = radius * Math.cos(angle1);
+                            const y1 = radius * Math.sin(angle1);
+                            
+                            const angle2 = calculateAngleWithRotation(r1, r1NextIndex, nextRing.mod, nextRing.coprimes, ringIndex + 1);
                             const x2 = nextRadius * Math.cos(angle2);
                             const y2 = nextRadius * Math.sin(angle2);
 
@@ -1947,8 +1904,6 @@
             
             // Add event listeners for per-ring rotation
             document.getElementById('enablePerRingRotation').addEventListener('change', togglePerRingRotation);
-            document.getElementById('perRingR').addEventListener('input', updatePerRingAngle);
-            document.getElementById('perRingM').addEventListener('input', updatePerRingAngle);
             
             // Initialize per-ring angle display
             updatePerRingAngle();
