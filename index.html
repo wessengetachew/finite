@@ -535,41 +535,14 @@
                                 <input type="checkbox" id="showPrimeMarkers">
                                 Highlight Prime Locations
                             </label>
-                        </div>
-                        
-                        <div class="section-divider" style="margin: 12px 0;"></div>
-                        
-                        <div class="form-group">
-                            <label><strong>Angular Positioning:</strong></label>
-                            <select id="angularMode" style="width: 100%;">
-                                <option value="standard" selected>Standard: θ = 2πr/M</option>
-                                <option value="negative">Negative: θ = -2πr/M</option>
-                                <option value="complement">Complement: θ = 2π(M-r)/M</option>
-                                <option value="index">By Index Order</option>
-                            </select>
-                        </div>
-                        
-                        <div class="section-divider" style="margin: 12px 0;"></div>
-                        
-                        <div class="form-group">
-                            <label><strong>GCD=1 Coloring Mode:</strong></label>
-                            <select id="gcdColorMode" style="width: 100%;">
-                                <option value="unified" selected>Unified Color (White)</option>
-                                <option value="by-modulus">Color per Modulus</option>
-                                <option value="by-residue">Color per Residue Value</option>
-                                <option value="angular">Angular Gradient</option>
-                                <option value="rainbow">Rainbow Spectrum</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><strong>Non-GCD=1 Display:</strong></label>
-                            <select id="nonGcdMode" style="width: 100%;">
-                                <option value="gray" selected>Gray (Dim)</option>
-                                <option value="red">Red (Highlight)</option>
-                                <option value="hidden">Hidden</option>
-                                <option value="outlined">Outlined Only</option>
-                            </select>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showAngularColors" checked>
+                                Angular Position Coloring
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showDistanceColors">
+                                Distance-Based Coloring
+                            </label>
                         </div>
                     </div>
                 </div>
@@ -580,23 +553,16 @@
                         <div class="checkbox-group">
                             <label class="checkbox-item">
                                 <input type="checkbox" id="showDirectLifts" checked>
-                                Direct Lifts to Next Modulus
+                                Direct Lifts Only
+                            </label>
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="showInverseLifts">
+                                Include Inverse Lifts
                             </label>
                             <label class="checkbox-item">
                                 <input type="checkbox" id="showDyadicLifts">
-                                Dyadic Lifts (r → r+M×x²)
+                                Show Dyadic Lifts
                             </label>
-                        </div>
-                        <div id="dyadicControls" style="margin-top: 12px; padding: 12px; background: #f8f8f8; border: 1px solid #e0e0e0; border-radius: 2px; display: none;">
-                            <div class="form-group">
-                                <label>Dyadic Parameter x (in M×x²)</label>
-                                <select id="dyadicX" style="width: 100%;">
-                                    <option value="1">x = 1 (lift by M)</option>
-                                    <option value="2" selected>x = 2 (lift by 4M)</option>
-                                    <option value="3">x = 3 (lift by 9M)</option>
-                                    <option value="4">x = 4 (lift by 16M)</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -680,19 +646,24 @@
                     <input type="range" id="zoomSlider" min="0.1" max="5" step="0.1" value="1">
                 </div>
                 <div class="slider-group">
-                    <label>Global Rotation: <span id="rotationValue">0°</span></label>
+                    <label>Rotation: <span id="rotationValue">0°</span></label>
                     <input type="range" id="rotationSlider" min="0" max="360" step="1" value="0">
                 </div>
-                <div class="slider-group">
-                    <label>Per-Ring Rotation (r/M × 2π)</label>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center; margin-top: 8px;">
-                        <input type="number" id="ringRotR" placeholder="r" value="0" min="0" step="1" oninput="updateRingRotDegrees()" style="width: 100%; padding: 6px; border: 1px solid #b0b0b0; border-radius: 2px;">
-                        <input type="number" id="ringRotM" placeholder="M" value="1" min="1" step="1" oninput="updateRingRotDegrees()" style="width: 100%; padding: 6px; border: 1px solid #b0b0b0; border-radius: 2px;">
-                        <span style="text-align: center; color: #666; font-size: 0.85em;" id="ringRotDegrees">0°</span>
-                        <button onclick="applyRingRotation()" style="padding: 6px 12px; white-space: nowrap;">Apply</button>
+                <div class="slider-group" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #444;">
+                    <label style="font-weight: 500; margin-bottom: 8px; display: block;">Per-Ring Rotation: r/M × 2π</label>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center;">
+                        <input type="number" id="ringRotR" placeholder="r" value="1" min="0" step="1" 
+                               oninput="updateRingRotDegrees()" 
+                               style="padding: 6px; border: 1px solid #666; background: #1a1a1a; color: #fff; border-radius: 2px;">
+                        <input type="number" id="ringRotM" placeholder="M" value="2" min="1" step="1" 
+                               oninput="updateRingRotDegrees()" 
+                               style="padding: 6px; border: 1px solid #666; background: #1a1a1a; color: #fff; border-radius: 2px;">
+                        <span style="text-align: center; color: #888; font-size: 0.9em;" id="ringRotDegrees">180.0°</span>
+                        <button onclick="applyRingRotation()" 
+                                style="padding: 6px 12px; background: #2a5; color: #fff; border: none; border-radius: 2px; cursor: pointer; white-space: nowrap;">Apply</button>
                     </div>
-                    <div style="font-size: 0.75em; color: #666; margin-top: 4px; font-style: italic;">
-                        Rotates each ring independently by (r/M) × 360°
+                    <div style="font-size: 0.75em; color: #888; margin-top: 6px; font-style: italic;">
+                        Each ring rotates incrementally by this angle
                     </div>
                 </div>
             </div>
@@ -984,36 +955,6 @@
             document.getElementById('rotationValue').textContent = currentRotation.toFixed(0) + '°';
             draw();
         }
-        
-
-        // Update ring rotation degree display
-        function updateRingRotDegrees() {
-            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
-            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
-            const degrees = (r / m) * 360;
-            document.getElementById('ringRotDegrees').textContent = degrees.toFixed(1) + '°';
-        }
-        
-        // Per-ring rotation state
-        let perRingRotation = 0; // In radians
-        
-        function applyRingRotation() {
-            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
-            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
-            
-            if (m === 0) {
-                alert('M cannot be zero');
-                return;
-            }
-            
-            // Calculate rotation in radians
-            perRingRotation = (r / m) * 2 * Math.PI;
-            
-            updateRingRotDegrees();
-            draw();
-            
-            updateAnimationStatus(`Per-ring rotation set: ${r}/${m} × 2π = ${((r/m)*360).toFixed(1)}°`);
-        }
 
         function resetView() {
             currentZoom = 1.0;
@@ -1080,34 +1021,32 @@
             return `hsl(${hue}, 70%, 60%)`;
         }
 
-        // Helper function to calculate angle with per-ring rotation
-        function calculateAngleWithRotation(residue, residueIndex, modulus, coprimes, ringIndex) {
-            const angularMode = document.getElementById('angularMode').value;
-            let angle;
-            
-            switch(angularMode) {
-                case 'standard':
-                    angle = (2 * Math.PI * residue) / modulus;
-                    break;
-                case 'negative':
-                    angle = -(2 * Math.PI * residue) / modulus;
-                    break;
-                case 'complement':
-                    angle = (2 * Math.PI * (modulus - residue)) / modulus;
-                    break;
-                case 'index':
-                    angle = (2 * Math.PI * residueIndex) / coprimes.length;
-                    break;
-                default:
-                    angle = (2 * Math.PI * residue) / modulus;
-            }
-            
-            // Apply per-ring rotation (uses global perRingRotation variable)
-            angle += ringIndex * perRingRotation;
-            
-            return angle;
+        // Per-ring rotation state
+        let perRingRotation = 0; // In radians
+        
+        function updateRingRotDegrees() {
+            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
+            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+            const degrees = (r / m) * 360;
+            document.getElementById('ringRotDegrees').textContent = degrees.toFixed(1) + '°';
         }
         
+        function applyRingRotation() {
+            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
+            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+            
+            if (m === 0) {
+                alert('M cannot be zero');
+                return;
+            }
+            
+            perRingRotation = (r / m) * 2 * Math.PI;
+            updateRingRotDegrees();
+            draw();
+            
+            updateAnimationStatus(`Per-ring rotation: ${r}/${m} × 2π = ${((r/m)*360).toFixed(1)}° per ring`);
+        }
+
         function draw() {
             const width = canvas.width;
             const height = canvas.height;
@@ -1140,62 +1079,17 @@
                 const radius = radiusStep * (ringIndex + 1);
                 const coprimes = ring.coprimes;
 
-                coprimes.forEach((residue, residueIndex) => {
-                    // Calculate angle using helper function
-                    const angle = calculateAngleWithRotation(residue, residueIndex, ring.mod, coprimes, ringIndex);
-                    
+                coprimes.forEach(residue => {
+                    let angle = (2 * Math.PI * residue) / ring.mod;
+                    angle += ringIndex * perRingRotation;  // Add per-ring rotation
                     const x = radius * Math.cos(angle);
                     const y = radius * Math.sin(angle);
 
-                    // Determine if this is GCD=1
-                    const isGcdOne = gcd(residue, ring.mod) === 1;
-                    
-                    // Get color based on GCD status and mode
-                    let color;
-                    const gcdColorMode = document.getElementById('gcdColorMode').value;
-                    const nonGcdMode = document.getElementById('nonGcdMode').value;
-                    
-                    if (isGcdOne) {
-                        // GCD=1 coloring
-                        switch(gcdColorMode) {
-                            case 'unified':
-                                color = '#FFFFFF';
-                                break;
-                            case 'by-modulus':
-                                const modHue = (ringIndex * 360 / rings.length) % 360;
-                                color = `hsl(${modHue}, 70%, 60%)`;
-                                break;
-                            case 'by-residue':
-                                const resHue = (residue * 360 / ring.mod) % 360;
-                                color = `hsl(${resHue}, 70%, 60%)`;
-                                break;
-                            case 'angular':
-                                color = getColorForAngle(angle);
-                                break;
-                            case 'rainbow':
-                                const rainbowHue = (residueIndex * 360 / coprimes.length) % 360;
-                                color = `hsl(${rainbowHue}, 80%, 65%)`;
-                                break;
-                            default:
-                                color = '#FFFFFF';
-                        }
-                    } else {
-                        // Non-GCD=1 coloring
-                        switch(nonGcdMode) {
-                            case 'gray':
-                                color = 'rgba(128, 128, 128, 0.4)';
-                                break;
-                            case 'red':
-                                color = 'rgba(255, 80, 80, 0.7)';
-                                break;
-                            case 'hidden':
-                                return; // Skip rendering
-                            case 'outlined':
-                                color = 'rgba(0, 0, 0, 0)'; // Transparent fill
-                                break;
-                            default:
-                                color = 'rgba(128, 128, 128, 0.4)';
-                        }
+                    let color = '#FFFFFF';
+                    if (showAngular) {
+                        color = getColorForAngle(angle);
+                    } else if (showDistance) {
+                        color = getColorForDistance(radius, maxRadius);
                     }
 
                     if (primeData.isActive && primeData.modulus === ring.mod) {
@@ -1213,17 +1107,6 @@
                     ctx.beginPath();
                     ctx.arc(x, y, 3, 0, 2 * Math.PI);
                     ctx.fill();
-                    
-                    // Enhanced border
-                    if (nonGcdMode === 'outlined' && !isGcdOne) {
-                        ctx.strokeStyle = 'rgba(255, 80, 80, 0.8)';
-                        ctx.lineWidth = 1.5;
-                        ctx.stroke();
-                    } else {
-                        ctx.strokeStyle = isGcdOne ? 'rgba(255, 255, 255, 0.3)' : 'rgba(128, 128, 128, 0.3)';
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
-                    }
 
                     if (showLabels) {
                         ctx.fillStyle = '#FFFFFF';
@@ -1232,151 +1115,31 @@
                     }
                 });
 
-                // Direct lifts to next ring (r in M_i maps to r in M_{i+1})
                 if (showDirectLifts && ringIndex < rings.length - 1) {
                     const nextRing = rings[ringIndex + 1];
                     const nextRadius = radiusStep * (ringIndex + 2);
 
-                    coprimes.forEach((r1, r1Index) => {
-                        // Find r1 in next ring (if it exists as coprime)
-                        if (nextRing.coprimes.includes(r1)) {
-                            const r1NextIndex = nextRing.coprimes.indexOf(r1);
-                            
-                            const angle1 = calculateAngleWithRotation(r1, r1Index, ring.mod, coprimes, ringIndex);
-                            const x1 = radius * Math.cos(angle1);
-                            const y1 = radius * Math.sin(angle1);
-                            
-                            const angle2 = calculateAngleWithRotation(r1, r1NextIndex, nextRing.mod, nextRing.coprimes, ringIndex + 1);
-                            const x2 = nextRadius * Math.cos(angle2);
-                            const y2 = nextRadius * Math.sin(angle2);
+                    coprimes.forEach(r1 => {
+                        const angle1 = (2 * Math.PI * r1) / ring.mod;
+                        const x1 = radius * Math.cos(angle1);
+                        const y1 = radius * Math.sin(angle1);
 
-                            ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-                            ctx.lineWidth = 0.5;
-                            ctx.beginPath();
-                            ctx.moveTo(x1, y1);
-                            ctx.lineTo(x2, y2);
-                            ctx.stroke();
-                        }
-                    });
-                }
-                
-                // Dyadic lifts: r → r + M×x² (within same ring)
-                const showDyadicLifts = document.getElementById('showDyadicLifts').checked;
-                if (showDyadicLifts) {
-                    const angularMode = document.getElementById('angularMode').value;
-                    const x = parseInt(document.getElementById('dyadicX').value);
-                    const dyadicLift = ring.mod * x * x;
-                    
-                    coprimes.forEach((r, rIndex) => {
-                        const r2 = (r + dyadicLift) % ring.mod;
-                        
-                        // Check if r2 is also coprime
-                        if (coprimes.includes(r2) && r !== r2) {
-                            const r2Index = coprimes.indexOf(r2);
-                            
-                            // Calculate angles based on mode
-                            let angle1, angle2;
-                            switch(angularMode) {
-                                case 'standard':
-                                    angle1 = (2 * Math.PI * r) / ring.mod;
-                                    angle2 = (2 * Math.PI * r2) / ring.mod;
-                                    break;
-                                case 'negative':
-                                    angle1 = -(2 * Math.PI * r) / ring.mod;
-                                    angle2 = -(2 * Math.PI * r2) / ring.mod;
-                                    break;
-                                case 'complement':
-                                    angle1 = (2 * Math.PI * (ring.mod - r)) / ring.mod;
-                                    angle2 = (2 * Math.PI * (ring.mod - r2)) / ring.mod;
-                                    break;
-                                case 'index':
-                                    angle1 = (2 * Math.PI * rIndex) / coprimes.length;
-                                    angle2 = (2 * Math.PI * r2Index) / coprimes.length;
-                                    break;
-                                default:
-                                    angle1 = (2 * Math.PI * r) / ring.mod;
-                                    angle2 = (2 * Math.PI * r2) / ring.mod;
-                            }
-                            
-                            // Apply per-ring rotation
-                            angle1 += perRingRotation;
-                            angle2 += perRingRotation;
-                            
-                            const x1 = radius * Math.cos(angle1);
-                            const y1 = radius * Math.sin(angle1);
-                            const x2 = radius * Math.cos(angle2);
-                            const y2 = radius * Math.sin(angle2);
-                            
-                            ctx.beginPath();
-                            ctx.moveTo(x1, y1);
-                            ctx.lineTo(x2, y2);
-                            ctx.strokeStyle = 'rgba(138, 43, 226, 0.4)'; // Purple for dyadic
-                            ctx.lineWidth = 1.2;
-                            ctx.stroke();
-                        }
-                    });
-                }
+                        nextRing.coprimes.forEach(r2 => {
+                            if (r2 % ring.mod === r1) {
+                                const angle2 = (2 * Math.PI * r2) / nextRing.mod;
+                                const x2 = nextRadius * Math.cos(angle2);
+                                const y2 = nextRadius * Math.sin(angle2);
 
-                // Gap connections - each gap gets a unique color
-                if (gaps.length > 0) {
-                    const angularMode = document.getElementById('angularMode').value;
-                    
-                    gaps.forEach((gap, gapIndex) => {
-                        // Assign a unique color for each gap value
-                        const hue = (gapIndex * 360 / gaps.length) % 360;
-                        const gapColor = `hsla(${hue}, 70%, 60%, 0.5)`;
-                        
-                        coprimes.forEach((r, rIndex) => {
-                            const r2 = (r + gap) % ring.mod;
-                            
-                            // Check if r2 is also coprime to the modulus
-                            if (coprimes.includes(r2)) {
-                                const r2Index = coprimes.indexOf(r2);
-                                
-                                // Calculate angles based on mode
-                                let angle1, angle2;
-                                switch(angularMode) {
-                                    case 'standard':
-                                        angle1 = (2 * Math.PI * r) / ring.mod;
-                                        angle2 = (2 * Math.PI * r2) / ring.mod;
-                                        break;
-                                    case 'negative':
-                                        angle1 = -(2 * Math.PI * r) / ring.mod;
-                                        angle2 = -(2 * Math.PI * r2) / ring.mod;
-                                        break;
-                                    case 'complement':
-                                        angle1 = (2 * Math.PI * (ring.mod - r)) / ring.mod;
-                                        angle2 = (2 * Math.PI * (ring.mod - r2)) / ring.mod;
-                                        break;
-                                    case 'index':
-                                        angle1 = (2 * Math.PI * rIndex) / coprimes.length;
-                                        angle2 = (2 * Math.PI * r2Index) / coprimes.length;
-                                        break;
-                                    default:
-                                        angle1 = (2 * Math.PI * r) / ring.mod;
-                                        angle2 = (2 * Math.PI * r2) / ring.mod;
-                                }
-                                
-                                // Apply per-ring rotation
-                                angle1 += perRingRotation;
-                                angle2 += perRingRotation;
-                                
-                                const x1 = radius * Math.cos(angle1);
-                                const y1 = radius * Math.sin(angle1);
-                                const x2 = radius * Math.cos(angle2);
-                                const y2 = radius * Math.sin(angle2);
-                                
+                                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                                ctx.lineWidth = 0.5;
                                 ctx.beginPath();
                                 ctx.moveTo(x1, y1);
                                 ctx.lineTo(x2, y2);
-                                ctx.strokeStyle = gapColor;
-                                ctx.lineWidth = 1.5;
                                 ctx.stroke();
                             }
                         });
                     });
                 }
-
             });
 
             ctx.restore();
@@ -1425,19 +1188,9 @@
             const gaps = getSelectedGaps();
             if (gaps.length > 0) {
                 html += `<div class="ring-info">
-                    <strong>Active Gap Analysis:</strong><br>`;
-                
-                // Show each gap with its color
-                gaps.forEach((gap, gapIndex) => {
-                    const hue = (gapIndex * 360 / gaps.length) % 360;
-                    const gapColor = `hsl(${hue}, 70%, 60%)`;
-                    html += `<div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">
-                        <div style="width: 20px; height: 20px; background: ${gapColor}; border: 1px solid #333; border-radius: 2px;"></div>
-                        <span>Gap ${gap}: Connects r ↔ r+${gap}</span>
-                    </div>`;
-                });
-                
-                html += `<em style="margin-top: 8px; display: block;">Exploring prime gap patterns across ${rings.length} ring${rings.length > 1 ? 's' : ''}</em>
+                    <strong>Active Gap Analysis:</strong><br>
+                    Gaps: [${gaps.join(', ')}]<br>
+                    <em>Exploring prime gap patterns across ${rings.length} ring${rings.length > 1 ? 's' : ''}</em>
                 </div>`;
             }
 
@@ -1570,347 +1323,47 @@
 
         function exportCanvasImage() {
             const resolution = document.getElementById('animResolution').value;
-            let canvasSize;
+            let width, height;
 
             switch (resolution) {
-                case 'low': canvasSize = 512; break;
-                case 'medium': canvasSize = 1024; break;
-                case 'high': canvasSize = 2048; break;
-                case 'ultra': canvasSize = 4096; break;
+                case 'low': width = height = 512; break;
+                case 'medium': width = height = 1024; break;
+                case 'high': width = height = 2048; break;
+                case 'ultra': width = height = 4096; break;
                 case 'custom':
-                    canvasSize = parseInt(document.getElementById('customRes').value) || 1024;
+                    width = height = parseInt(document.getElementById('customRes').value) || 1024;
                     break;
-                default: canvasSize = 1024;
+                default: width = height = 1024;
             }
 
-            // Create export canvas with space for title and legend
-            const titleHeight = 80;
-            const legendWidth = 300;
-            const padding = 20;
-            
-            const exportCanvas = document.createElement('canvas');
-            exportCanvas.width = canvasSize + legendWidth + padding * 3;
-            exportCanvas.height = canvasSize + titleHeight + padding * 2;
-            const exportCtx = exportCanvas.getContext('2d');
-
-            // White background
-            exportCtx.fillStyle = '#ffffff';
-            exportCtx.fillRect(0, 0, exportCanvas.width, exportCanvas.height);
-
-            // Draw title
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.font = 'bold 24px Georgia';
-            exportCtx.textAlign = 'center';
-            exportCtx.fillText('Interactive Modular Lifting Rings', exportCanvas.width / 2, 35);
-            
-            exportCtx.font = '14px Georgia';
-            exportCtx.fillStyle = '#666';
-            const rings = getActiveRings();
-            const gaps = getSelectedGaps();
-            const subtitle = `Rings: ${rings.length} | Active Gaps: ${gaps.length > 0 ? gaps.join(', ') : 'None'}`;
-            exportCtx.fillText(subtitle, exportCanvas.width / 2, 55);
-
-            // Render main visualization at higher resolution
             const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = canvasSize;
-            tempCanvas.height = canvasSize;
+            tempCanvas.width = width;
+            tempCanvas.height = height;
             const tempCtx = tempCanvas.getContext('2d');
-            
-            const savedWidth = canvas.width;
-            const savedHeight = canvas.height;
-            canvas.width = canvasSize;
-            canvas.height = canvasSize;
-            
-            draw();
-            
-            // Copy rendered canvas to export canvas
-            exportCtx.drawImage(canvas, padding, titleHeight + padding);
-            
-            // Restore original canvas size
-            canvas.width = savedWidth;
-            canvas.height = savedHeight;
+
+            const originalCanvas = canvas;
+            const originalCtx = ctx;
+
+            canvas.width = width;
+            canvas.height = height;
+
             draw();
 
-            // Draw legend panel with comprehensive details
-            const legendX = canvasSize + padding * 2;
-            const legendY = titleHeight + padding;
-            
-            exportCtx.fillStyle = '#f8f8f8';
-            exportCtx.fillRect(legendX, legendY, legendWidth, canvasSize);
-            exportCtx.strokeStyle = '#d0d0d0';
-            exportCtx.lineWidth = 1;
-            exportCtx.strokeRect(legendX, legendY, legendWidth, canvasSize);
-            
-            // Legend title
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.font = 'bold 16px Georgia';
-            exportCtx.textAlign = 'left';
-            exportCtx.fillText('Configuration Details', legendX + 15, legendY + 25);
-            
-            let yPos = legendY + 50;
-            exportCtx.font = '11px Georgia';
-            
-            // Calculate GCD statistics
-            let totalGcdOne = 0;
-            let totalNonGcdOne = 0;
-            
-            rings.forEach(ring => {
-                for (let i = 0; i < ring.mod; i++) {
-                    if (gcd(i, ring.mod) === 1) {
-                        totalGcdOne++;
-                    } else {
-                        totalNonGcdOne++;
-                    }
-                }
-            });
-            
-            const totalPoints = totalGcdOne + totalNonGcdOne;
-            const gcdOnePercent = ((totalGcdOne / totalPoints) * 100).toFixed(1);
-            const nonGcdOnePercent = ((totalNonGcdOne / totalPoints) * 100).toFixed(1);
-            
-            // GCD Statistics Section
-            exportCtx.fillStyle = '#333';
-            exportCtx.font = 'bold 12px Georgia';
-            exportCtx.fillText('GCD Statistics:', legendX + 15, yPos);
-            yPos += 18;
-            
-            exportCtx.font = '11px Georgia';
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.fillText(`Total Points: ${totalPoints}`, legendX + 15, yPos);
-            yPos += 16;
-            exportCtx.fillText(`GCD=1: ${totalGcdOne} (${gcdOnePercent}%)`, legendX + 15, yPos);
-            yPos += 16;
-            exportCtx.fillText(`Non-GCD=1: ${totalNonGcdOne} (${nonGcdOnePercent}%)`, legendX + 15, yPos);
-            yPos += 16;
-            exportCtx.font = 'italic 10px Georgia';
-            exportCtx.fillStyle = '#666';
-            exportCtx.fillText(`Ratio: ${(totalGcdOne/totalNonGcdOne).toFixed(2)}:1`, legendX + 15, yPos);
-            yPos += 20;
-            
-            // Angular Positioning Mode
-            const angularMode = document.getElementById('angularMode').value;
-            const angularModeNames = {
-                'standard': 'θ = 2πr/M',
-                'negative': 'θ = -2πr/M',
-                'complement': 'θ = 2π(M-r)/M',
-                'index': 'By Index Order'
-            };
-            
-            exportCtx.fillStyle = '#333';
-            exportCtx.font = 'bold 12px Georgia';
-            exportCtx.fillText('Positioning:', legendX + 15, yPos);
-            yPos += 18;
-            
-            exportCtx.font = '11px Georgia';
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.fillText(angularModeNames[angularMode] || 'Standard', legendX + 15, yPos);
-            yPos += 16;
-            
-            // Add per-ring rotation if active
-            if (perRingRotation !== 0) {
-                const r = parseFloat(document.getElementById('ringRotR').value) || 0;
-                const m = parseFloat(document.getElementById('ringRotM').value) || 1;
-                const degrees = (r / m) * 360;
-                
-                exportCtx.font = '10px Georgia';
-                exportCtx.fillStyle = '#666';
-                exportCtx.fillText(`+ Ring offset: ${r}/${m} × 2π = ${degrees.toFixed(1)}°`, legendX + 15, yPos);
-                yPos += 16;
-            }
-            
-            yPos += 6;
-            
-            // GCD Coloring Mode
-            const gcdColorMode = document.getElementById('gcdColorMode').value;
-            const gcdColorModeNames = {
-                'unified': 'Unified White',
-                'by-modulus': 'Color per Modulus',
-                'by-residue': 'Color per Residue',
-                'angular': 'Angular Gradient',
-                'rainbow': 'Rainbow Spectrum'
-            };
-            
-            exportCtx.fillStyle = '#333';
-            exportCtx.font = 'bold 12px Georgia';
-            exportCtx.fillText('GCD=1 Coloring:', legendX + 15, yPos);
-            yPos += 18;
-            
-            exportCtx.font = '11px Georgia';
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.fillText(gcdColorModeNames[gcdColorMode] || 'Unified', legendX + 15, yPos);
-            yPos += 22;
-            
-            // Non-GCD Mode
-            const nonGcdMode = document.getElementById('nonGcdMode').value;
-            const nonGcdModeNames = {
-                'gray': 'Gray (Dimmed)',
-                'red': 'Red (Highlighted)',
-                'hidden': 'Hidden',
-                'outlined': 'Outlined Only'
-            };
-            
-            exportCtx.fillStyle = '#333';
-            exportCtx.font = 'bold 12px Georgia';
-            exportCtx.fillText('Non-GCD=1 Display:', legendX + 15, yPos);
-            yPos += 18;
-            
-            exportCtx.font = '11px Georgia';
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.fillText(nonGcdModeNames[nonGcdMode] || 'Gray', legendX + 15, yPos);
-            yPos += 22;
-            
-            // Gap colors legend
-            if (gaps.length > 0) {
-                exportCtx.fillStyle = '#333';
-                exportCtx.font = 'bold 13px Georgia';
-                exportCtx.fillText('Gap Connections:', legendX + 15, yPos);
-                yPos += 20;
-                
-                exportCtx.font = '11px Georgia';
-                gaps.forEach((gap, gapIndex) => {
-                    const hue = (gapIndex * 360 / gaps.length) % 360;
-                    const gapColor = `hsl(${hue}, 70%, 60%)`;
-                    
-                    exportCtx.fillStyle = gapColor;
-                    exportCtx.fillRect(legendX + 15, yPos - 10, 15, 15);
-                    exportCtx.strokeStyle = '#333';
-                    exportCtx.lineWidth = 1;
-                    exportCtx.strokeRect(legendX + 15, yPos - 10, 15, 15);
-                    
-                    exportCtx.fillStyle = '#1a1a1a';
-                    exportCtx.fillText(`Gap ${gap}: r ↔ r+${gap}`, legendX + 35, yPos);
-                    yPos += 20;
-                });
-                yPos += 10;
-            }
-            
-            // Lift operations legend
-            const showDirectLifts = document.getElementById('showDirectLifts').checked;
-            const showDyadicLifts = document.getElementById('showDyadicLifts').checked;
-            
-            if (showDirectLifts || showDyadicLifts) {
-                exportCtx.fillStyle = '#333';
-                exportCtx.font = 'bold 13px Georgia';
-                exportCtx.fillText('Lift Operations:', legendX + 15, yPos);
-                yPos += 20;
-                
-                exportCtx.font = '11px Georgia';
-                
-                if (showDirectLifts) {
-                    exportCtx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-                    exportCtx.fillRect(legendX + 15, yPos - 10, 15, 15);
-                    exportCtx.strokeStyle = '#999';
-                    exportCtx.lineWidth = 1;
-                    exportCtx.strokeRect(legendX + 15, yPos - 10, 15, 15);
-                    
-                    exportCtx.fillStyle = '#1a1a1a';
-                    exportCtx.fillText('Direct: r in Mᵢ → r in Mᵢ₊₁', legendX + 35, yPos);
-                    yPos += 20;
-                }
-                
-                if (showDyadicLifts) {
-                    const x = parseInt(document.getElementById('dyadicX').value);
-                    exportCtx.fillStyle = 'rgba(138, 43, 226, 0.4)';
-                    exportCtx.fillRect(legendX + 15, yPos - 10, 15, 15);
-                    exportCtx.strokeStyle = '#8a2be2';
-                    exportCtx.lineWidth = 1;
-                    exportCtx.strokeRect(legendX + 15, yPos - 10, 15, 15);
-                    
-                    exportCtx.fillStyle = '#1a1a1a';
-                    exportCtx.fillText(`Dyadic: r → r+M×${x}²`, legendX + 35, yPos);
-                    yPos += 20;
-                }
-                yPos += 10;
-            }
-            
-            // Ring-by-Ring Details
-            exportCtx.fillStyle = '#333';
-            exportCtx.font = 'bold 12px Georgia';
-            exportCtx.fillText('Ring Details:', legendX + 15, yPos);
-            yPos += 18;
-            
-            exportCtx.font = '10px Georgia';
-            exportCtx.fillStyle = '#1a1a1a';
-            
-            // Show first 5 rings in detail
-            const maxRingsToShow = Math.min(5, rings.length);
-            for (let i = 0; i < maxRingsToShow; i++) {
-                const ring = rings[i];
-                const ringLabel = ring.n === 'unit' ? 'M=1' : `M=${ring.label}`;
-                const phiValue = ring.coprimes.length;
-                
-                exportCtx.fillText(`${ringLabel}: φ=${phiValue}`, legendX + 15, yPos);
-                yPos += 14;
-            }
-            
-            if (rings.length > maxRingsToShow) {
-                exportCtx.font = 'italic 9px Georgia';
-                exportCtx.fillStyle = '#999';
-                exportCtx.fillText(`... and ${rings.length - maxRingsToShow} more rings`, legendX + 15, yPos);
-                yPos += 14;
-            }
-            
-            yPos += 8;
-            
-            // Overall Summary
-            exportCtx.fillStyle = '#333';
-            exportCtx.font = 'bold 12px Georgia';
-            exportCtx.fillText('Overall Summary:', legendX + 15, yPos);
-            yPos += 18;
-            
-            exportCtx.font = '11px Georgia';
-            exportCtx.fillStyle = '#1a1a1a';
-            exportCtx.fillText(`Total Rings: ${rings.length}`, legendX + 15, yPos);
-            yPos += 16;
-            
-            const totalResidues = rings.reduce((sum, r) => sum + r.coprimes.length, 0);
-            exportCtx.fillText(`Total Coprimes: ${totalResidues}`, legendX + 15, yPos);
-            yPos += 16;
-            
-            exportCtx.font = 'italic 10px Georgia';
-            exportCtx.fillStyle = '#666';
-            exportCtx.fillText(`∑φ(Mᵢ) = ${totalResidues}`, legendX + 15, yPos);
-            yPos += 20;
-            
-            // Watermark at bottom
-            if (yPos < legendY + canvasSize - 40) {
-                exportCtx.font = 'italic 9px Georgia';
-                exportCtx.fillStyle = '#999';
-                exportCtx.textAlign = 'center';
-                exportCtx.fillText('Generated by Interactive', legendX + legendWidth/2, legendY + canvasSize - 25);
-                exportCtx.fillText('Modular Lifting Rings v8.0', legendX + legendWidth/2, legendY + canvasSize - 12);
-            }
-
-            // Export
             const link = document.createElement('a');
-            link.download = `modular_lifting_rings_${canvasSize}x${canvasSize}_export.png`;
-            link.href = exportCanvas.toDataURL('image/png');
+            link.download = `modular_lifting_rings_${width}x${height}.png`;
+            link.href = canvas.toDataURL();
             link.click();
 
-            updateAnimationStatus(`Exported ${canvasSize}×${canvasSize} with title and legend`);
-        }
+            canvas.width = originalCanvas.width;
+            canvas.height = originalCanvas.height;
 
-        // Toggle dyadic controls
-        function toggleDyadicControls() {
-            const showDyadic = document.getElementById('showDyadicLifts').checked;
-            document.getElementById('dyadicControls').style.display = showDyadic ? 'block' : 'none';
+            draw();
+
+            updateAnimationStatus(`Exported ${width}×${height} image`);
         }
 
         function initControls() {
             addRingControl('unit', 'Unit Circle (M=1)', true);
-            
-            // Add event listener for dyadic checkbox
-            document.getElementById('showDyadicLifts').addEventListener('change', toggleDyadicControls);
-            
-            // Add event listeners for per-ring rotation
-            document.getElementById('enablePerRingRotation').addEventListener('change', togglePerRingRotation);
-            
-            // Initialize per-ring angle display
-            updatePerRingAngle();
-            
-            // Add event listeners for per-ring rotation live update
-            document.getElementById('ringRotR').addEventListener('input', updateRingRotDegrees);
-            document.getElementById('ringRotM').addEventListener('input', updateRingRotDegrees);
             
             for (let mod = 2; mod <= 60; mod++) {
                 const customId = `default_${mod}`;
@@ -1955,4 +1408,4 @@
         });
     </script>
 </body>
-    </html>
+                                    </html>
