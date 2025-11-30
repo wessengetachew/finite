@@ -1,5 +1,4 @@
 
-<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -985,6 +984,55 @@
             document.getElementById('rotationValue').textContent = currentRotation.toFixed(0) + '°';
             draw();
         }
+        
+        function updatePerRingAngle() {
+            const r = parseFloat(document.getElementById('perRingR').value) || 0;
+            const m = parseFloat(document.getElementById('perRingM').value) || 1;
+            
+            // Calculate angle: (r/m) × 2π radians = (r/m) × 360 degrees
+            const angleDegrees = (r / m) * 360;
+            
+            document.getElementById('perRingAngleDisplay').textContent = angleDegrees.toFixed(1) + '°';
+            
+            if (document.getElementById('enablePerRingRotation').checked) {
+                draw();
+            }
+        }
+        
+        function togglePerRingRotation() {
+            const enabled = document.getElementById('enablePerRingRotation').checked;
+            document.getElementById('perRingRotationControls').style.display = enabled ? 'block' : 'none';
+            draw();
+        }
+        
+        // Update ring rotation degree display
+        function updateRingRotDegrees() {
+            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
+            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+            const degrees = (r / m) * 360;
+            document.getElementById('ringRotDegrees').textContent = degrees.toFixed(1) + '°';
+        }
+        
+        // Per-ring rotation state
+        let perRingRotation = 0; // In radians
+        
+        function applyRingRotation() {
+            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
+            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+            
+            if (m === 0) {
+                alert('M cannot be zero');
+                return;
+            }
+            
+            // Calculate rotation in radians
+            perRingRotation = (r / m) * 2 * Math.PI;
+            
+            updateRingRotDegrees();
+            draw();
+            
+            updateAnimationStatus(`Per-ring rotation set: ${r}/${m} × 2π = ${((r/m)*360).toFixed(1)}°`);
+        }
 
         function resetView() {
             currentZoom = 1.0;
@@ -1051,6 +1099,39 @@
             return `hsl(${hue}, 70%, 60%)`;
         }
 
+        // Helper function to calculate angle with per-ring rotation
+        function calculateAngleWithRotation(residue, residueIndex, modulus, coprimes, ringIndex) {
+            const angularMode = document.getElementById('angularMode').value;
+            let angle;
+            
+            switch(angularMode) {
+                case 'standard':
+                    angle = (2 * Math.PI * residue) / modulus;
+                    break;
+                case 'negative':
+                    angle = -(2 * Math.PI * residue) / modulus;
+                    break;
+                case 'complement':
+                    angle = (2 * Math.PI * (modulus - residue)) / modulus;
+                    break;
+                case 'index':
+                    angle = (2 * Math.PI * residueIndex) / coprimes.length;
+                    break;
+                default:
+                    angle = (2 * Math.PI * residue) / modulus;
+            }
+            
+            // Apply per-ring rotation if enabled
+            if (document.getElementById('enablePerRingRotation').checked) {
+                const r = parseFloat(document.getElementById('perRingR').value) || 0;
+                const m = parseFloat(document.getElementById('perRingM').value) || 1;
+                const perRingAngle = (r / m) * 2 * Math.PI;
+                angle += ringIndex * perRingAngle;
+            }
+            
+            return angle;
+        }
+        
         function draw() {
             const width = canvas.width;
             const height = canvas.height;
@@ -1104,6 +1185,9 @@
                         default:
                             angle = (2 * Math.PI * residue) / ring.mod;
                     }
+                    
+                    // Apply per-ring rotation (each ring rotated by same amount)
+                    angle += perRingRotation;
                     
                     const x = radius * Math.cos(angle);
                     const y = radius * Math.sin(angle);
@@ -1257,6 +1341,10 @@
                                     angle2 = (2 * Math.PI * r2) / ring.mod;
                             }
                             
+                            // Apply per-ring rotation
+                            angle1 += perRingRotation;
+                            angle2 += perRingRotation;
+                            
                             const x1 = radius * Math.cos(angle1);
                             const y1 = radius * Math.sin(angle1);
                             const x2 = radius * Math.cos(angle2);
@@ -1311,6 +1399,10 @@
                                         angle1 = (2 * Math.PI * r) / ring.mod;
                                         angle2 = (2 * Math.PI * r2) / ring.mod;
                                 }
+                                
+                                // Apply per-ring rotation
+                                angle1 += perRingRotation;
+                                angle2 += perRingRotation;
                                 
                                 const x1 = radius * Math.cos(angle1);
                                 const y1 = radius * Math.sin(angle1);
@@ -1655,7 +1747,21 @@
             exportCtx.font = '11px Georgia';
             exportCtx.fillStyle = '#1a1a1a';
             exportCtx.fillText(angularModeNames[angularMode] || 'Standard', legendX + 15, yPos);
-            yPos += 22;
+            yPos += 16;
+            
+            // Add per-ring rotation if active
+            if (perRingRotation !== 0) {
+                const r = parseFloat(document.getElementById('ringRotR').value) || 0;
+                const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+                const degrees = (r / m) * 360;
+                
+                exportCtx.font = '10px Georgia';
+                exportCtx.fillStyle = '#666';
+                exportCtx.fillText(`+ Ring offset: ${r}/${m} × 2π = ${degrees.toFixed(1)}°`, legendX + 15, yPos);
+                yPos += 16;
+            }
+            
+            yPos += 6;
             
             // GCD Coloring Mode
             const gcdColorMode = document.getElementById('gcdColorMode').value;
@@ -1838,6 +1944,18 @@
             
             // Add event listener for dyadic checkbox
             document.getElementById('showDyadicLifts').addEventListener('change', toggleDyadicControls);
+            
+            // Add event listeners for per-ring rotation
+            document.getElementById('enablePerRingRotation').addEventListener('change', togglePerRingRotation);
+            document.getElementById('perRingR').addEventListener('input', updatePerRingAngle);
+            document.getElementById('perRingM').addEventListener('input', updatePerRingAngle);
+            
+            // Initialize per-ring angle display
+            updatePerRingAngle();
+            
+            // Add event listeners for per-ring rotation live update
+            document.getElementById('ringRotR').addEventListener('input', updateRingRotDegrees);
+            document.getElementById('ringRotM').addEventListener('input', updateRingRotDegrees);
             
             for (let mod = 2; mod <= 60; mod++) {
                 const customId = `default_${mod}`;
