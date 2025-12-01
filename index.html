@@ -1233,7 +1233,7 @@
                 <canvas id="fullPlaneCanvas" width="1000" height="1000"></canvas>
             </div>
 
-            <div class="canvas-panel" id="primitiveRootsPanel" style="display: none;">
+            <div class="canvas-panel" id="primitiveRootsPanel">
                 <div class="panel-header">
                     <div>
                         <div class="panel-title">Primitive Roots Power Sequence</div>
@@ -3497,6 +3497,16 @@
                     vizGrid.classList.remove('four-panel');
                 }
                 
+                updateAll();
+            });
+            
+            document.getElementById('togglePrimitiveRoots').addEventListener('change', e => {
+                const panel = document.getElementById('primitiveRootsPanel');
+                if (e.target.checked) {
+                    panel.style.display = 'block';
+                } else {
+                    panel.style.display = 'none';
+                }
                 updateAll();
             });
             
@@ -7746,10 +7756,8 @@ Generated: ${new Date().toLocaleString()}
             drawNested();
             drawReduction();
             
-            // Draw Pixi primitive roots if panel is visible
-            if (document.getElementById('primitiveRootsPanel').style.display !== 'none') {
-                drawPixiPrimitiveRoots();
-            }
+            // Always draw Pixi primitive roots (6th canvas)
+            drawPixiPrimitiveRoots();
             
             // Draw full plane if visible
             if (document.getElementById('toggleFullPlane').checked) {
