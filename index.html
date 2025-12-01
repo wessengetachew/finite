@@ -1,5 +1,4 @@
 
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -3930,6 +3929,14 @@
             
             pixiGraphics = new PIXI.Graphics();
             pixiContainer.addChild(pixiGraphics);
+            
+            console.log('PIXI initialized:', {
+                app: !!pixiApp,
+                container: !!pixiContainer,
+                graphics: !!pixiGraphics,
+                width: pixiApp.screen.width,
+                height: pixiApp.screen.height
+            });
         }
         
         // Canvas-to-PIXI Adapter
@@ -3938,8 +3945,8 @@
                 this.app = app;
                 this.container = container;
                 this.graphics = graphics;
-                this.fillStyle = 0xFFFFFF;
-                this.strokeStyle = 0xFFFFFF;
+                this._fillStyle = 0xFFFFFF;
+                this._strokeStyle = 0xFFFFFF;
                 this.lineWidth = 1;
                 this.globalAlpha = 1;
                 this.savedStates = [];
@@ -3955,8 +3962,8 @@
             
             save() {
                 this.savedStates.push({
-                    fillStyle: this.fillStyle,
-                    strokeStyle: this.strokeStyle,
+                    fillStyle: this._fillStyle,
+                    strokeStyle: this._strokeStyle,
                     lineWidth: this.lineWidth,
                     globalAlpha: this.globalAlpha
                 });
@@ -3965,8 +3972,8 @@
             restore() {
                 if (this.savedStates.length > 0) {
                     const state = this.savedStates.pop();
-                    this.fillStyle = state.fillStyle;
-                    this.strokeStyle = state.strokeStyle;
+                    this._fillStyle = state.fillStyle;
+                    this._strokeStyle = state.strokeStyle;
                     this.lineWidth = state.lineWidth;
                     this.globalAlpha = state.globalAlpha;
                 }
@@ -3990,8 +3997,7 @@
             
             arc(x, y, radius, startAngle, endAngle) {
                 // Draw circle as filled shape
-                const color = typeof this.fillStyle === 'string' ? 
-                    parseInt(this.fillStyle.replace('#', '0x')) : this.fillStyle;
+                const color = this._fillStyle || 0xFFFFFF;
                 
                 this.graphics.beginFill(color, this.globalAlpha);
                 this.graphics.drawCircle(x, y, radius);
@@ -4012,8 +4018,7 @@
             
             lineTo(x, y) {
                 if (this.lineStart) {
-                    const color = typeof this.strokeStyle === 'string' ?
-                        parseInt(this.strokeStyle.replace('#', '0x')) : this.strokeStyle;
+                    const color = this._strokeStyle || 0xFFFFFF;
                     
                     this.graphics.lineStyle(this.lineWidth, color, this.globalAlpha);
                     this.graphics.moveTo(this.lineStart.x, this.lineStart.y);
@@ -5733,6 +5738,12 @@
         }
 
         function drawVisualization() {
+            // Safety check - make sure PIXI is initialized
+            if (!pixiApp || !pixiContainer || !pixiGraphics) {
+                console.error('PIXI not initialized yet');
+                return;
+            }
+            
             const width = canvas.width;
             const height = canvas.height;
             const centerX = width / 2;
