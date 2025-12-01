@@ -1568,6 +1568,75 @@
                     </div>
                 </div>
 
+                <!-- Canvas Zoom Controls -->
+                <div class="section-header">Canvas Zoom Controls</div>
+                <div class="control-row">
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Unit Disk Zoom</span>
+                            <span class="control-value" id="diskZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="diskZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Upper Half-Plane Zoom</span>
+                            <span class="control-value" id="cayleyZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="cayleyZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Nested Rings Zoom</span>
+                            <span class="control-value" id="nestedZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="nestedZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Modular Reduction Zoom</span>
+                            <span class="control-value" id="reductionZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="reductionZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Full Complex Plane Zoom</span>
+                            <span class="control-value" id="fullPlaneZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="fullPlaneZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Primitive Roots Zoom</span>
+                            <span class="control-value" id="primitiveZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="primitiveZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+                </div>
+
+                <div class="control-row">
+                    <div class="control-item">
+                        <button class="btn btn-primary" onclick="resetAllZoom()" style="width: 100%;">
+                            <span>Reset All Zoom to 100%</span>
+                        </button>
+                    </div>
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>Master Zoom (All Canvases)</span>
+                            <span class="control-value" id="masterZoomValue">100%</span>
+                        </div>
+                        <input type="range" id="masterZoomSlider" min="50" max="300" value="100" step="5">
+                    </div>
+                </div>
+
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Quick presets for per-ring rotation to align specific fractions to top (90°)">
                         <div class="control-label">
@@ -2502,6 +2571,9 @@
             diskZoom: 1.0,
             cayleyZoom: 1.0,
             nestedZoom: 1.0,
+            reductionZoom: 1.0,
+            fullPlaneZoom: 1.0,
+            primitiveZoom: 1.0,
             ringGenerationMode: 'manual',
             baseMod: 30,
             scaleFactor: 2,
@@ -2668,7 +2740,7 @@
             const height = canvases.pixiApp.view.height / canvases.pixiApp.renderer.resolution;
             const centerX = width / 2;
             const centerY = height / 2;
-            const radius = Math.min(width, height) * 0.35;
+            const radius = Math.min(width, height) * 0.35 * state.primitiveZoom;
             
             // Draw background circle
             g.lineStyle(3, 0xffffff, 0.4);
@@ -3157,22 +3229,73 @@
                 document.getElementById('speedValue').textContent = state.animSpeed.toFixed(1) + '×';
             });
 
-            // Zoom sliders
+            // Zoom sliders - updated for percentage display
             document.getElementById('diskZoomSlider').addEventListener('input', e => {
-                state.diskZoom = parseFloat(e.target.value);
-                document.getElementById('diskZoomValue').textContent = state.diskZoom.toFixed(2) + '×';
+                state.diskZoom = parseFloat(e.target.value) / 100;
+                document.getElementById('diskZoomValue').textContent = e.target.value + '%';
                 if (!state.animationId) updateAll();
             });
 
             document.getElementById('cayleyZoomSlider').addEventListener('input', e => {
-                state.cayleyZoom = parseFloat(e.target.value);
-                document.getElementById('cayleyZoomValue').textContent = state.cayleyZoom.toFixed(2) + '×';
+                state.cayleyZoom = parseFloat(e.target.value) / 100;
+                document.getElementById('cayleyZoomValue').textContent = e.target.value + '%';
                 if (!state.animationId) updateAll();
             });
 
             document.getElementById('nestedZoomSlider').addEventListener('input', e => {
-                state.nestedZoom = parseFloat(e.target.value);
-                document.getElementById('nestedZoomValue').textContent = state.nestedZoom.toFixed(2) + '×';
+                state.nestedZoom = parseFloat(e.target.value) / 100;
+                document.getElementById('nestedZoomValue').textContent = e.target.value + '%';
+                if (!state.animationId) updateAll();
+            });
+
+            document.getElementById('reductionZoomSlider').addEventListener('input', e => {
+                state.reductionZoom = parseFloat(e.target.value) / 100;
+                document.getElementById('reductionZoomValue').textContent = e.target.value + '%';
+                if (!state.animationId) updateAll();
+            });
+
+            document.getElementById('fullPlaneZoomSlider').addEventListener('input', e => {
+                state.fullPlaneZoom = parseFloat(e.target.value) / 100;
+                document.getElementById('fullPlaneZoomValue').textContent = e.target.value + '%';
+                if (!state.animationId) updateAll();
+            });
+
+            document.getElementById('primitiveZoomSlider').addEventListener('input', e => {
+                state.primitiveZoom = parseFloat(e.target.value) / 100;
+                document.getElementById('primitiveZoomValue').textContent = e.target.value + '%';
+                if (!state.animationId) updateAll();
+            });
+
+            // Master zoom slider
+            document.getElementById('masterZoomSlider').addEventListener('input', e => {
+                const zoomPercent = e.target.value;
+                const zoomValue = parseFloat(zoomPercent) / 100;
+                
+                // Update all zoom values
+                state.diskZoom = zoomValue;
+                state.cayleyZoom = zoomValue;
+                state.nestedZoom = zoomValue;
+                state.reductionZoom = zoomValue;
+                state.fullPlaneZoom = zoomValue;
+                state.primitiveZoom = zoomValue;
+                
+                // Update all displays
+                document.getElementById('diskZoomValue').textContent = zoomPercent + '%';
+                document.getElementById('cayleyZoomValue').textContent = zoomPercent + '%';
+                document.getElementById('nestedZoomValue').textContent = zoomPercent + '%';
+                document.getElementById('reductionZoomValue').textContent = zoomPercent + '%';
+                document.getElementById('fullPlaneZoomValue').textContent = zoomPercent + '%';
+                document.getElementById('primitiveZoomValue').textContent = zoomPercent + '%';
+                document.getElementById('masterZoomValue').textContent = zoomPercent + '%';
+                
+                // Update all sliders
+                document.getElementById('diskZoomSlider').value = zoomPercent;
+                document.getElementById('cayleyZoomSlider').value = zoomPercent;
+                document.getElementById('nestedZoomSlider').value = zoomPercent;
+                document.getElementById('reductionZoomSlider').value = zoomPercent;
+                document.getElementById('fullPlaneZoomSlider').value = zoomPercent;
+                document.getElementById('primitiveZoomSlider').value = zoomPercent;
+                
                 if (!state.animationId) updateAll();
             });
 
@@ -6533,7 +6656,7 @@ Generated: ${new Date().toLocaleString()}
             const M = state.modulus;
             const centerX = w / 2;
             const centerY = h / 2;
-            const maxRadius = Math.min(w, h) * 0.42;
+            const maxRadius = Math.min(w, h) * 0.42 * state.reductionZoom;
             const lineThickness = state.globalLineThickness || 1.0;
 
             // Update panel title dynamically
@@ -6788,7 +6911,7 @@ Generated: ${new Date().toLocaleString()}
 
             // Coordinate conversion - full complex plane view
             function mathToScreen(wp) {
-                const scale = Math.min(w, h) * 0.15 * state.cayleyZoom;
+                const scale = Math.min(w, h) * 0.15 * state.fullPlaneZoom;
                 const x = w / 2 + wp.re * scale;
                 const y = h / 2 - wp.im * scale;
                 return { x, y };
@@ -7881,6 +8004,36 @@ Generated: ${new Date().toLocaleString()}
         let phaseAnimationId = null;
         let phaseAnimationStart = 0;
         
+        function resetAllZoom() {
+            // Reset all zoom values to 100%
+            state.diskZoom = 1.0;
+            state.cayleyZoom = 1.0;
+            state.nestedZoom = 1.0;
+            state.reductionZoom = 1.0;
+            state.fullPlaneZoom = 1.0;
+            state.primitiveZoom = 1.0;
+            
+            // Update all displays
+            document.getElementById('diskZoomValue').textContent = '100%';
+            document.getElementById('cayleyZoomValue').textContent = '100%';
+            document.getElementById('nestedZoomValue').textContent = '100%';
+            document.getElementById('reductionZoomValue').textContent = '100%';
+            document.getElementById('fullPlaneZoomValue').textContent = '100%';
+            document.getElementById('primitiveZoomValue').textContent = '100%';
+            document.getElementById('masterZoomValue').textContent = '100%';
+            
+            // Update all sliders
+            document.getElementById('diskZoomSlider').value = 100;
+            document.getElementById('cayleyZoomSlider').value = 100;
+            document.getElementById('nestedZoomSlider').value = 100;
+            document.getElementById('reductionZoomSlider').value = 100;
+            document.getElementById('fullPlaneZoomSlider').value = 100;
+            document.getElementById('primitiveZoomSlider').value = 100;
+            document.getElementById('masterZoomSlider').value = 100;
+            
+            if (!state.animationId) updateAll();
+        }
+
         function togglePhaseAnimation() {
             const btn = document.getElementById('phaseAnimateBtn');
             
