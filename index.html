@@ -147,6 +147,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .canvas-container canvas {
+            display: block;
         }
 
         .range-value {
@@ -231,7 +237,7 @@
             </div>
 
             <div class="canvas-container" id="mainContainer">
-                <div class="stats" id="mainStats">Loading...</div>
+                <div class="stats" id="mainStats">Initializing PIXI...</div>
             </div>
         </div>
     </div>
@@ -296,10 +302,28 @@
         let globalRotation = 0;
         let currentTab = 'visualization';
 
+        // Check if PIXI is loaded
+        function checkPIXI() {
+            if (typeof PIXI === 'undefined') {
+                console.error('PIXI not loaded!');
+                document.getElementById('mainStats').innerHTML = 'ERROR: PIXI.js not loaded<br>Check internet connection';
+                return false;
+            }
+            console.log('PIXI version:', PIXI.VERSION);
+            return true;
+        }
+
         // Initialize all PIXI apps
         function initPIXI() {
-            // Main visualization
-            mainApp = new PIXI.Application({
+            console.log('Initializing PIXI apps...');
+            
+            if (!checkPIXI()) {
+                return;
+            }
+            
+            try {
+                // Main visualization
+                mainApp = new PIXI.Application({
                 width: 1000,
                 height: 800,
                 backgroundColor: 0x000000,
@@ -349,7 +373,33 @@
             primGraphics = new PIXI.Graphics();
             primContainer.addChild(primGraphics);
 
-            console.log('All PIXI apps initialized');
+            console.log('All PIXI apps initialized successfully');
+            console.log('Main app:', mainApp.view.width, 'x', mainApp.view.height);
+            
+            // Draw test pattern to confirm PIXI is working
+            mainGraphics.beginFill(0xFF0000);
+            mainGraphics.drawCircle(0, 0, 50);
+            mainGraphics.endFill();
+            
+            compGraphics.beginFill(0x00FF00);
+            compGraphics.drawCircle(0, 0, 50);
+            compGraphics.endFill();
+            
+            primGraphics.beginFill(0x0000FF);
+            primGraphics.drawCircle(0, 0, 50);
+            primGraphics.endFill();
+            
+            console.log('Test circles drawn');
+            
+            // Immediately update stats to remove "Loading..."
+            document.getElementById('mainStats').innerHTML = 'Ready - Click Generate<br>(Test circle visible)';
+            document.getElementById('compStats').innerHTML = 'Ready';
+            document.getElementById('primStats').innerHTML = 'Ready';
+            
+            } catch (error) {
+                console.error('PIXI initialization error:', error);
+                document.getElementById('mainStats').innerHTML = 'ERROR: ' + error.message;
+            }
         }
 
         // GCD function
@@ -652,10 +702,25 @@
 
         // Initialize
         window.addEventListener('load', () => {
-            initPIXI();
-            updateVisualization();
-            updateComposite();
-            updatePrimitive();
+            console.log('Page loaded, initializing...');
+            
+            // Wait a moment for DOM to be fully ready
+            setTimeout(() => {
+                try {
+                    initPIXI();
+                    console.log('PIXI initialized, generating initial data...');
+                    
+                    // Generate initial visualizations
+                    updateVisualization();
+                    updateComposite();
+                    updatePrimitive();
+                    
+                    console.log('All visualizations generated');
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    alert('Error initializing PIXI: ' + error.message);
+                }
+            }, 100);
         });
     </script>
 </body>
