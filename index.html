@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Modular Lifting Rings v8.0 - Research Tool</title>
+    <title>PIXI.js Modular Rings - High Performance</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -12,1052 +13,565 @@
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: #fafafa;
-            color: #1a1a1a;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
-        .app-header {
-            background: #ffffff;
-            padding: 24px 40px;
-            border-bottom: 2px solid #d0d0d0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .header-content {
-            max-width: 1800px;
-            margin: 0 auto;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .header-title h1 {
-            font-size: 1.6em;
-            font-weight: 400;
-            color: #1a1a1a;
-            margin-bottom: 4px;
-            letter-spacing: 0.5px;
-        }
-
-        .header-title .subtitle {
-            font-size: 0.85em;
-            color: #666;
-            font-style: italic;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .app-container {
-            max-width: 100%;
-            margin: 0 auto;
-            padding: 24px;
-            display: grid;
-            grid-template-columns: 320px minmax(600px, 1fr) 360px;
-            gap: 20px;
-            min-height: calc(100vh - 100px);
-        }
-
-        .control-panel {
-            background: #ffffff;
-            border-radius: 2px;
-            padding: 0;
-            height: fit-content;
-            max-height: calc(100vh - 140px);
-            overflow-y: auto;
-            border: 1px solid #d0d0d0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .panel-header {
-            position: sticky;
-            top: 0;
-            background: #f8f8f8;
-            padding: 16px 20px;
-            border-bottom: 1px solid #d0d0d0;
-            z-index: 10;
-        }
-
-        .panel-header h2 {
-            font-size: 1.1em;
-            font-weight: 500;
-            color: #1a1a1a;
-            margin: 0;
-            letter-spacing: 0.3px;
-        }
-
-        .panel-content {
-            padding: 18px;
-        }
-
-        .section-card {
-            background: #fafafa;
-            border-radius: 2px;
-            padding: 16px;
-            margin-bottom: 16px;
-            border: 1px solid #e0e0e0;
-            transition: all 0.2s ease;
-        }
-
-        .section-card:hover {
-            border-color: #999;
-        }
-
-        .section-card h3 {
-            color: #333;
-            margin-bottom: 14px;
-            font-size: 0.9em;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            user-select: none;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .section-card.collapsed .section-content {
-            display: none;
-        }
-
-        .section-content {
-            margin-top: 12px;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 5px 8px;
-            border-radius: 2px;
-            transition: background 0.15s;
-            font-size: 0.88em;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .checkbox-item:hover {
-            background: #f0f0f0;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            transform: scale(1.1);
-            accent-color: #333;
-        }
-
-        .visualization-panel {
-            background: #ffffff;
-            border-radius: 2px;
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            border: 1px solid #d0d0d0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .canvas-wrapper {
-            position: relative;
-            background: #000000;
-            border-radius: 2px;
-            border: 1px solid #b0b0b0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
             overflow: hidden;
         }
 
-        #canvas {
-            border-radius: 2px;
-            background: #000000;
-            border: 1px solid #999;
-            display: block;
+        .container {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            height: 100vh;
         }
 
-        .canvas-controls {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            padding: 12px 0;
-            border-top: 1px solid #e0e0e0;
-            flex-wrap: wrap;
+        .controls {
+            background: #1a1a1a;
+            padding: 20px;
+            overflow-y: auto;
+            border-right: 1px solid #333;
         }
 
-        .slider-group {
-            flex: 1;
-            min-width: 200px;
+        .canvas-container {
+            position: relative;
+            background: #000;
         }
 
-        .slider-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.85em;
-            color: #555;
+        h2 {
+            font-size: 1.2em;
+            margin-bottom: 16px;
+            color: #fff;
             font-weight: 500;
-            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .control-group {
+            background: #252525;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+
+        .control-group h3 {
+            font-size: 0.95em;
+            margin-bottom: 12px;
+            color: #aaa;
+            font-weight: 500;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.9em;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 8px;
+            background: #333;
+            border: 1px solid #555;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.9em;
+            margin-top: 4px;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #4a90e2;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 0.95em;
+            cursor: pointer;
+            margin-top: 12px;
+            font-weight: 500;
+        }
+
+        button:hover {
+            background: #357abd;
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .info {
+            background: #1a3a1a;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 0.85em;
+            color: #8f8;
+        }
+
+        .warning {
+            background: #3a2a1a;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+            font-size: 0.85em;
+            color: #fa8;
+        }
+
+        .stats {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            color: #8f8;
+            pointer-events: none;
         }
 
         input[type="range"] {
             width: 100%;
-            height: 4px;
-            background: #d0d0d0;
-            outline: none;
-            border-radius: 2px;
+            margin-top: 8px;
         }
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            background: #333;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-
-        input[type="range"]::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            background: #333;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-
-        button, .btn {
-            background: #333;
-            color: #fff;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 2px;
-            cursor: pointer;
-            font-size: 0.88em;
+        .range-value {
+            display: inline-block;
+            float: right;
+            color: #4a90e2;
             font-weight: 500;
-            transition: background 0.2s;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        button:hover, .btn:hover {
-            background: #1a1a1a;
-        }
-
-        button:active, .btn:active {
-            background: #000;
-        }
-
-        button.secondary {
-            background: #fff;
-            color: #333;
-            border: 1px solid #999;
-        }
-
-        button.secondary:hover {
-            background: #f0f0f0;
-        }
-
-        .analysis-panel {
-            background: #ffffff;
-            border-radius: 2px;
-            padding: 0;
-            height: fit-content;
-            max-height: calc(100vh - 140px);
-            overflow-y: auto;
-            border: 1px solid #d0d0d0;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        }
-
-        .ring-info, .unit-circle-info {
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-left: 3px solid #666;
-            padding: 12px;
-            margin-bottom: 12px;
-            font-size: 0.88em;
-            border-radius: 2px;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .unit-circle-info {
-            border-left-color: #333;
-            background: #f0f0f0;
-        }
-
-        .ring-info strong, .unit-circle-info strong {
-            color: #1a1a1a;
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.95em;
-        }
-
-        .math-notation {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-style: italic;
-            color: #444;
-        }
-
-        input[type="number"], input[type="text"], select {
-            background: #fff;
-            border: 1px solid #b0b0b0;
-            padding: 6px 10px;
-            border-radius: 2px;
-            font-size: 0.88em;
-            color: #1a1a1a;
-            font-family: 'Segoe UI', sans-serif;
-            width: 100%;
-        }
-
-        input[type="number"]:focus, input[type="text"]:focus, select:focus {
-            outline: none;
-            border-color: #666;
-        }
-
-        .form-group {
-            margin-bottom: 14px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.85em;
-            color: #555;
-            font-weight: 500;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .button-group {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .button-group button {
-            flex: 1;
-            min-width: 100px;
-        }
-
-        .status-message {
-            padding: 10px;
-            background: #f0f0f0;
-            border: 1px solid #d0d0d0;
-            border-radius: 2px;
-            margin-top: 12px;
-            font-size: 0.85em;
-            color: #555;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .analysis-content {
-            padding: 16px;
-        }
-
-        .custom-controls {
-            display: none;
-            margin-top: 12px;
-            padding: 12px;
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
-        }
-
-        .toggle-section {
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .section-divider {
-            height: 1px;
-            background: #d0d0d0;
-            margin: 20px 0;
-        }
-
-        #ringInfo {
-            max-height: calc(100vh - 200px);
-            overflow-y: auto;
-        }
-
-        .export-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .math-formula {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            font-style: italic;
-            padding: 8px;
-            background: #f8f8f8;
-            border-left: 2px solid #999;
-            margin: 8px 0;
-            font-size: 0.9em;
-        }
-
-        #searchResult {
-            padding: 10px;
-            margin-top: 10px;
-            background: #f8f8f8;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
-            font-size: 0.85em;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .color-legend {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 8px;
-            margin-top: 12px;
-        }
-
-        .color-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.82em;
-            font-family: 'Segoe UI', sans-serif;
-        }
-
-        .color-swatch {
-            width: 16px;
-            height: 16px;
-            border: 1px solid #999;
-            border-radius: 1px;
-        }
-
-        /* Scrollbar styling for research feel */
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f0f0f0;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #b0b0b0;
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #999;
-        }
-
-        @media (max-width: 1400px) {
-            .app-container {
-                grid-template-columns: 280px minmax(500px, 1fr) 320px;
-            }
-        }
-
-        @media (max-width: 1200px) {
-            .app-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .control-panel, .analysis-panel {
-                max-height: none;
-            }
         }
     </style>
 </head>
 <body>
-    <div class="app-header">
-        <div class="header-content">
-            <div class="header-title">
-                <h1>Interactive Modular Lifting Rings</h1>
-                <div class="subtitle">Riemann Hypothesis Research Tool – v8.0</div>
+    <div class="container">
+        <div class="controls">
+            <h2>Modular Rings Configuration</h2>
+            
+            <div class="control-group">
+                <h3>Ring Selection Mode</h3>
+                <select id="selectionMode">
+                    <option value="range">Range (M_start to M_end)</option>
+                    <option value="consecutive">Consecutive from M_start</option>
+                    <option value="nth">Every Nth from M_start</option>
+                </select>
             </div>
-            <div class="header-actions">
-                <button onclick="exportCanvasImage()" class="secondary">Export Image</button>
-                <button onclick="exportDetailedPrimeList()" class="secondary">Export Data</button>
-            </div>
-        </div>
-    </div>
 
-    <div class="app-container">
-        <div class="control-panel">
-            <div class="panel-header">
-                <h2>Configuration</h2>
-            </div>
-            <div class="panel-content">
-                <div class="section-card">
-                    <h3 class="toggle-section" onclick="toggleSection(this)">Ring Selection ▼</h3>
-                    <div class="section-content">
-                        <div id="ringControls" class="checkbox-group"></div>
-                        <div class="section-divider"></div>
-                        <div class="form-group">
-                            <label>Add Custom Modulus</label>
-                            <div style="display: flex; gap: 8px;">
-                                <input type="number" id="customModulus" placeholder="M" min="1">
-                                <button onclick="addCustomRing()" style="flex-shrink: 0;">Add</button>
-                            </div>
-                        </div>
+            <div class="control-group" id="rangeControls">
+                <h3>Range Configuration</h3>
+                <div class="grid-inputs">
+                    <div>
+                        <label>Start M:</label>
+                        <input type="number" id="startM" value="1" min="1" max="1000000">
                     </div>
-                </div>
-
-                <div class="section-card">
-                    <h3 class="toggle-section" onclick="toggleSection(this)">Gap Analysis ▼</h3>
-                    <div class="section-content">
-                        <div id="gapControls" class="checkbox-group"></div>
-                        <div class="section-divider"></div>
-                        <div class="form-group">
-                            <label>Generate Gap Range</label>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                                <input type="number" id="gapStart" placeholder="Start" value="2" min="2">
-                                <input type="number" id="gapEnd" placeholder="End" value="12" min="2">
-                            </div>
-                            <button onclick="generateGaps()" class="secondary" style="width: 100%;">Generate Gaps</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-card">
-                    <h3 class="toggle-section" onclick="toggleSection(this)">Visualization ▼</h3>
-                    <div class="section-content">
-                        <div class="form-group" style="margin-bottom: 12px;">
-                            <label><strong>Angular Positioning:</strong></label>
-                            <select id="angularMode" onchange="draw()" style="width: 100%; padding: 8px; border: 1px solid #d0d0d0; border-radius: 4px;">
-                                <option value="standard" selected>Standard: θ = 2πr/M</option>
-                                <option value="negative">Negative: θ = -2πr/M</option>
-                                <option value="complement">Complement: θ = 2π(M-r)/M</option>
-                                <option value="index">By Index Order</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group" style="margin-bottom: 12px;">
-                            <label><strong>GCD=1 Coloring:</strong></label>
-                            <select id="gcdColorMode" onchange="draw()" style="width: 100%; padding: 8px; border: 1px solid #d0d0d0; border-radius: 4px;">
-                                <option value="unified" selected>Unified White</option>
-                                <option value="by-modulus">Color per Modulus</option>
-                                <option value="by-residue">Color per Residue Value</option>
-                                <option value="angular">Angular Gradient</option>
-                                <option value="rainbow">Rainbow Spectrum</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label><strong>Non-GCD=1 Display:</strong></label>
-                            <select id="nonGcdMode" onchange="draw()" style="width: 100%; padding: 8px; border: 1px solid #d0d0d0; border-radius: 4px;">
-                                <option value="gray" selected>Gray (Dimmed)</option>
-                                <option value="red">Red (Highlighted)</option>
-                                <option value="hidden">Hidden</option>
-                            </select>
-                        </div>
-                        
-                        <div class="section-divider"></div>
-                        
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="showLabels">
-                                Display Residue Labels
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="showPrimeMarkers">
-                                Highlight Prime Locations
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-card">
-                    <h3 class="toggle-section" onclick="toggleSection(this)">Lift Operations ▼</h3>
-                    <div class="section-content">
-                        <div class="checkbox-group">
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="showDirectLifts" checked>
-                                Direct Lifts Only
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="showInverseLifts">
-                                Include Inverse Lifts
-                            </label>
-                            <label class="checkbox-item">
-                                <input type="checkbox" id="showDyadicLifts">
-                                Show Dyadic Lifts
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-card">
-                    <h3 class="toggle-section" onclick="toggleSection(this)">Prime Sieve ▼</h3>
-                    <div class="section-content">
-                        <div class="form-group">
-                            <label>Modulus</label>
-                            <input type="number" id="primeModulus" placeholder="M" value="30" min="2">
-                        </div>
-                        <div class="form-group">
-                            <label>Upper Limit</label>
-                            <input type="number" id="primeLimit" placeholder="Limit" value="1000" min="100">
-                        </div>
-                        <button onclick="runPrimeSieve()" style="width: 100%;">Compute Prime Distribution</button>
-                        <button onclick="clearPrimeSieve()" class="secondary" style="width: 100%; margin-top: 8px;">Clear Sieve</button>
-                        
-                        <div class="section-divider"></div>
-                        
-                        <button onclick="togglePrimeSearchMode()" class="secondary" style="width: 100%;">Search Prime Location</button>
-                        <div id="primeSearchControls" style="display: none; margin-top: 12px;">
-                            <div class="form-group">
-                                <label>Prime Number</label>
-                                <input type="number" id="searchPrime" placeholder="p" min="2">
-                            </div>
-                            <button onclick="findPrimeInResidue()" style="width: 100%;">Locate Prime</button>
-                            <div id="searchResult"></div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section-card">
-                    <h3 class="toggle-section" onclick="toggleSection(this)">Animation ▼</h3>
-                    <div class="section-content">
-                        <div class="form-group">
-                            <label>Animation Mode</label>
-                            <select id="animationMode">
-                                <option value="rotation">Rotation</option>
-                                <option value="zoom">Zoom</option>
-                                <option value="pulse">Pulse</option>
-                                <option value="none">None</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label>Speed</label>
-                            <input type="range" id="animSpeed" min="0.1" max="5" step="0.1" value="1">
-                        </div>
-                        <div class="form-group">
-                            <label>Resolution</label>
-                            <select id="animResolution">
-                                <option value="low">Low (512)</option>
-                                <option value="medium" selected>Medium (1024)</option>
-                                <option value="high">High (2048)</option>
-                                <option value="ultra">Ultra (4096)</option>
-                                <option value="custom">Custom</option>
-                            </select>
-                        </div>
-                        <div id="customResolutionControls" class="custom-controls">
-                            <div class="form-group">
-                                <label>Custom Resolution</label>
-                                <input type="number" id="customRes" placeholder="Width" value="1024" min="256" step="256">
-                            </div>
-                        </div>
-                        <div class="button-group">
-                            <button onclick="toggleAnimation()">Start</button>
-                            <button onclick="resetView()" class="secondary">Reset</button>
-                        </div>
+                    <div>
+                        <label>End M:</label>
+                        <input type="number" id="endM" value="60" min="1" max="1000000">
                     </div>
                 </div>
             </div>
+
+            <div class="control-group" id="consecutiveControls" style="display: none;">
+                <h3>Consecutive Configuration</h3>
+                <div class="grid-inputs">
+                    <div>
+                        <label>Start M:</label>
+                        <input type="number" id="consStartM" value="1" min="1" max="1000000">
+                    </div>
+                    <div>
+                        <label>Count:</label>
+                        <input type="number" id="consCount" value="60" min="1" max="10000">
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group" id="nthControls" style="display: none;">
+                <h3>Every Nth Configuration</h3>
+                <div class="grid-inputs">
+                    <div>
+                        <label>Start M:</label>
+                        <input type="number" id="nthStartM" value="1" min="1" max="1000000">
+                    </div>
+                    <div>
+                        <label>Step (N):</label>
+                        <input type="number" id="nthStep" value="10" min="1" max="100000">
+                    </div>
+                </div>
+                <label>Count:</label>
+                <input type="number" id="nthCount" value="100" min="1" max="10000">
+            </div>
+
+            <button onclick="generateRings()">Generate Rings</button>
+
+            <div class="control-group">
+                <h3>Angular Positioning</h3>
+                <select id="angularMode" onchange="render()">
+                    <option value="2pir/m">2πr/M (Standard)</option>
+                    <option value="-2pir/m">-2πr/M (Negative)</option>
+                    <option value="2pi(r-m)/m">2π(r-M)/M</option>
+                    <option value="2pi(m-r)/m">2π(M-r)/M (Complement)</option>
+                    <option value="2pi(r-m)/r">2π(r-M)/r</option>
+                    <option value="2pi(m-r)/r">2π(M-r)/r</option>
+                    <option value="0/n">0/n = 0° (All at zero)</option>
+                    <option value="n/n">n/n = 360° (All at full circle)</option>
+                    <option value="index">By Index Order</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <h3>Per-Ring Rotation</h3>
+                <div class="grid-inputs">
+                    <div>
+                        <label>r:</label>
+                        <input type="number" id="perRingR" value="0" min="0" step="1">
+                    </div>
+                    <div>
+                        <label>M:</label>
+                        <input type="number" id="perRingM" value="1" min="1" step="1">
+                    </div>
+                </div>
+                <label>
+                    Angle per ring: <span class="range-value" id="perRingAngle">0.0°</span>
+                </label>
+                <button onclick="applyPerRingRotation()">Apply</button>
+            </div>
+
+            <div class="control-group">
+                <h3>Display Controls</h3>
+                <label>
+                    Zoom: <span class="range-value" id="zoomValue">1.0</span>
+                </label>
+                <input type="range" id="zoom" min="0.1" max="5" step="0.1" value="1" oninput="updateZoom()">
+                
+                <label style="margin-top: 12px;">
+                    Rotation: <span class="range-value" id="rotationValue">0°</span>
+                </label>
+                <input type="range" id="rotation" min="0" max="360" step="1" value="0" oninput="updateRotation()">
+                
+                <label style="margin-top: 12px;">
+                    Point Size: <span class="range-value" id="pointSizeValue">2</span>
+                </label>
+                <input type="range" id="pointSize" min="1" max="10" step="0.5" value="2" oninput="updatePointSize()">
+            </div>
+
+            <div id="statsInfo"></div>
         </div>
 
-        <div class="visualization-panel">
-            <div class="canvas-wrapper">
-                <canvas id="canvas" width="1024" height="1024"></canvas>
-            </div>
-            <div class="canvas-controls">
-                <div class="slider-group">
-                    <label>Zoom: <span id="zoomValue">1.0</span></label>
-                    <input type="range" id="zoomSlider" min="0.1" max="5" step="0.1" value="1">
-                </div>
-                <div class="slider-group">
-                    <label>Rotation: <span id="rotationValue">0°</span></label>
-                    <input type="range" id="rotationSlider" min="0" max="360" step="1" value="0">
-                </div>
-                <div class="slider-group" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #444;">
-                    <label style="font-weight: 500; margin-bottom: 8px; display: block;">Per-Ring Rotation: r/M × 2π</label>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 8px; align-items: center;">
-                        <input type="number" id="ringRotR" placeholder="r" value="1" min="0" step="1" 
-                               oninput="updateRingRotDegrees()" 
-                               style="padding: 6px; border: 1px solid #666; background: #1a1a1a; color: #fff; border-radius: 2px;">
-                        <input type="number" id="ringRotM" placeholder="M" value="2" min="1" step="1" 
-                               oninput="updateRingRotDegrees()" 
-                               style="padding: 6px; border: 1px solid #666; background: #1a1a1a; color: #fff; border-radius: 2px;">
-                        <span style="text-align: center; color: #888; font-size: 0.9em;" id="ringRotDegrees">180.0°</span>
-                        <button onclick="applyRingRotation()" 
-                                style="padding: 6px 12px; background: #2a5; color: #fff; border: none; border-radius: 2px; cursor: pointer; white-space: nowrap;">Apply</button>
-                    </div>
-                    <div style="font-size: 0.75em; color: #888; margin-top: 6px; font-style: italic;">
-                        Each ring rotates incrementally by this angle
-                    </div>
-                </div>
-            </div>
-            <div id="animationStatus" class="status-message"></div>
-        </div>
-
-        <div class="analysis-panel">
-            <div class="panel-header">
-                <h2>Analysis</h2>
-            </div>
-            <div class="analysis-content">
-                <div id="ringInfo"></div>
+        <div class="canvas-container" id="canvasContainer">
+            <div class="stats" id="stats">
+                FPS: --<br>
+                Rings: 0<br>
+                Points: 0
             </div>
         </div>
     </div>
 
     <script>
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        let animationId = null;
-        let currentRotation = 0;
+        // PIXI.js Application
+        let app;
+        let container;
+        let rings = [];
         let currentZoom = 1.0;
-        let animationTime = 0;
+        let currentRotation = 0;
+        let pointSize = 2;
+        let perRingRotation = 0;
+        let lastFrameTime = performance.now();
+        let frameCount = 0;
+        let fps = 60;
 
-        // M_n configurations based on advanced number theory patterns
-        const configs = {
-            'unit': { mod: 1, label: '1', description: 'Unit Circle' },
-            '2': { mod: 2, label: '2', description: 'M_2 = 2' },
-            '3': { mod: 6, label: '6', description: 'M_3 = 2×3' },
-            '4': { mod: 30, label: '30', description: 'M_4 = 2×3×5' },
-            '5': { mod: 210, label: '210', description: 'M_5 = 2×3×5×7' },
-            '6': { mod: 2310, label: '2310', description: 'M_6 = 2×3×5×7×11' },
-            '7': { mod: 30030, label: '30030', description: 'M_7 = 2×3×5×7×11×13' }
-        };
+        // Initialize PIXI
+        function init() {
+            const canvasContainer = document.getElementById('canvasContainer');
+            
+            app = new PIXI.Application({
+                width: canvasContainer.clientWidth,
+                height: canvasContainer.clientHeight,
+                backgroundColor: 0x000000,
+                antialias: true,
+                resolution: window.devicePixelRatio || 1,
+                autoDensity: true
+            });
 
-        // Prime sieve data structure
-        let primeData = {
-            isActive: false,
-            modulus: 0,
-            limit: 0,
-            totalPrimes: 0,
-            residueDistribution: {}
-        };
+            canvasContainer.appendChild(app.view);
+            
+            container = new PIXI.Container();
+            app.stage.addChild(container);
 
+            // Center the container
+            container.x = app.screen.width / 2;
+            container.y = app.screen.height / 2;
+
+            // Handle window resize
+            window.addEventListener('resize', () => {
+                app.renderer.resize(canvasContainer.clientWidth, canvasContainer.clientHeight);
+                container.x = app.screen.width / 2;
+                container.y = app.screen.height / 2;
+                render();
+            });
+
+            // Start render loop
+            app.ticker.add(updateFPS);
+
+            // Update per-ring angle display
+            updatePerRingAngleDisplay();
+
+            // Generate initial rings
+            generateRings();
+        }
+
+        function updateFPS() {
+            const now = performance.now();
+            frameCount++;
+            
+            if (now - lastFrameTime >= 1000) {
+                fps = frameCount;
+                frameCount = 0;
+                lastFrameTime = now;
+                updateStats();
+            }
+        }
+
+        function updateStats() {
+            const totalPoints = rings.reduce((sum, ring) => sum + ring.coprimes.length, 0);
+            document.getElementById('stats').innerHTML = `
+                FPS: ${fps}<br>
+                Rings: ${rings.length}<br>
+                Points: ${totalPoints.toLocaleString()}
+            `;
+        }
+
+        // GCD function
         function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
             while (b !== 0) {
-                let temp = b;
+                const t = b;
                 b = a % b;
-                a = temp;
+                a = t;
             }
             return a;
         }
 
-        function getCoprimes(n) {
-            if (n === 1) return [0];
+        // Get coprimes for a modulus
+        function getCoprimes(mod) {
             const coprimes = [];
-            for (let i = 0; i < n; i++) {
-                if (gcd(i, n) === 1) {
-                    coprimes.push(i);
+            for (let r = 0; r < mod; r++) {
+                if (gcd(r, mod) === 1) {
+                    coprimes.push(r);
                 }
             }
             return coprimes;
         }
 
-        function isPrime(num) {
-            if (num < 2) return false;
-            if (num === 2) return true;
-            if (num % 2 === 0) return false;
-            for (let i = 3; i <= Math.sqrt(num); i += 2) {
-                if (num % i === 0) return false;
+        // Selection mode handling
+        document.getElementById('selectionMode').addEventListener('change', function() {
+            document.getElementById('rangeControls').style.display = 'none';
+            document.getElementById('consecutiveControls').style.display = 'none';
+            document.getElementById('nthControls').style.display = 'none';
+            
+            switch(this.value) {
+                case 'range':
+                    document.getElementById('rangeControls').style.display = 'block';
+                    break;
+                case 'consecutive':
+                    document.getElementById('consecutiveControls').style.display = 'block';
+                    break;
+                case 'nth':
+                    document.getElementById('nthControls').style.display = 'block';
+                    break;
             }
-            return true;
-        }
+        });
 
-        function sieveOfEratosthenes(limit) {
-            const primes = [];
-            const isPrimeArray = new Array(limit + 1).fill(true);
-            isPrimeArray[0] = isPrimeArray[1] = false;
+        // Generate rings based on selection mode
+        function generateRings() {
+            const mode = document.getElementById('selectionMode').value;
+            const mods = [];
 
-            for (let i = 2; i <= Math.sqrt(limit); i++) {
-                if (isPrimeArray[i]) {
-                    for (let j = i * i; j <= limit; j += i) {
-                        isPrimeArray[j] = false;
+            switch(mode) {
+                case 'range': {
+                    const start = parseInt(document.getElementById('startM').value);
+                    const end = parseInt(document.getElementById('endM').value);
+                    
+                    if (start > end) {
+                        alert('Start M must be <= End M');
+                        return;
                     }
+                    
+                    for (let m = start; m <= end; m++) {
+                        mods.push(m);
+                    }
+                    break;
                 }
-            }
-
-            for (let i = 2; i <= limit; i++) {
-                if (isPrimeArray[i]) {
-                    primes.push(i);
-                }
-            }
-            return primes;
-        }
-
-        function runPrimeSieve() {
-            const modulus = parseInt(document.getElementById('primeModulus').value);
-            const limit = parseInt(document.getElementById('primeLimit').value);
-
-            if (!modulus || modulus < 2) {
-                alert('Please enter a valid modulus ≥ 2');
-                return;
-            }
-
-            if (!limit || limit < 100) {
-                alert('Please enter a valid limit ≥ 100');
-                return;
-            }
-
-            updateAnimationStatus(`Computing prime distribution mod ${modulus} up to ${limit}...`);
-
-            setTimeout(() => {
-                const primes = sieveOfEratosthenes(limit);
-                const coprimes = getCoprimes(modulus);
                 
-                primeData.isActive = true;
-                primeData.modulus = modulus;
-                primeData.limit = limit;
-                primeData.totalPrimes = primes.length;
-                primeData.residueDistribution = {};
-
-                coprimes.forEach(r => {
-                    primeData.residueDistribution[r] = {
-                        count: 0,
-                        percentage: 0,
-                        primes: []
-                    };
-                });
-
-                primes.forEach(p => {
-                    const residue = p % modulus;
-                    if (primeData.residueDistribution[residue]) {
-                        primeData.residueDistribution[residue].count++;
-                        primeData.residueDistribution[residue].primes.push(p);
+                case 'consecutive': {
+                    const start = parseInt(document.getElementById('consStartM').value);
+                    const count = parseInt(document.getElementById('consCount').value);
+                    
+                    for (let i = 0; i < count; i++) {
+                        mods.push(start + i);
                     }
-                });
-
-                Object.keys(primeData.residueDistribution).forEach(r => {
-                    const data = primeData.residueDistribution[r];
-                    data.percentage = ((data.count / primes.length) * 100).toFixed(2);
-                });
-
-                updateAnimationStatus(`Prime sieve complete: ${primes.length} primes distributed across φ(${modulus}) = ${coprimes.length} residue classes`);
-                updateInfo();
-                draw();
-            }, 50);
-        }
-
-        function clearPrimeSieve() {
-            primeData.isActive = false;
-            primeData.modulus = 0;
-            primeData.limit = 0;
-            primeData.totalPrimes = 0;
-            primeData.residueDistribution = {};
-            updateAnimationStatus('Prime sieve data cleared');
-            updateInfo();
-            draw();
-        }
-
-        function toggleSection(header) {
-            const card = header.parentElement;
-            card.classList.toggle('collapsed');
-            const arrow = header.textContent.includes('▼') ? '▶' : '▼';
-            header.textContent = header.textContent.replace(/[▼▶]/, arrow);
-        }
-
-        function getActiveRings() {
-            const rings = [];
-            const checkboxes = document.querySelectorAll('#ringControls input[type="checkbox"]');
-            
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    const n = cb.dataset.n;
-                    const config = configs[n];
-                    if (config) {
-                        rings.push({
-                            n: n,
-                            mod: config.mod,
-                            label: config.label,
-                            coprimes: getCoprimes(config.mod)
-                        });
+                    break;
+                }
+                
+                case 'nth': {
+                    const start = parseInt(document.getElementById('nthStartM').value);
+                    const step = parseInt(document.getElementById('nthStep').value);
+                    const count = parseInt(document.getElementById('nthCount').value);
+                    
+                    for (let i = 0; i < count; i++) {
+                        mods.push(start + (i * step));
                     }
+                    break;
                 }
-            });
-
-            return rings.sort((a, b) => a.mod - b.mod);
-        }
-
-        function getSelectedGaps() {
-            const gaps = [];
-            const checkboxes = document.querySelectorAll('#gapControls input[type="checkbox"]');
-            
-            checkboxes.forEach(cb => {
-                if (cb.checked) {
-                    gaps.push(parseInt(cb.dataset.gap));
-                }
-            });
-
-            return gaps.sort((a, b) => a - b);
-        }
-
-        function addRingControl(n, label, checked = false) {
-            const container = document.getElementById('ringControls');
-            const div = document.createElement('label');
-            div.className = 'checkbox-item';
-            
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = checked;
-            checkbox.dataset.n = n;
-            
-            const text = document.createTextNode(label);
-            
-            div.appendChild(checkbox);
-            div.appendChild(text);
-            container.appendChild(div);
-        }
-
-        function addGapControl(gap, checked = false) {
-            const container = document.getElementById('gapControls');
-            const div = document.createElement('label');
-            div.className = 'checkbox-item';
-            
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = checked;
-            checkbox.dataset.gap = gap;
-            
-            const text = document.createTextNode(`Gap ${gap}`);
-            
-            div.appendChild(checkbox);
-            div.appendChild(text);
-            container.appendChild(div);
-        }
-
-        function addCustomRing() {
-            const modInput = document.getElementById('customModulus');
-            const mod = parseInt(modInput.value);
-
-            if (!mod || mod < 1) {
-                alert('Please enter a valid modulus ≥ 1');
-                return;
             }
 
-            const customId = `custom_${mod}`;
-            if (configs[customId]) {
-                alert('This modulus already exists');
-                return;
+            // Check if too many rings
+            const totalCoprimes = mods.reduce((sum, m) => {
+                let count = 0;
+                for (let r = 0; r < m; r++) {
+                    if (gcd(r, m) === 1) count++;
+                }
+                return sum + count;
+            }, 0);
+
+            const statsDiv = document.getElementById('statsInfo');
+            
+            if (totalCoprimes > 1000000) {
+                statsDiv.innerHTML = `<div class="warning">⚠️ Warning: ${totalCoprimes.toLocaleString()} points may cause slowdown. Consider reducing the range.</div>`;
+            } else if (totalCoprimes > 100000) {
+                statsDiv.innerHTML = `<div class="info">ℹ️ Generating ${totalCoprimes.toLocaleString()} points...</div>`;
+            } else {
+                statsDiv.innerHTML = `<div class="info">✓ ${totalCoprimes.toLocaleString()} points</div>`;
             }
 
-            configs[customId] = {
+            // Build rings data structure
+            rings = mods.map(mod => ({
                 mod: mod,
-                label: mod.toString(),
-                description: `Custom modulus ${mod}`
-            };
+                coprimes: getCoprimes(mod)
+            }));
 
-            addRingControl(customId, `M${mod} (Custom)`, true);
-            modInput.value = '';
-            draw();
+            render();
         }
 
-        function generateGaps() {
-            const start = parseInt(document.getElementById('gapStart').value);
-            const end = parseInt(document.getElementById('gapEnd').value);
+        // Calculate angle based on mode
+        function calculateAngle(residue, residueIndex, mod, coprimes, ringIndex) {
+            const mode = document.getElementById('angularMode').value;
+            let angle;
 
-            if (!start || !end || start < 2 || end < start) {
-                alert('Please enter valid gap range (start ≥ 2, end ≥ start)');
-                return;
+            switch(mode) {
+                case '2pir/m':
+                    angle = (2 * Math.PI * residue) / mod;
+                    break;
+                case '-2pir/m':
+                    angle = -(2 * Math.PI * residue) / mod;
+                    break;
+                case '2pi(r-m)/m':
+                    angle = (2 * Math.PI * (residue - mod)) / mod;
+                    break;
+                case '2pi(m-r)/m':
+                    angle = (2 * Math.PI * (mod - residue)) / mod;
+                    break;
+                case '2pi(r-m)/r':
+                    angle = residue !== 0 ? (2 * Math.PI * (residue - mod)) / residue : 0;
+                    break;
+                case '2pi(m-r)/r':
+                    angle = residue !== 0 ? (2 * Math.PI * (mod - residue)) / residue : 0;
+                    break;
+                case '0/n':
+                    angle = 0;
+                    break;
+                case 'n/n':
+                    angle = 2 * Math.PI;
+                    break;
+                case 'index':
+                    angle = (2 * Math.PI * residueIndex) / coprimes.length;
+                    break;
+                default:
+                    angle = (2 * Math.PI * residue) / mod;
             }
 
-            const container = document.getElementById('gapControls');
-            container.innerHTML = '';
+            // Apply per-ring rotation
+            angle += ringIndex * perRingRotation;
 
-            for (let gap = start; gap <= end; gap++) {
-                addGapControl(gap, false);
-            }
-
-            updateAnimationStatus(`Generated gaps from ${start} to ${end}`);
+            return angle;
         }
 
+        // Main render function
+        function render() {
+            // Clear container
+            container.removeChildren();
+
+            if (rings.length === 0) return;
+
+            const maxRadius = Math.min(app.screen.width, app.screen.height) * 0.45 * currentZoom;
+            const radiusStep = maxRadius / rings.length;
+
+            // Create graphics object for all points
+            const graphics = new PIXI.Graphics();
+
+            rings.forEach((ring, ringIndex) => {
+                const radius = radiusStep * (ringIndex + 1);
+                const coprimes = ring.coprimes;
+
+                coprimes.forEach((residue, residueIndex) => {
+                    const angle = calculateAngle(residue, residueIndex, ring.mod, coprimes, ringIndex);
+                    
+                    const x = radius * Math.cos(angle);
+                    const y = radius * Math.sin(angle);
+
+                    // Draw point
+                    graphics.beginFill(0xFFFFFF);
+                    graphics.drawCircle(x, y, pointSize);
+                    graphics.endFill();
+                });
+            });
+
+            container.addChild(graphics);
+            container.rotation = (currentRotation * Math.PI) / 180;
+
+            updateStats();
+        }
+
+        // Control functions
         function updateZoom() {
-            currentZoom = parseFloat(document.getElementById('zoomSlider').value);
+            currentZoom = parseFloat(document.getElementById('zoom').value);
             document.getElementById('zoomValue').textContent = currentZoom.toFixed(1);
-            draw();
+            render();
         }
 
         function updateRotation() {
-            currentRotation = parseFloat(document.getElementById('rotationSlider').value);
+            currentRotation = parseFloat(document.getElementById('rotation').value);
             document.getElementById('rotationValue').textContent = currentRotation.toFixed(0) + '°';
-            draw();
+            render();
         }
 
-        function resetView() {
-            currentZoom = 1.0;
-            currentRotation = 0;
-            document.getElementById('zoomSlider').value = currentZoom;
-            document.getElementById('rotationSlider').value = currentRotation;
-            document.getElementById('zoomValue').textContent = '1.0';
-            document.getElementById('rotationValue').textContent = '0°';
-            draw();
+        function updatePointSize() {
+            pointSize = parseFloat(document.getElementById('pointSize').value);
+            document.getElementById('pointSizeValue').textContent = pointSize.toFixed(1);
+            render();
         }
 
-        function toggleAnimation() {
-            if (animationId) {
-                cancelAnimationFrame(animationId);
-                animationId = null;
-                updateAnimationStatus('Animation stopped');
-            } else {
-                animationTime = 0;
-                animate();
-                updateAnimationStatus('Animation running');
-            }
-        }
-
-        function animate() {
-            const mode = document.getElementById('animationMode').value;
-            const speed = parseFloat(document.getElementById('animSpeed').value);
-
-            animationTime += 0.016 * speed;
-
-            switch (mode) {
-                case 'rotation':
-                    currentRotation = (animationTime * 20) % 360;
-                    document.getElementById('rotationSlider').value = currentRotation;
-                    document.getElementById('rotationValue').textContent = currentRotation.toFixed(0) + '°';
-                    break;
-                case 'zoom':
-                    currentZoom = 1.0 + 0.5 * Math.sin(animationTime);
-                    document.getElementById('zoomSlider').value = currentZoom;
-                    document.getElementById('zoomValue').textContent = currentZoom.toFixed(1);
-                    break;
-                case 'pulse':
-                    currentZoom = 1.0 + 0.2 * Math.sin(animationTime * 2);
-                    document.getElementById('zoomSlider').value = currentZoom;
-                    document.getElementById('zoomValue').textContent = currentZoom.toFixed(1);
-                    break;
-            }
-
-            draw();
-            animationId = requestAnimationFrame(animate);
-        }
-
-        function updateAnimationStatus(message) {
-            document.getElementById('animationStatus').textContent = message;
-        }
-
-        function getColorForAngle(angle) {
-            const hue = (angle / (2 * Math.PI)) * 360;
-            return `hsl(${hue}, 70%, 60%)`;
-        }
-
-        function getColorForDistance(distance, maxDistance) {
-            const normalized = distance / maxDistance;
-            const hue = (1 - normalized) * 240;
-            return `hsl(${hue}, 70%, 60%)`;
-        }
-
-        // Per-ring rotation state
-        let perRingRotation = 0; // In radians
-        
-        function updateRingRotDegrees() {
-            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
-            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+        function updatePerRingAngleDisplay() {
+            const r = parseFloat(document.getElementById('perRingR').value) || 0;
+            const m = parseFloat(document.getElementById('perRingM').value) || 1;
             const degrees = (r / m) * 360;
-            document.getElementById('ringRotDegrees').textContent = degrees.toFixed(1) + '°';
+            document.getElementById('perRingAngle').textContent = degrees.toFixed(1) + '°';
         }
-        
-        function applyRingRotation() {
-            const r = parseFloat(document.getElementById('ringRotR').value) || 0;
-            const m = parseFloat(document.getElementById('ringRotM').value) || 1;
+
+        function applyPerRingRotation() {
+            const r = parseFloat(document.getElementById('perRingR').value) || 0;
+            const m = parseFloat(document.getElementById('perRingM').value) || 1;
             
             if (m === 0) {
                 alert('M cannot be zero');
@@ -1065,430 +579,16 @@
             }
             
             perRingRotation = (r / m) * 2 * Math.PI;
-            updateRingRotDegrees();
-            draw();
-            
-            updateAnimationStatus(`Per-ring rotation: ${r}/${m} × 2π = ${((r/m)*360).toFixed(1)}° per ring`);
+            updatePerRingAngleDisplay();
+            render();
         }
 
-        function draw() {
-            const width = canvas.width;
-            const height = canvas.height;
-            const centerX = width / 2;
-            const centerY = height / 2;
+        // Update per-ring angle display on input
+        document.getElementById('perRingR').addEventListener('input', updatePerRingAngleDisplay);
+        document.getElementById('perRingM').addEventListener('input', updatePerRingAngleDisplay);
 
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(0, 0, width, height);
-
-            const rings = getActiveRings();
-            const gaps = getSelectedGaps();
-            const showLabels = document.getElementById('showLabels').checked;
-            const showPrimes = document.getElementById('showPrimeMarkers').checked;
-            const showDirectLifts = document.getElementById('showDirectLifts').checked;
-            const showInverseLifts = document.getElementById('showInverseLifts').checked;
-            const showDyadicLifts = document.getElementById('showDyadicLifts').checked;
-
-            if (rings.length === 0) return;
-
-            const maxRadius = Math.min(width, height) * 0.4 * currentZoom;
-            const radiusStep = maxRadius / rings.length;
-
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            ctx.rotate((currentRotation * Math.PI) / 180);
-
-            rings.forEach((ring, ringIndex) => {
-                const radius = radiusStep * (ringIndex + 1);
-                const coprimes = ring.coprimes;
-
-                coprimes.forEach((residue, residueIndex) => {
-                    // Calculate base angle based on selected mode
-                    const angularMode = document.getElementById('angularMode').value;
-                    let angle;
-                    
-                    switch(angularMode) {
-                        case 'standard':
-                            angle = (2 * Math.PI * residue) / ring.mod;
-                            break;
-                        case 'negative':
-                            angle = -(2 * Math.PI * residue) / ring.mod;
-                            break;
-                        case 'complement':
-                            angle = (2 * Math.PI * (ring.mod - residue)) / ring.mod;
-                            break;
-                        case 'index':
-                            angle = (2 * Math.PI * residueIndex) / coprimes.length;
-                            break;
-                        default:
-                            angle = (2 * Math.PI * residue) / ring.mod;
-                    }
-                    
-                    angle += ringIndex * perRingRotation;  // Add per-ring rotation
-                    const x = radius * Math.cos(angle);
-                    const y = radius * Math.sin(angle);
-
-                    // Determine if this is GCD=1
-                    const isGcdOne = gcd(residue, ring.mod) === 1;
-                    
-                    // Get color based on GCD status and mode
-                    let color;
-                    const gcdColorMode = document.getElementById('gcdColorMode').value;
-                    const nonGcdMode = document.getElementById('nonGcdMode').value;
-                    
-                    if (isGcdOne) {
-                        // GCD=1 coloring
-                        switch(gcdColorMode) {
-                            case 'unified':
-                                color = '#FFFFFF';
-                                break;
-                            case 'by-modulus':
-                                const modHue = (ringIndex * 360 / rings.length) % 360;
-                                color = `hsl(${modHue}, 70%, 60%)`;
-                                break;
-                            case 'by-residue':
-                                const resHue = (residue * 360 / ring.mod) % 360;
-                                color = `hsl(${resHue}, 70%, 60%)`;
-                                break;
-                            case 'angular':
-                                color = getColorForAngle(angle);
-                                break;
-                            case 'rainbow':
-                                const rainbowHue = (residueIndex * 360 / coprimes.length) % 360;
-                                color = `hsl(${rainbowHue}, 80%, 65%)`;
-                                break;
-                            default:
-                                color = '#FFFFFF';
-                        }
-                    } else {
-                        // Non-GCD=1 coloring
-                        switch(nonGcdMode) {
-                            case 'gray':
-                                color = 'rgba(128, 128, 128, 0.4)';
-                                break;
-                            case 'red':
-                                color = 'rgba(255, 80, 80, 0.7)';
-                                break;
-                            case 'hidden':
-                                return; // Skip rendering
-                            default:
-                                color = 'rgba(128, 128, 128, 0.4)';
-                        }
-                    }
-
-                    if (primeData.isActive && primeData.modulus === ring.mod) {
-                        const data = primeData.residueDistribution[residue];
-                        if (data && data.count > 0) {
-                            const intensity = Math.min(data.count / 50, 1);
-                            ctx.fillStyle = `rgba(255, 215, 0, ${0.3 + intensity * 0.7})`;
-                            ctx.beginPath();
-                            ctx.arc(x, y, 6, 0, 2 * Math.PI);
-                            ctx.fill();
-                        }
-                    }
-
-                    ctx.fillStyle = color;
-                    ctx.beginPath();
-                    ctx.arc(x, y, 3, 0, 2 * Math.PI);
-                    ctx.fill();
-
-                    if (showLabels) {
-                        ctx.fillStyle = '#FFFFFF';
-                        ctx.font = '10px "Segoe UI"';
-                        ctx.fillText(residue.toString(), x + 6, y - 6);
-                    }
-                });
-
-                if (showDirectLifts && ringIndex < rings.length - 1) {
-                    const nextRing = rings[ringIndex + 1];
-                    const nextRadius = radiusStep * (ringIndex + 2);
-
-                    coprimes.forEach(r1 => {
-                        const angle1 = (2 * Math.PI * r1) / ring.mod;
-                        const x1 = radius * Math.cos(angle1);
-                        const y1 = radius * Math.sin(angle1);
-
-                        nextRing.coprimes.forEach(r2 => {
-                            if (r2 % ring.mod === r1) {
-                                const angle2 = (2 * Math.PI * r2) / nextRing.mod;
-                                const x2 = nextRadius * Math.cos(angle2);
-                                const y2 = nextRadius * Math.sin(angle2);
-
-                                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
-                                ctx.lineWidth = 0.5;
-                                ctx.beginPath();
-                                ctx.moveTo(x1, y1);
-                                ctx.lineTo(x2, y2);
-                                ctx.stroke();
-                            }
-                        });
-                    });
-                }
-            });
-
-            ctx.restore();
-
-            updateInfo();
-        }
-
-        function updateInfo() {
-            const info = document.getElementById('ringInfo');
-            const rings = getActiveRings();
-
-            if (rings.length === 0) {
-                info.innerHTML = '<div class="ring-info">No rings selected</div>';
-                return;
-            }
-
-            let html = '';
-            let totalResidues = 0;
-
-            rings.forEach((ring, idx) => {
-                totalResidues += ring.coprimes.length;
-                
-                const ringTitle = ring.n === 'unit' ? 'Unit Circle' : `Ring ${idx + 1}`;
-                const modLabel = ring.n === 'unit' ? '1' : ring.label;
-                
-                let specialNote = '';
-                if (ring.n === 'unit') {
-                    specialNote = '<br><em>Reference configuration</em>';
-                }
-                
-                const infoClass = ring.n === 'unit' ? 'unit-circle-info' : 'ring-info';
-                
-                const displayResidues = ring.coprimes.length > 5 
-                    ? `${ring.coprimes.slice(0, 5).join(', ')}...` 
-                    : ring.coprimes.join(', ');
-                
-                html += `<div class="${infoClass}">
-                    <strong>${ringTitle}</strong><br>
-                    <em class="math-notation">M = ${modLabel}</em><br>
-                    <em class="math-notation">φ(M) = ${ring.coprimes.length}</em><br>
-                    Residues: [${displayResidues}]
-                    ${specialNote}
-                </div>`;
-            });
-
-            const gaps = getSelectedGaps();
-            if (gaps.length > 0) {
-                html += `<div class="ring-info">
-                    <strong>Active Gap Analysis:</strong><br>
-                    Gaps: [${gaps.join(', ')}]<br>
-                    <em>Exploring prime gap patterns across ${rings.length} ring${rings.length > 1 ? 's' : ''}</em>
-                </div>`;
-            }
-
-            if (primeData.isActive) {
-                const eulerPhi = getCoprimes(primeData.modulus).length;
-                const avgPrimesPerResidue = (primeData.totalPrimes / eulerPhi).toFixed(1);
-                
-                html += `<div class="ring-info" style="border-left: 3px solid #333;">
-                    <strong>Prime Sieve Analysis:</strong><br>
-                    Modulus: ${primeData.modulus}, Limit: ${primeData.limit}<br>
-                    Total Primes: ${primeData.totalPrimes}<br>
-                    Avg per residue: ${avgPrimesPerResidue}<br>
-                    <em>Distribution across φ(${primeData.modulus}) = ${eulerPhi} classes</em>
-                </div>`;
-            }
-
-            html += `<div class="ring-info">
-                <strong>System Summary:</strong><br>
-                Total Rings: ${rings.length}<br>
-                Total Residues: ${totalResidues}<br>
-                <em class="math-notation">∑φ(M<sub>i</sub>) = ${totalResidues}</em>
-            </div>`;
-
-            info.innerHTML = html;
-        }
-
-        function exportDetailedPrimeList() {
-            if (!primeData.isActive) {
-                alert('No prime data to export. Run a sieve first.');
-                return;
-            }
-            
-            let exportText = `Complete Prime Distribution Analysis\n`;
-            exportText += `Modulus: ${primeData.modulus}, Limit: ${primeData.limit}\n`;
-            exportText += `Total Primes: ${primeData.totalPrimes}\n`;
-            exportText += `Generated: ${new Date().toISOString()}\n\n`;
-            
-            const sortedResidues = Object.keys(primeData.residueDistribution).sort((a, b) => parseInt(a) - parseInt(b));
-            
-            sortedResidues.forEach(residue => {
-                const data = primeData.residueDistribution[residue];
-                exportText += `\n=== Residue Class r ≡ ${residue} (mod ${primeData.modulus}) ===\n`;
-                exportText += `Count: ${data.count} primes (${data.percentage}%)\n`;
-                
-                if (data.count === 0) {
-                    exportText += `No primes in this residue class\n`;
-                } else {
-                    exportText += `All ${data.count} primes: `;
-                    for (let i = 0; i < data.primes.length; i += 15) {
-                        if (i > 0) exportText += '\n                     ';
-                        exportText += data.primes.slice(i, i + 15).join(', ');
-                        if (i + 15 < data.primes.length) exportText += ',';
-                    }
-                    exportText += '\n';
-                }
-            });
-            
-            const dataBlob = new Blob([exportText], {type: 'text/plain'});
-            const url = URL.createObjectURL(dataBlob);
-            
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `complete_prime_distribution_mod${primeData.modulus}_to_${primeData.limit}.txt`;
-            link.click();
-            
-            URL.revokeObjectURL(url);
-            updateAnimationStatus('Complete prime distribution exported');
-        }
-        
-        function togglePrimeSearchMode() {
-            const controls = document.getElementById('primeSearchControls');
-            const isVisible = controls.style.display !== 'none';
-            controls.style.display = isVisible ? 'none' : 'block';
-            
-            if (!isVisible) {
-                document.getElementById('searchPrime').focus();
-            }
-        }
-        
-        function findPrimeInResidue() {
-            const searchPrime = parseInt(document.getElementById('searchPrime').value);
-            const result = document.getElementById('searchResult');
-            
-            if (!primeData.isActive) {
-                result.innerHTML = '<span style="color: #CC0000;">No sieve data available. Run a prime sieve first.</span>';
-                return;
-            }
-            
-            if (!searchPrime || searchPrime < 2) {
-                result.innerHTML = '<span style="color: #CC0000;">Please enter a valid prime number ≥ 2.</span>';
-                return;
-            }
-            
-            if (!isPrime(searchPrime)) {
-                result.innerHTML = `<span style="color: #CC0000;">${searchPrime} is not a prime number.</span>`;
-                return;
-            }
-            
-            if (searchPrime > primeData.limit) {
-                result.innerHTML = `<span style="color: #CC8800;">Prime ${searchPrime} is beyond sieve limit ${primeData.limit}. Cannot verify presence in residue classes.</span>`;
-                return;
-            }
-            
-            const residue = searchPrime % primeData.modulus;
-            const residueData = primeData.residueDistribution[residue];
-            
-            if (residueData && residueData.primes.includes(searchPrime)) {
-                const position = residueData.primes.indexOf(searchPrime) + 1;
-                result.innerHTML = `
-                    <span style="color: #006600;"><strong>✓ Found</strong></span><br>
-                    Prime ${searchPrime} ≡ ${residue} (mod ${primeData.modulus})<br>
-                    Position ${position} of ${residueData.count} primes in this residue class<br>
-                    <em>This residue class contains ${residueData.percentage}% of all primes up to ${primeData.limit}</em>
-                `;
-            } else if (gcd(residue, primeData.modulus) !== 1) {
-                result.innerHTML = `
-                    <span style="color: #CC0000;"><strong>Impossible</strong></span><br>
-                    Prime ${searchPrime} ≡ ${residue} (mod ${primeData.modulus})<br>
-                    But gcd(${residue}, ${primeData.modulus}) = ${gcd(residue, primeData.modulus)} ≠ 1<br>
-                    <em>This residue class cannot contain primes (except possibly small exceptions)</em>
-                `;
-            } else {
-                result.innerHTML = `
-                    <span style="color: #CC8800;"><strong>Not found in sieve data</strong></span><br>
-                    Prime ${searchPrime} should be ≡ ${residue} (mod ${primeData.modulus})<br>
-                    <em>This may indicate the prime is beyond the sieve limit or there's a calculation error</em>
-                `;
-            }
-        }
-
-        function exportCanvasImage() {
-            const resolution = document.getElementById('animResolution').value;
-            let width, height;
-
-            switch (resolution) {
-                case 'low': width = height = 512; break;
-                case 'medium': width = height = 1024; break;
-                case 'high': width = height = 2048; break;
-                case 'ultra': width = height = 4096; break;
-                case 'custom':
-                    width = height = parseInt(document.getElementById('customRes').value) || 1024;
-                    break;
-                default: width = height = 1024;
-            }
-
-            const tempCanvas = document.createElement('canvas');
-            tempCanvas.width = width;
-            tempCanvas.height = height;
-            const tempCtx = tempCanvas.getContext('2d');
-
-            const originalCanvas = canvas;
-            const originalCtx = ctx;
-
-            canvas.width = width;
-            canvas.height = height;
-
-            draw();
-
-            const link = document.createElement('a');
-            link.download = `modular_lifting_rings_${width}x${height}.png`;
-            link.href = canvas.toDataURL();
-            link.click();
-
-            canvas.width = originalCanvas.width;
-            canvas.height = originalCanvas.height;
-
-            draw();
-
-            updateAnimationStatus(`Exported ${width}×${height} image`);
-        }
-
-        function initControls() {
-            addRingControl('unit', 'Unit Circle (M=1)', true);
-            
-            for (let mod = 2; mod <= 60; mod++) {
-                const customId = `default_${mod}`;
-                configs[customId] = { 
-                    mod: mod, 
-                    label: mod.toString(),
-                    description: `Default modulus ${mod}`
-                };
-                addRingControl(customId, `M${mod}`, true);
-            }
-            
-            Object.keys(configs).forEach(n => {
-                if (!n.startsWith('custom_') && !n.startsWith('default_') && n !== 'unit') {
-                    addRingControl(n, `n=${n} (M=${configs[n].label})`, false);
-                }
-            });
-
-            const gapControls = document.getElementById('gapControls');
-            gapControls.innerHTML = '';
-            
-            for (let gap = 2; gap <= 12; gap += 2) {
-                addGapControl(gap, false);
-            }
-
-            document.addEventListener('change', draw);
-            document.getElementById('zoomSlider').addEventListener('input', updateZoom);
-            document.getElementById('rotationSlider').addEventListener('input', updateRotation);
-            document.getElementById('animResolution').addEventListener('change', function() {
-                const customControls = document.getElementById('customResolutionControls');
-                customControls.style.display = this.value === 'custom' ? 'block' : 'none';
-            });
-            
-            updateAnimationStatus('System initialized: M1-M60, Angular coloring, no gaps, no labels, direct lifts only');
-        }
-
-        initControls();
-        draw();
-        
-        window.addEventListener('resize', () => {
-            clearTimeout(window.resizeTimeout);
-            window.resizeTimeout = setTimeout(draw, 250);
-        });
+        // Initialize on load
+        window.addEventListener('load', init);
     </script>
 </body>
-    </html>
+</html>
