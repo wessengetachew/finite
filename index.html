@@ -353,6 +353,42 @@
             letter-spacing: 2px;
         }
 
+        /* Canvas-specific color coding */
+        .canvas-disk {
+            color: #ffd700 !important;
+            border-bottom-color: rgba(255, 215, 0, 0.5) !important;
+        }
+        
+        .canvas-cayley {
+            color: #1abc9c !important;
+            border-bottom-color: rgba(26, 188, 156, 0.5) !important;
+        }
+        
+        .canvas-nested {
+            color: #3498db !important;
+            border-bottom-color: rgba(52, 152, 219, 0.5) !important;
+        }
+        
+        .canvas-reduction {
+            color: #e67e22 !important;
+            border-bottom-color: rgba(230, 126, 34, 0.5) !important;
+        }
+        
+        .canvas-fullplane {
+            color: #9b59b6 !important;
+            border-bottom-color: rgba(155, 89, 182, 0.5) !important;
+        }
+        
+        .canvas-primitive {
+            color: #e91e63 !important;
+            border-bottom-color: rgba(233, 30, 99, 0.5) !important;
+        }
+        
+        .canvas-global {
+            color: #00ffff !important;
+            border-bottom-color: rgba(0, 255, 255, 0.5) !important;
+        }
+
         .toggle-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1508,9 +1544,46 @@
             <div class="controls-header">
                 Unlimited Parameter Control
             </div>
+            
+            <!-- Canvas Color Legend -->
+            <div style="padding: 15px; background: rgba(10, 14, 39, 0.8); border: 1px solid rgba(255, 215, 0, 0.3); border-radius: 8px; margin: 15px 15px 0 15px;">
+                <div style="font-family: 'Fira Code', monospace; font-size: 0.9em; font-weight: bold; color: #00ffff; margin-bottom: 10px; text-align: center;">
+                    CANVAS COLOR LEGEND
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; font-family: 'Fira Code', monospace; font-size: 0.75em;">
+                    <div style="color: #ffd700; display: flex; align-items: center;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #ffd700; border-radius: 2px; margin-right: 6px;"></span>
+                        𝔻 Unit Disk
+                    </div>
+                    <div style="color: #1abc9c; display: flex; align-items: center;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #1abc9c; border-radius: 2px; margin-right: 6px;"></span>
+                        ℍ Cayley Plane
+                    </div>
+                    <div style="color: #3498db; display: flex; align-items: center;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #3498db; border-radius: 2px; margin-right: 6px;"></span>
+                        ⊚ Nested Rings
+                    </div>
+                    <div style="color: #e67e22; display: flex; align-items: center;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #e67e22; border-radius: 2px; margin-right: 6px;"></span>
+                        🔄 Reduction
+                    </div>
+                    <div style="color: #9b59b6; display: flex; align-items: center;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #9b59b6; border-radius: 2px; margin-right: 6px;"></span>
+                        ℂ Full Plane
+                    </div>
+                    <div style="color: #e91e63; display: flex; align-items: center;">
+                        <span style="display: inline-block; width: 12px; height: 12px; background: #e91e63; border-radius: 2px; margin-right: 6px;"></span>
+                        ⚙ Primitive Roots
+                    </div>
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255, 255, 255, 0.1); color: #888; font-size: 0.7em; text-align: center;">
+                    Controls are color-coded to show which canvas they affect
+                </div>
+            </div>
+            
             <div class="controls-body">
                 <!-- Basic Parameters -->
-                <div class="section-header">Basic Parameters</div>
+                <div class="section-header canvas-global">Basic Parameters</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Rotates all visualizations by this angle. Animated when auto-rotate is enabled.">
                         <div class="control-label">
@@ -1569,7 +1642,7 @@
                 </div>
 
                 <!-- Canvas Zoom Controls -->
-                <div class="section-header">Canvas Zoom Controls</div>
+                <div class="section-header canvas-global">Canvas Zoom Controls</div>
                 <div class="control-row">
                     <div class="control-item">
                         <div class="control-label">
@@ -1714,7 +1787,7 @@
                 </div>
 
                 <!-- Nested Rings Display Mode -->
-                <div class="section-header">Nested Rings Display Mode</div>
+                <div class="section-header canvas-nested">Nested Rings Display Mode</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Choose how to display the nested rings">
                         <div class="control-label">
@@ -1765,7 +1838,7 @@
                 </div>
 
                 <!-- Primitive Roots Generator -->
-                <div class="section-header">Primitive Roots & Generator</div>
+                <div class="section-header canvas-primitive">Primitive Roots & Generator</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Select generator g for the power sequence. Auto-finds smallest primitive root if one exists.">
                         <div class="control-label">
@@ -1786,7 +1859,7 @@
                 </div>
 
                 <!-- Global Line Thickness -->
-                <div class="section-header">Global Line Thickness</div>
+                <div class="section-header canvas-global">Global Line Thickness</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Control line thickness globally for all visualizations. Lower values create sharper, cleaner lines for large moduli.">
                         <div class="control-label">
@@ -1826,7 +1899,7 @@
                 </div>
 
                 <!-- Cayley View Controls -->
-                <div class="section-header">Cayley Transform & View Options</div>
+                <div class="section-header canvas-cayley">Cayley Transform & View Options</div>
                 <div class="control-row">
                     <div class="control-item" style="grid-column: 1 / -1;" data-tooltip="Choose which mathematical transformation to apply">
                         <div class="control-label">
@@ -1872,7 +1945,7 @@
                     </div>
                 </div>
 
-                <div class="section-header">Cayley Plane View Range</div>
+                <div class="section-header canvas-cayley">Cayley Plane View Range</div>
                 <div class="control-row">
                     
                     <div class="control-item" data-tooltip="Width of the visible window in the upper half-plane. Increase to see more of the real axis.">
@@ -1913,7 +1986,7 @@
                 </div>
 
                 <!-- Prime Distribution -->
-                <div class="section-header">Prime Distribution</div>
+                <div class="section-header canvas-disk">Prime Distribution</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="How many prime numbers to display. More primes = denser visualization but slower rendering.">
                         <div class="control-label">
@@ -1935,7 +2008,7 @@
                 </div>
 
                 <!-- Nested Rings Parameters -->
-                <div class="section-header">Nested Rings Configuration</div>
+                <div class="section-header canvas-nested">Nested Rings Configuration</div>
                 <div class="control-row">
                     <div class="control-item" style="grid-column: 1 / -1;" data-tooltip="Choose how ring moduli are generated">
                         <div class="control-label">
@@ -2134,7 +2207,7 @@
 
 
                 <!-- Custom Farey Points -->
-                <div class="section-header">Farey Sequence & Custom Points</div>
+                <div class="section-header canvas-global">Farey Sequence & Custom Points</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Generate complete Farey sequence F_n with option to include 0/n for each denominator n (0/1, 0/2, 0/3, etc.)">
                         <div class="control-label">
@@ -2205,7 +2278,7 @@
                 </div>
 
                 <!-- Connection Options -->
-                <div class="section-header">Connection Options</div>
+                <div class="section-header canvas-nested">Connection Options</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Filter which points get connections based on their GCD with the modulus">
                         <div class="control-label">
@@ -2299,7 +2372,7 @@
                 </div>
 
                 <!-- Label Options -->
-                <div class="section-header">Label Options</div>
+                <div class="section-header canvas-global">Label Options</div>
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Choose which elements get text labels. 'Everything' can be cluttered for large visualizations.">
                         <div class="control-label">
@@ -2352,7 +2425,7 @@
                 </div>
 
                 <!-- Toggles -->
-                <div class="section-header">Display Options</div>
+                <div class="section-header canvas-global">Display Options</div>
                 <div class="toggle-grid">
                     <input type="checkbox" id="toggleFarey" checked>
                     <label for="toggleFarey" class="toggle-item">
@@ -2506,7 +2579,7 @@
                 </div>
 
                 <!-- Global Connection Visualization -->
-                <div class="section-header">Global Connection Visualization (All Canvases)</div>
+                <div class="section-header canvas-global">Global Connection Visualization (All Canvases)</div>
                 <div class="toggle-grid">
                     <input type="checkbox" id="toggleShowRtoR">
                     <label for="toggleShowRtoR" class="toggle-item" data-tooltip="Connect residue r to itself across all rings. Shows vertical self-similarity in modular tower.">
@@ -6084,7 +6157,16 @@ Generated: ${new Date().toLocaleString()}
                 displayPrimes.forEach(p => {
                     if (showChannels && gcd(p, state.modulus) !== 1) return;
 
-                    const angle = 2 * Math.PI * p / state.modulus + phase;
+                    // Apply per-ring rotation if presets are set
+                    let perRingOffset = 0;
+                    const m = state.modulus;
+                    if (state.perRingRotations && state.perRingRotations[m] !== undefined) {
+                        perRingOffset = state.perRingRotations[m] * Math.PI / 180;
+                    } else {
+                        perRingOffset = state.ringRotation * Math.PI / 180;
+                    }
+
+                    const angle = 2 * Math.PI * p / state.modulus + phase + perRingOffset;
                     const x = cx + r * Math.cos(angle);
                     const y = cy + r * Math.sin(angle);
 
@@ -6106,7 +6188,17 @@ Generated: ${new Date().toLocaleString()}
                     .filter(fp => passesFilters(fp.num, fp.den))  // Apply advanced filters
                     .map(fp => {
                         const frac = fp.num / fp.den;
-                        const angle = 2 * Math.PI * frac + phase;
+                        
+                        // Apply per-ring rotation for this denominator
+                        let perRingOffset = 0;
+                        const m = fp.den;
+                        if (state.perRingRotations && state.perRingRotations[m] !== undefined) {
+                            perRingOffset = state.perRingRotations[m] * Math.PI / 180;
+                        } else {
+                            perRingOffset = state.ringRotation * Math.PI / 180;
+                        }
+                        
+                        const angle = 2 * Math.PI * frac + phase + perRingOffset;
                         return {
                             x: cx + r * Math.cos(angle),
                             y: cy + r * Math.sin(angle),
@@ -6472,8 +6564,23 @@ Generated: ${new Date().toLocaleString()}
                         const frac1 = fp1.num / fp1.den;
                         const frac2 = fp2.num / fp2.den;
                         
-                        const angle1 = 2 * Math.PI * frac1 + phase;
-                        const angle2 = 2 * Math.PI * frac2 + phase;
+                        // Apply per-ring rotation for each point
+                        let perRingOffset1 = 0;
+                        if (state.perRingRotations && state.perRingRotations[fp1.den] !== undefined) {
+                            perRingOffset1 = state.perRingRotations[fp1.den] * Math.PI / 180;
+                        } else {
+                            perRingOffset1 = state.ringRotation * Math.PI / 180;
+                        }
+                        
+                        let perRingOffset2 = 0;
+                        if (state.perRingRotations && state.perRingRotations[fp2.den] !== undefined) {
+                            perRingOffset2 = state.perRingRotations[fp2.den] * Math.PI / 180;
+                        } else {
+                            perRingOffset2 = state.ringRotation * Math.PI / 180;
+                        }
+                        
+                        const angle1 = 2 * Math.PI * frac1 + phase + perRingOffset1;
+                        const angle2 = 2 * Math.PI * frac2 + phase + perRingOffset2;
                         
                         const z1 = { re: Math.cos(angle1), im: Math.sin(angle1) };
                         const z2 = { re: Math.cos(angle2), im: Math.sin(angle2) };
@@ -6704,7 +6811,17 @@ Generated: ${new Date().toLocaleString()}
             if (showFarey && state.fareyPoints.length >= 2) {
                 const transformedPoints = state.fareyPoints.map(fp => {
                     const frac = fp.num / fp.den;
-                    const angle = 2 * Math.PI * frac + phase;
+                    
+                    // Apply per-ring rotation for this denominator
+                    let perRingOffset = 0;
+                    const m = fp.den;
+                    if (state.perRingRotations && state.perRingRotations[m] !== undefined) {
+                        perRingOffset = state.perRingRotations[m] * Math.PI / 180;
+                    } else {
+                        perRingOffset = state.ringRotation * Math.PI / 180;
+                    }
+                    
+                    const angle = 2 * Math.PI * frac + phase + perRingOffset;
                     const z = { re: Math.cos(angle), im: Math.sin(angle) };
                     const wp = cayleyTransform(z, state.transformType);
                     return {
@@ -7157,7 +7274,17 @@ Generated: ${new Date().toLocaleString()}
                     if (!passesFilters(fp.num, fp.den)) return;
                     
                     const frac = fp.num / fp.den;
-                    const angle = 2 * Math.PI * frac + phase;
+                    
+                    // Apply per-ring rotation for this denominator
+                    let perRingOffset = 0;
+                    const m = fp.den;
+                    if (state.perRingRotations && state.perRingRotations[m] !== undefined) {
+                        perRingOffset = state.perRingRotations[m] * Math.PI / 180;
+                    } else {
+                        perRingOffset = state.ringRotation * Math.PI / 180;
+                    }
+                    
+                    const angle = 2 * Math.PI * frac + phase + perRingOffset;
                     const z = { re: Math.cos(angle), im: Math.sin(angle) };
                     const wp = cayleyTransform(z, state.transformType);
                     const p = mathToScreen(wp);
@@ -7195,8 +7322,23 @@ Generated: ${new Date().toLocaleString()}
                         const frac1 = fp1.num / fp1.den;
                         const frac2 = fp2.num / fp2.den;
                         
-                        const angle1 = 2 * Math.PI * frac1 + phase;
-                        const angle2 = 2 * Math.PI * frac2 + phase;
+                        // Apply per-ring rotation for each point
+                        let perRingOffset1 = 0;
+                        if (state.perRingRotations && state.perRingRotations[fp1.den] !== undefined) {
+                            perRingOffset1 = state.perRingRotations[fp1.den] * Math.PI / 180;
+                        } else {
+                            perRingOffset1 = state.ringRotation * Math.PI / 180;
+                        }
+                        
+                        let perRingOffset2 = 0;
+                        if (state.perRingRotations && state.perRingRotations[fp2.den] !== undefined) {
+                            perRingOffset2 = state.perRingRotations[fp2.den] * Math.PI / 180;
+                        } else {
+                            perRingOffset2 = state.ringRotation * Math.PI / 180;
+                        }
+                        
+                        const angle1 = 2 * Math.PI * frac1 + phase + perRingOffset1;
+                        const angle2 = 2 * Math.PI * frac2 + phase + perRingOffset2;
                         
                         const z1 = { re: Math.cos(angle1), im: Math.sin(angle1) };
                         const z2 = { re: Math.cos(angle2), im: Math.sin(angle2) };
