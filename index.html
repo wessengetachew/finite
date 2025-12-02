@@ -1713,6 +1713,57 @@
                     </div>
                 </div>
 
+                <!-- Nested Rings Display Mode -->
+                <div class="section-header">Nested Rings Display Mode</div>
+                <div class="control-row">
+                    <div class="control-item" data-tooltip="Choose how to display the nested rings">
+                        <div class="control-label">
+                            <span>Display Mode</span>
+                        </div>
+                        <select id="nestedDisplayMode" onchange="updateNestedMode()" style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-mid); color: var(--text); border: 1px solid var(--border); border-radius: 4px;">
+                            <option value="range">Ring Range (Min to Max)</option>
+                            <option value="sequential">Sequential 1 to N</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="sequentialControls" style="display: none;">
+                    <div class="control-row">
+                        <div class="control-item" data-tooltip="Angular mapping formula for positioning points">
+                            <div class="control-label">
+                                <span>Angular Mapping</span>
+                            </div>
+                            <select id="angularMapping" onchange="drawNested()" style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-mid); color: var(--text); border: 1px solid var(--border); border-radius: 4px;">
+                                <option value="standard">Standard: θ = 2πr/m</option>
+                                <option value="reverse">Reverse: θ = -2πr/m</option>
+                                <option value="complement">Complement: θ = 2π(m-r)/m</option>
+                                <option value="rotated">Rotated: θ = 2πr/m - π/2</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="control-row">
+                        <div class="control-item" data-tooltip="Show GCD-based colors">
+                            <div class="control-label">
+                                <span>Color by GCD</span>
+                            </div>
+                            <label class="toggle-label" style="margin-top: 8px;">
+                                <input type="checkbox" id="colorByGCD" checked onchange="drawNested()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <div class="control-item" data-tooltip="Show connections from center to coprime points">
+                            <div class="control-label">
+                                <span>Show Coprime Connections</span>
+                            </div>
+                            <label class="toggle-label" style="margin-top: 8px;">
+                                <input type="checkbox" id="showCoprimeConnections" onchange="drawNested()">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Primitive Roots Generator -->
                 <div class="section-header">Primitive Roots & Generator</div>
                 <div class="control-row">
@@ -7150,6 +7201,10 @@ Generated: ${new Date().toLocaleString()}
 
             ctx.clearRect(0, 0, w, h);
 
+            // Check display mode
+            const displayMode = document.getElementById('nestedDisplayMode').value;
+            const isSequential = displayMode === 'sequential';
+
             // Apply inversion if enabled
             const invertAll = document.getElementById('toggleInvertAll').checked;
             if (invertAll) {
@@ -7185,6 +7240,117 @@ Generated: ${new Date().toLocaleString()}
             ctx.lineTo(cx, h);
             ctx.stroke();
 
+            // SEQUENTIAL MODE: Show moduli 1 to N with angular mappings and GCD colors
+            if (isSequential) {
+                const n = state.maxRing;
+                const mapping = document.getElementById('angularMapping').value;
+                const colorByGCD = document.getElementById('colorByGCD').checked;
+                const showConnections = document.getElementById('showCoprimeConnections').checked;
+                
+                // Draw each ring from 1 to n
+                for (let m = 1; m <= n; m++) {
+                    const t = (m - 1) / Math.max(1, n - 1);
+                    const ringRadius = baseRadius + t * (maxRadius - baseRadius) * state.ringSpacing;
+
+                    // Ring circle
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, ringRadius, 0, 2 * Math.PI);
+                    ctx.stroke();
+
+                    // Ring label
+                    if (m % Math.max(1, Math.floor(n / 10)) === 0 || m === 1 || m === n) {
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+                        ctx.font = `${Math.max(8, 10 * state.nestedZoom)}px "Fira Code"`;
+                        ctx.textAlign = 'left';
+                        ctx.fillText(`m=${m}`, cx + ringRadius + 5, cy);
+                    }
+
+                    // Draw residues for this modulus
+                    for (let r = 0; r < m; r++) {
+                        const g = gcd(r, m);
+                        const angle = getAngleForMapping(r, m, mapping);
+                        const x = cx + ringRadius * Math.cos(angle);
+                        const y = cy + ringRadius * Math.sin(angle);
+
+                        // Determine color
+                        let color;
+                        if (colorByGCD) {
+                            color = GCD_COLORS[g] || GCD_COLORS.default;
+                        } else {
+                            color = g === 1 ? CONFIG.colors.gold : 'rgba(255, 255, 255, 0.3)';
+                        }
+
+                        // Draw point
+                        ctx.fillStyle = color;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2.5 * state.globalLineThickness, 0, 2 * Math.PI);
+                        ctx.fill();
+
+                        // Draw connection to center for coprime points on outer ring
+                        if (showConnections && m === n && g === 1 && n <= 30) {
+                            ctx.strokeStyle = color;
+                            ctx.lineWidth = 0.5 * state.globalLineThickness;
+                            ctx.globalAlpha = 0.2;
+                            ctx.beginPath();
+                            ctx.moveTo(cx, cy);
+                            ctx.lineTo(x, y);
+                            ctx.stroke();
+                            ctx.globalAlpha = 1.0;
+                        }
+                    }
+                }
+
+                // Draw GCD legend
+                if (colorByGCD) {
+                    const legendX = 15;
+                    const legendY = h - 140;
+                    
+                    ctx.fillStyle = 'rgba(10, 14, 39, 0.85)';
+                    ctx.fillRect(legendX, legendY, 130, 130);
+                    ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(legendX, legendY, 130, 130);
+
+                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                    ctx.font = 'bold 11px "Fira Code"';
+                    ctx.textAlign = 'left';
+                    ctx.fillText('GCD Colors', legendX + 10, legendY + 20);
+
+                    const legendItems = [
+                        { gcd: 1, label: 'GCD = 1' },
+                        { gcd: 2, label: 'GCD = 2' },
+                        { gcd: 3, label: 'GCD = 3' },
+                        { gcd: 4, label: 'GCD = 4' },
+                        { gcd: 5, label: 'GCD = 5' },
+                        { gcd: 'default', label: 'GCD ≥ 6' }
+                    ];
+
+                    let ly = legendY + 35;
+                    legendItems.forEach(item => {
+                        const color = item.gcd === 'default' ? GCD_COLORS.default : GCD_COLORS[item.gcd];
+                        
+                        ctx.fillStyle = color;
+                        ctx.beginPath();
+                        ctx.arc(legendX + 15, ly, 4, 0, 2 * Math.PI);
+                        ctx.fill();
+
+                        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                        ctx.font = '10px "Fira Code"';
+                        ctx.fillText(item.label, legendX + 25, ly + 3);
+                        ly += 15;
+                    });
+                }
+
+                // Restore and return
+                if (invertAll) {
+                    ctx.restore();
+                }
+                return;
+            }
+
+            // ORIGINAL RANGE MODE: Continue with existing code
             const phase = state.phase * Math.PI / 180;
             const showRings = document.getElementById('toggleRings').checked;
             const showGCD = document.getElementById('toggleGCD').checked;
@@ -8139,6 +8305,41 @@ Generated: ${new Date().toLocaleString()}
             document.getElementById('ringRotationInput2').value = val;
             if (!state.animationId) updateAll();
         }
+
+        // Nested rings mode functions
+        function updateNestedMode() {
+            const mode = document.getElementById('nestedDisplayMode').value;
+            document.getElementById('sequentialControls').style.display = 
+                mode === 'sequential' ? 'block' : 'none';
+            drawNested();
+        }
+
+        function getAngleForMapping(r, m, mapping) {
+            const phase = state.phase * Math.PI / 180;
+            switch(mapping) {
+                case 'standard':
+                    return 2 * Math.PI * r / m + phase;
+                case 'reverse':
+                    return -2 * Math.PI * r / m + phase;
+                case 'complement':
+                    return 2 * Math.PI * (m - r) / m + phase;
+                case 'rotated':
+                    return 2 * Math.PI * r / m - Math.PI / 2 + phase;
+                default:
+                    return 2 * Math.PI * r / m + phase;
+            }
+        }
+
+        // GCD color palette
+        const GCD_COLORS = {
+            1: '#e74c3c',  // Red - coprime
+            2: '#3498db',  // Blue
+            3: '#2ecc71',  // Green
+            4: '#f39c12',  // Orange
+            5: '#9b59b6',  // Purple
+            6: '#1abc9c',  // Teal
+            default: '#95a5a6'  // Gray
+        };
 
         // ============================================================
         // ANIMATION
