@@ -3055,27 +3055,6 @@
         }
 
         // Find all primitive roots for modulus m
-            });
-            legendText2.x = legendX + 40;
-            legendText2.y = legendY + 67;
-            canvases.pixiApp.stage.addChild(legendText2);
-            
-            // Mathematical note at bottom
-            const mathNote = new PIXI.Text(
-                'Primitive roots exist ⟺ m = 1, 2, 4, p^k, or 2p^k (p odd prime)',
-                {
-                    fontFamily: 'Fira Code',
-                    fontSize: 14,
-                    fill: 0x888888,
-                    align: 'center'
-                }
-            );
-            mathNote.anchor.set(0.5, 1);
-            mathNote.x = centerX;
-            mathNote.y = height - 20;
-            canvases.pixiApp.stage.addChild(mathNote);
-        }
-
         function findAllPrimitiveRoots(m) {
             const roots = [];
             if (m === 1) return [1];
