@@ -1858,6 +1858,22 @@
                     </div>
                 </div>
 
+                <!-- Order Selection Dropdown -->
+                <div class="control-row">
+                    <div class="control-item" data-tooltip="Browse all coprime elements by their order. Shows complete group structure.">
+                        <div class="control-label">
+                            <span>Select Element by Order</span>
+                        </div>
+                        <button class="btn btn-secondary" onclick="showOrderTable()" style="width: 100%; margin-top: 8px;">
+                            <span>📊 Show Order Table for M=<span id="orderTableModulus">101</span></span>
+                        </button>
+                        <select id="orderElementSelect" style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-mid); color: var(--text); border: 1px solid var(--border); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.9em;" onchange="selectElementFromOrder(this.value)">
+                            <option value="">-- Select element by order --</option>
+                        </select>
+                        <div class="help-text" id="orderSelectHelp">Dropdown shows: element (order)</div>
+                    </div>
+                </div>
+
                 <!-- Global Line Thickness -->
                 <div class="section-header canvas-global">Global Line Thickness</div>
                 <div class="control-row">
@@ -2781,6 +2797,7 @@
             setupEventListeners();
             setupInteractiveInspection(); // NEW: Set up click/hover handlers
             updateColorSchemePreview(); // Initialize color scheme preview
+            populateOrderDropdown(); // Populate generator dropdown
             updateAll();
             setTimeout(() => {
                 document.getElementById('loading').classList.add('hidden');
@@ -3127,6 +3144,183 @@
             alert(`All primitive roots mod ${m}:\n\n{${roots.join(', ')}}\n\nTotal: ${roots.length} primitive root(s)\nφ(${m}) = ${eulerPhi(m)}`);
         }
 
+        // Populate order dropdown with all coprime elements
+        function populateOrderDropdown() {
+            const m = state.modulus;
+            const select = document.getElementById('orderElementSelect');
+            const phi = eulerPhi(m);
+            
+            // Clear existing options except first
+            select.innerHTML = '<option value="">-- Select element by order --</option>';
+            
+            // Calculate orders for all coprime elements
+            const orderGroups = {};
+            for (let g = 1; g < m; g++) {
+                if (gcd(g, m) !== 1) continue;
+                
+                const order = getOrderOfElement(g, m);
+                if (!orderGroups[order]) {
+                    orderGroups[order] = [];
+                }
+                orderGroups[order].push(g);
+            }
+            
+            // Sort by order (ascending)
+            const sortedOrders = Object.keys(orderGroups).map(Number).sort((a, b) => a - b);
+            
+            // Add options grouped by order
+            sortedOrders.forEach(order => {
+                const elements = orderGroups[order];
+                const isPrimitive = (order === phi);
+                
+                elements.forEach(g => {
+                    const option = document.createElement('option');
+                    option.value = g;
+                    option.textContent = isPrimitive 
+                        ? `g=${g} (ord=${order}) ★ PRIMITIVE`
+                        : `g=${g} (ord=${order})`;
+                    option.style.color = isPrimitive ? '#ff00ff' : '#ffffff';
+                    select.appendChild(option);
+                });
+            });
+            
+            // Update modulus display
+            document.getElementById('orderTableModulus').textContent = m;
+            
+            // Update help text
+            document.getElementById('orderSelectHelp').textContent = 
+                `${phi} coprime elements | ${sortedOrders.length} distinct orders`;
+        }
+
+        // Select element from order dropdown
+        function selectElementFromOrder(value) {
+            if (!value) return;
+            updateGenerator(parseInt(value));
+        }
+
+        // Show detailed order table
+        function showOrderTable() {
+            const m = state.modulus;
+            const phi = eulerPhi(m);
+            
+            // Calculate orders for all coprime elements
+            const orderGroups = {};
+            for (let g = 1; g < m; g++) {
+                if (gcd(g, m) !== 1) continue;
+                
+                const order = getOrderOfElement(g, m);
+                if (!orderGroups[order]) {
+                    orderGroups[order] = [];
+                }
+                orderGroups[order].push(g);
+            }
+            
+            // Sort by order
+            const sortedOrders = Object.keys(orderGroups).map(Number).sort((a, b) => a - b);
+            
+            // Build table text
+            let tableText = `ORDER TABLE FOR (ℤ/${m}ℤ)*\n`;
+            tableText += `═══════════════════════════════════════\n`;
+            tableText += `φ(${m}) = ${phi} coprime elements\n`;
+            tableText += `${sortedOrders.length} distinct orders\n\n`;
+            
+            // Check if cyclic
+            const primitiveRoots = findAllPrimitiveRoots(m);
+            if (primitiveRoots.length > 0) {
+                tableText += `✓ CYCLIC GROUP (${primitiveRoots.length} primitive root${primitiveRoots.length > 1 ? 's' : ''})\n`;
+                tableText += `  Generators: {${primitiveRoots.join(', ')}}\n\n`;
+            } else {
+                tableText += `✗ NOT CYCLIC (no primitive roots)\n\n`;
+            }
+            
+            tableText += `ORDER DISTRIBUTION:\n`;
+            tableText += `─────────────────────────────────────\n`;
+            
+            sortedOrders.forEach(order => {
+                const elements = orderGroups[order];
+                const count = elements.length;
+                const isPrimitive = (order === phi);
+                const symbol = isPrimitive ? ' ★' : '';
+                
+                tableText += `\nOrder ${order}${symbol}: (${count} element${count > 1 ? 's' : ''})\n`;
+                
+                // Show elements in rows of 10
+                for (let i = 0; i < elements.length; i += 10) {
+                    const row = elements.slice(i, i + 10);
+                    tableText += `  ${row.join(', ')}${i + 10 < elements.length ? ',' : ''}\n`;
+                }
+            });
+            
+            // Show in alert (or could create modal)
+            alert(tableText);
+            
+            // Also populate the dropdown
+            populateOrderDropdown();
+        }
+
+        function populateOrderDropdown() {
+            const m = state.modulus;
+            const phi = eulerPhi(m);
+            const select = document.getElementById('orderElementSelect');
+            
+            // Clear existing options except first
+            select.innerHTML = '<option value="">-- Select element by order --</option>';
+            
+            // Calculate orders for all coprime elements
+            const orderGroups = {};
+            for (let g = 1; g < m; g++) {
+                if (gcd(g, m) !== 1) continue;
+                
+                const order = getOrderOfElement(g, m);
+                if (!orderGroups[order]) {
+                    orderGroups[order] = [];
+                }
+                orderGroups[order].push(g);
+            }
+            
+            // Sort by order
+            const sortedOrders = Object.keys(orderGroups).map(Number).sort((a, b) => a - b);
+            
+            // Add options grouped by order
+            sortedOrders.forEach(order => {
+                const elements = orderGroups[order];
+                const isPrimitive = (order === phi);
+                
+                // Create optgroup for this order
+                const optgroup = document.createElement('optgroup');
+                optgroup.label = `Order ${order}${isPrimitive ? ' ★ (Primitive)' : ''} - ${elements.length} element${elements.length > 1 ? 's' : ''}`;
+                
+                elements.forEach(g => {
+                    const option = document.createElement('option');
+                    option.value = g;
+                    option.textContent = `g=${g} (ord=${order})${isPrimitive ? ' ★' : ''}`;
+                    optgroup.appendChild(option);
+                });
+                
+                select.appendChild(optgroup);
+            });
+            
+            // Update help text
+            const primitiveRoots = findAllPrimitiveRoots(m);
+            document.getElementById('orderSelectHelp').textContent = 
+                primitiveRoots.length > 0 
+                    ? `Cyclic group: ${primitiveRoots.length} primitive root${primitiveRoots.length > 1 ? 's' : ''}`
+                    : `Not cyclic: no primitive roots exist`;
+        }
+
+        function selectElementFromOrder(value) {
+            if (!value) return;
+            
+            const g = parseInt(value);
+            updateGenerator(g);
+        }
+
+        // Auto-populate dropdown when modulus changes
+        function updateModulusWithDropdown(value) {
+            updateModulus(value);
+            populateOrderDropdown();
+        }
+
         // Find all primitive roots for modulus m
         function findAllPrimitiveRoots(m) {
             const roots = [];
@@ -3402,6 +3596,7 @@
                     state.modulus = val;
                     document.getElementById('modulusDisplay').textContent = val;
                     document.getElementById('maxFareyOrder').textContent = val;
+                    document.getElementById('orderTableModulus').textContent = val;
                     
                     // Show divisors for Farey understanding
                     const divisors = [];
@@ -3412,6 +3607,9 @@
                         ? `Farey denominators: ${divisors.join(', ')}`
                         : `Farey: ${divisors.length} denominators (1,2,...,${val})`;
                     document.getElementById('modulusHelp').textContent = helpText;
+                    
+                    // Populate order dropdown
+                    populateOrderDropdown();
                     
                     updateAll();
                 }
@@ -8822,6 +9020,7 @@ Generated: ${new Date().toLocaleString()}
 
             stopAnimation();
             updateFareyPointsList();
+            populateOrderDropdown(); // Initialize order dropdown
             updateAll();
         }
 
