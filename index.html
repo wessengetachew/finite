@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farey Triangle & Cayley Transform - 6 Canvas Explorer with Pixi</title>
+    <title>Interactive Modular Arithmetic & Number Theory Research Suite - 12 Canvas Explorer | By Wessen Getachew</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/7.3.2/pixi.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
@@ -27,6 +27,20 @@
             --text: #e8f1f5;
             --text-dim: #8899aa;
             --border: rgba(255, 215, 0, 0.3);
+            
+            /* 12 Canvas Colors */
+            --c1-gold: #ffd700;
+            --c2-teal: #1abc9c;
+            --c3-blue: #3498db;
+            --c4-orange: #e67e22;
+            --c5-purple: #9b59b6;
+            --c6-pink: #e91e63;
+            --c7-green: #2ecc71;
+            --c8-yellow: #f1c40f;
+            --c9-red: #e74c3c;
+            --c10-indigo: #6366f1;
+            --c11-lime: #27ae60;
+            --c12-magenta: #9c27b0;
         }
 
         body {
@@ -157,8 +171,8 @@
 
         .viz-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
             margin-bottom: 30px;
         }
         
@@ -788,9 +802,15 @@
             cursor: pointer;
         }
 
-        @media (max-width: 1800px) {
+        @media (max-width: 2000px) {
             .viz-grid {
-                grid-template-columns: 1fr 1fr;
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        @media (max-width: 1400px) {
+            .viz-grid {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
 
@@ -1034,9 +1054,100 @@
         .legend-text {
             color: var(--text);
         }
+
+        /* Research Page Header */
+        .research-header {
+            background: linear-gradient(135deg, var(--bg-deep) 0%, var(--bg-mid) 100%);
+            border-bottom: 3px solid var(--gold);
+            padding: 30px 40px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 100;
+        }
+
+        .research-title {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 2.5em;
+            color: var(--gold);
+            margin: 0 0 10px 0;
+            font-weight: 700;
+            text-shadow: 0 2px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .research-subtitle {
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1em;
+            color: var(--cyan);
+            margin: 0 0 15px 0;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        .research-author {
+            font-family: 'Libre Baskerville', serif;
+            font-size: 1em;
+            color: var(--text);
+            margin: 0;
+            font-style: italic;
+        }
+
+        .research-author strong {
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .research-meta {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
+            color: var(--text-dim);
+            flex-wrap: wrap;
+        }
+
+        .research-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .research-meta-label {
+            color: var(--cyan);
+            font-weight: 600;
+        }
     </style>
 </head>
 <body>
+    <!-- Research Page Header -->
+    <div class="research-header">
+        <h1 class="research-title">Interactive Modular Arithmetic & Number Theory Research Suite</h1>
+        <h2 class="research-subtitle">Comprehensive 12-Canvas Visualization Tool for Advanced Mathematical Exploration</h2>
+        <p class="research-author">Research & Development by <strong>Wessen Getachew</strong> · Twitter <a href="https://twitter.com/7dview" target="_blank" rel="noopener" style="color: #00ffff; text-decoration: none;">@7dview</a></p>
+        <div class="research-meta">
+            <div class="research-meta-item">
+                <span class="research-meta-label">Features:</span>
+                <span>12 Interactive Canvases | Unlimited Parameters | 2K Export | Statistical Analysis | CSV Data</span>
+            </div>
+            <div class="research-meta-item">
+                <span class="research-meta-label">Topics:</span>
+                <span>Farey Sequences | Cayley Transforms | Prime Distribution | Primitive Roots | Coprime Density | Dirichlet Characters</span>
+            </div>
+            <div class="research-meta-item" style="margin-top: 10px;">
+                <span class="research-meta-label">More Tools:</span>
+                <span style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 5px;">
+                    <a href="https://wessengetachew.github.io/Transform/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Transform Explorer</a>
+                    <a href="https://wessengetachew.github.io/Composite/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Composite Analysis</a>
+                    <a href="https://wessengetachew.github.io/Gemini/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Gemini Explorer</a>
+                    <a href="https://wessengetachew.github.io/Goldbach/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Goldbach Conjecture</a>
+                    <a href="https://wessengetachew.github.io/Primes/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Prime Explorer</a>
+                    <a href="https://wessengetachew.github.io/Farey/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Farey Sequences</a>
+                    <a href="https://wessengetachew.github.io/2pir/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">2πr Analysis</a>
+                </span>
+            </div>
+        </div>
+    </div>
+
     <div class="loading" id="loading">
         <div class="loading-symbol">ζ(s)</div>
         <div class="loading-text">Initializing Unlimited Explorer...</div>
@@ -1055,15 +1166,6 @@
     </div>
 
     <div class="main-container">
-        <header>
-            <h1>
-                <span class="title-main">Farey Triangle & Cayley Transform</span>
-            </h1>
-            <p class="subtitle">Hyperbolic Geometry · Number Theory · Modular Forms</p>
-            <p style="font-family: 'Fira Code', monospace; font-size: 0.85em; color: rgba(255, 255, 255, 0.5); margin-top: 10px;">
-                by Wessen Getachew · Twitter <a href="https://twitter.com/7dview" target="_blank" rel="noopener" style="color: #00ffff; text-decoration: none; transition: all 0.3s;">@7dview</a>
-            </p>
-        </header>
 
         <!-- Introduction Panel -->
         <div class="controls-section" style="margin-bottom: 20px;">
@@ -1186,6 +1288,331 @@
                     <div style="background: rgba(255, 215, 0, 0.1); padding: 15px; margin-top: 20px; border-radius: 4px;">
                         <strong style="color: var(--gold);">Getting Started:</strong> Use the preset buttons in the controls to load common configurations (F₃, F₅, F₇, etc.). Hover over controls for detailed tooltips explaining each parameter. Click any point on the visualizations to see its mathematical properties in a detailed panel. Enable the Interactive Guide below for a step-by-step tutorial. Experiment with different transform types to see how various conformal mappings affect the geometry.
                     </div>
+
+                    <!-- COMPREHENSIVE 12-CANVAS MATHEMATICAL DOCUMENTATION -->
+                    <h3 style="color: var(--gold); margin: 35px 0 20px; font-size: 1.8em; border-bottom: 3px solid var(--gold); padding-bottom: 10px;">Complete Mathematical Theory: All 12 Canvases</h3>
+                    
+                    <div style="background: rgba(0,255,255,0.05); padding: 20px; border: 2px solid var(--cyan); border-radius: 8px; margin-bottom: 25px;">
+                        <p style="font-size: 1.05em; line-height: 1.8; margin: 0;">
+                            This research suite integrates <strong>12 complementary visualizations</strong> spanning number theory, group theory, analytic number theory, and hyperbolic geometry. Each canvas provides unique mathematical insight while maintaining coherent connections to the underlying modular arithmetic structures.
+                        </p>
+                    </div>
+
+                    <!-- GROUP 1: FAREY & TRANSFORM SUITE (Canvases 1-6) -->
+                    <h4 style="color: var(--gold); font-size: 1.4em; margin: 30px 0 15px; background: linear-gradient(90deg, rgba(255,215,0,0.2), transparent); padding: 10px; border-left: 4px solid var(--gold);">Group 1: Farey Sequence & Transform Suite (Canvases 1-6)</h4>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin: 20px 0;">
+                        <!-- Canvas 1 -->
+                        <div style="background: rgba(255,215,0,0.05); padding: 20px; border-left: 4px solid var(--c1-gold); border-radius: 6px;">
+                            <h5 style="color: var(--c1-gold); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 1: 𝔻 Unit Disk - Farey Triangle & Prime Distribution
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Mathematical Foundation:</strong> The <strong>Farey sequence</strong> F_n is the ordered set of reduced fractions {p/q : 0 ≤ p ≤ q ≤ n, gcd(p,q) = 1}. These points are mapped to the unit circle at angles θ = 2πp/q, creating a dense set of rational points on ∂𝔻.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Key Properties:</strong> The mediant property states that for adjacent fractions p/q, r/s in F_n, their mediant (p+r)/(q+s) first appears in F_{q+s}, and |ps - qr| = 1 (unimodular determinant). The Farey triangle connects these boundary points, with edges representing the SL(2,ℤ) action on ℚ/ℤ.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Prime Distribution:</strong> Primes p are placed at angles 2πp/M where M is the modulus. <strong>Dirichlet's theorem</strong> guarantees that primes are equidistributed among residue classes coprime to M, each with asymptotic density 1/φ(M). The visualization reveals this equidistribution through uniform angular spacing of prime points in coprime residue classes.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Farey sequences appear in continued fractions, Ford circles, the Stern-Brocot tree, rational approximation theory, and the geometric study of modular curves.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 2 -->
+                        <div style="background: rgba(26,188,156,0.05); padding: 20px; border-left: 4px solid var(--c2-teal); border-radius: 6px;">
+                            <h5 style="color: var(--c2-teal); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 2: ℍ Upper Half-Plane - Cayley Transform & Hyperbolic Geometry
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Cayley Transform:</strong> The map w = i(1+z)/(1-z) is a conformal isomorphism from the Poincaré disk 𝔻 to the upper half-plane ℍ = {w ∈ ℂ : Im(w) > 0}. It preserves the hyperbolic metric: ds²_𝔻 = 4|dz|²/(1-|z|²)² corresponds to ds²_ℍ = |dw|²/Im(w)².
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Hyperbolic Geodesics:</strong> In ℍ, geodesics are semicircles perpendicular to ℝ (or vertical lines). The hyperbolic distance between z₁, z₂ ∈ ℍ is d_ℍ(z₁,z₂) = arcosh(1 + |z₁-z₂|²/(2Im(z₁)Im(z₂))). Geodesics minimize this distance.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Modular Group Action:</strong> PSL(2,ℤ) = SL(2,ℤ)/{±I} acts on ℍ by Möbius transformations γ·z = (az+b)/(cz+d) where [[a,b],[c,d]] ∈ SL(2,ℤ). Generated by S(z) = -1/z and T(z) = z+1 with relation (ST)³ = 1. The fundamental domain 𝒟 = {z : |z| ≥ 1, |Re(z)| ≤ 1/2} tiles ℍ under PSL(2,ℤ).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Ford Circles:</strong> For rational p/q in lowest terms, the Ford circle has center (p/q, 1/(2q²)) and radius 1/(2q²). Ford circles corresponding to Farey neighbors are tangent (|ps-qr| = 1), providing geometric proof of Farey sequence properties.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Modular forms, elliptic curves, j-invariant, modular curves, automorphic forms, and connections to the Riemann Hypothesis through the Selberg trace formula.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 3 -->
+                        <div style="background: rgba(52,152,219,0.05); padding: 20px; border-left: 4px solid var(--c3-blue); border-radius: 6px;">
+                            <h5 style="color: var(--c3-blue); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 3: ⊚ Nested Modular Rings - Group Structure of (ℤ/mℤ)×
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Group of Units:</strong> For each modulus m, (ℤ/mℤ)× = {k ∈ ℤ/mℤ : gcd(k,m) = 1} forms a multiplicative group of order φ(m). The visualization shows all residue classes 0 ≤ k < m on a circle, with coprime elements (units) highlighted.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Euler's Totient:</strong> φ(m) = m·∏_{p|m}(1 - 1/p) counts units. For prime powers: φ(p^k) = p^{k-1}(p-1). Multiplicativity: φ(mn) = φ(m)φ(n) when gcd(m,n) = 1. <strong>Euler's theorem:</strong> If gcd(a,m) = 1, then a^{φ(m)} ≡ 1 (mod m).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>GCD Structure:</strong> Points are colored by gcd(k,m), revealing subgroup structure. Elements with gcd(k,m) = d correspond to m/d·(ℤ/dℤ)× embedded in ℤ/mℤ. The Chinese Remainder Theorem: if gcd(m₁,m₂) = 1, then ℤ/(m₁m₂)ℤ ≅ ℤ/m₁ℤ × ℤ/m₂ℤ, visible in the factorization patterns.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Residue Lifting:</strong> In modular towers Mₙ = M₀·b^n, a residue r at level n lifts to b residues {r, r+Mₙ, ..., r+(b-1)Mₙ} at level n+1. Coprimality is preserved: if gcd(r,M₀) = gcd(r,b) = 1, then all lifts remain coprime to Mₙ₊₁.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> RSA cryptography (φ(pq) = (p-1)(q-1)), Diffie-Hellman key exchange, primitive roots, discrete logarithm problem, quadratic reciprocity, and structure theory of finite abelian groups.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 4 -->
+                        <div style="background: rgba(230,126,34,0.05); padding: 20px; border-left: 4px solid var(--c4-orange); border-radius: 6px;">
+                            <h5 style="color: var(--c4-orange); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 4: 🔄 Modular Reduction Projection - Channel Decomposition
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Farey Channel Structure:</strong> Every rational p/q with 0 < p < q can be reduced by its GCD: if d = gcd(p,q), then p/q represents the same angle as (p/d)/(q/d). This reduction maps rationals to their "channels" based on the reduced denominator.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Dyadic Lifting:</strong> Starting from a base modulus M₀, create a geometric sequence M_n = M₀·2^n. A residue r mod M_n lifts to two residues {r, r+M_n} mod M_{n+1}. If gcd(r,M₀) = 1 and r is odd, both lifts remain coprime to all future M_k.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Zero-Residue Alignment:</strong> The 0-residue class (multiples of M₀) creates a "prime-avoiding channel" - no primes lie on this ray. As we lift through the tower, these channels bifurcate while preserving the prime-avoiding property, creating the sieve structure.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Sieve methods (Eratosthenes, Atkin), gap analysis between primes, twin prime conjecture approaches, and fractal sieve structures.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 5 -->
+                        <div style="background: rgba(155,89,182,0.05); padding: 20px; border-left: 4px solid var(--c5-purple); border-radius: 6px;">
+                            <h5 style="color: var(--c5-purple); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 5: ℂ Full Complex Plane - Complete Transform View
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Riemann Sphere:</strong> The extended complex plane ℂ̂ = ℂ ∪ {∞} forms a compact Riemann surface (sphere). Möbius transformations act as conformal automorphisms of ℂ̂, forming the group Aut(ℂ̂) ≅ PSL(2,ℂ).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Complete Cayley Image:</strong> The full transform shows: |z| < 1 → Im(w) > 0 (upper half-plane), |z| = 1 → Im(w) = 0 (real axis), |z| > 1 → Im(w) < 0 (lower half-plane). The point z = 1 maps to w = ∞, and z = -1 is the pole (undefined).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Circle Preservation:</strong> Möbius transformations map generalized circles (circles and lines in ℂ̂) to generalized circles. This property characterizes Möbius transformations among all holomorphic maps.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Complex analysis, Riemann mapping theorem, uniformization theorem, conformal field theory, string theory, and Teichmüller theory.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 6 -->
+                        <div style="background: rgba(233,30,99,0.05); padding: 20px; border-left: 4px solid var(--c6-pink); border-radius: 6px;">
+                            <h5 style="color: var(--c6-pink); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 6: ⚙ Primitive Roots - Cyclic Structure of (ℤ/Mℤ)×
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Primitive Root Definition:</strong> An element g ∈ (ℤ/Mℤ)× is a <strong>primitive root</strong> if its multiplicative order is φ(M), i.e., g^{φ(M)} ≡ 1 (mod M) and g^k ≢ 1 (mod M) for 0 < k < φ(M). When primitive roots exist, (ℤ/Mℤ)× is cyclic.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Existence Theorem:</strong> Primitive roots exist mod M if and only if M ∈ {1, 2, 4, p^k, 2p^k} where p is an odd prime. For these moduli, (ℤ/Mℤ)× ≅ ℤ/φ(M)ℤ is cyclic, and there are exactly φ(φ(M)) primitive roots.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Power Sequence Visualization:</strong> The sequence {g^n mod M : n = 0,1,2,...,φ(M)-1} cycles through all units, landing at each exactly once. Points are plotted at angles 2π·g^n/M, creating a spiraling pattern that demonstrates the cyclic group structure.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Order Structure:</strong> By Lagrange's theorem, the order of any element divides φ(M). Elements are organized by their orders, with primitive roots having maximal order φ(M). The visualization color-codes elements by order.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Discrete logarithm problem, Diffie-Hellman protocol, index calculus, cyclic codes, pseudorandom number generation, and construction of finite fields.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- GROUP 2: COPRIME DENSITY ANALYSIS (Canvases 7-11) -->
+                    <h4 style="color: var(--gold); font-size: 1.4em; margin: 40px 0 15px; background: linear-gradient(90deg, rgba(255,215,0,0.2), transparent); padding: 10px; border-left: 4px solid var(--gold);">Group 2: Coprime Density & Statistical Analysis (Canvases 7-11)</h4>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin: 20px 0;">
+                        <!-- Canvas 7 -->
+                        <div style="background: rgba(46,204,113,0.05); padding: 20px; border-left: 4px solid var(--c7-green); border-radius: 6px;">
+                            <h5 style="color: var(--c7-green); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 7: 🔵 Coprime Circle - Visual Coprimality Patterns
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Coprimality Visualization:</strong> For a given modulus M, all integers 1 ≤ k < M are placed on a circle at angles 2πk/M. Points are colored green if gcd(k,M) = 1 (coprime) and red otherwise, immediately revealing the density φ(M)/M.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Pattern Recognition:</strong> For prime M, all points except M itself are green (φ(M) = M-1). For composite M, the pattern reveals prime factors: non-coprime points appear at intervals corresponding to divisors of M. For M = p^k, non-coprime points are spaced every p positions.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Connection Structure:</strong> Optional edges connect coprime pairs, revealing the graph structure of (ℤ/Mℤ)×. The complete graph on φ(M) vertices shows all unit interactions, with visual clustering indicating subgroup structure.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Visual verification of coprimality, clock arithmetic, modular multiplication tables, and understanding the structure of cyclic groups.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 8 -->
+                        <div style="background: rgba(241,196,15,0.05); padding: 20px; border-left: 4px solid var(--c8-yellow); border-radius: 6px;">
+                            <h5 style="color: var(--c8-yellow); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 8: 📊 Phi Ratios Chart - φ(n)/n Convergence Behavior
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Totient Density Function:</strong> The ratio φ(n)/n represents the probability that a randomly chosen integer k with 1 ≤ k ≤ n is coprime to n. Using the formula φ(n) = n·∏_{p|n}(1-1/p), we see this equals ∏_{p|n}(1-1/p).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Prime Values:</strong> For prime p, φ(p)/p = (p-1)/p → 1 as p → ∞. These are marked as red dots on the chart, showing that primes have maximum coprime density.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Prime Power Values:</strong> For p^k, φ(p^k)/p^k = 1 - 1/p, constant in k. This creates horizontal "shelves" in the chart at heights 1/2 (powers of 2), 2/3 (powers of 3), 4/5 (powers of 5), etc.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Multiplicative Pattern:</strong> For n = ∏ p_i^{a_i}, we have φ(n)/n = ∏(1-1/p_i). Highly composite numbers with many small prime factors have low ratios, while primorials have systematically decreasing ratios.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Asymptotic Results:</strong> The average value of φ(n)/n is asymptotically 6/π² ≈ 0.6079 (related to probability of coprimality). The minimum values occur at primorials, approaching 0.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 9 -->
+                        <div style="background: rgba(231,76,60,0.05); padding: 20px; border-left: 4px solid var(--c9-red); border-radius: 6px;">
+                            <h5 style="color: var(--c9-red); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 9: 📈 Convergence to 6/π² - Mertens' Third Theorem
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Probability of Coprimality:</strong> For randomly chosen integers a,b ≤ N, the probability that gcd(a,b) = 1 is asymptotically 6/π² ≈ 0.6079 as N → ∞. This is equivalent to asking: what fraction of all pairs (a,b) with a,b ≤ N are coprime?
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Derivation via Euler Product:</strong> The probability equals ∏_p (1-1/p²) where the product is over all primes. This Euler product telescopes to 1/ζ(2) = 6/π², where ζ(s) = ∑_{n≥1} 1/n^s is the Riemann zeta function and ζ(2) = π²/6 (Basel problem).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Visualization Method:</strong> The cumulative count of coprime pairs (a,b) with 1 ≤ a < b ≤ n is ∑_{k=1}^n φ(k). The ratio of this count to the total number of pairs n(n-1)/2 converges to 6/π².
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Mertens' Third Theorem:</strong> ∑_{n≤x} φ(n) = (3/π²)x² + O(x log x). This stronger result shows not just convergence but the precise asymptotic density with error term.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Connections:</strong> Related to the probability that a random polynomial over ℤ is irreducible, the density of squarefree integers (also 6/π²), and probabilistic number theory.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 10 -->
+                        <div style="background: rgba(99,102,241,0.05); padding: 20px; border-left: 4px solid var(--c10-indigo); border-radius: 6px;">
+                            <h5 style="color: var(--c10-indigo); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 10: 🎯 Coprime Pairs Grid - GCD Matrix Visualization
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>GCD Matrix:</strong> The grid displays gcd(i,j) for 1 ≤ i,j < M as a heatmap. Coprime pairs (gcd = 1) are bright, while pairs with common factors are dimmer. The visual intensity is proportional to 1/gcd(i,j).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Diagonal Structure:</strong> The main diagonal (i = j) shows gcd(i,i) = i, highlighted in gold. These are the only "self-GCD" values. The matrix is symmetric: gcd(i,j) = gcd(j,i).
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Prime Patterns:</strong> Row/column i corresponding to prime p shows: gcd(i,j) ∈ {1,p}. The row is bright except at multiples of p, creating a characteristic sparse pattern. Prime powers show similar but denser patterns.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Totient Interpretation:</strong> Each row i has exactly φ(i) bright cells (coprime pairs). The total number of bright cells in the matrix equals ∑_{i=1}^{M-1} φ(i), which asymptotically equals (3/π²)M².
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Visual GCD computation, verification of coprimality, identification of common divisors, and pattern recognition in number theory. Related to the Möbius function and inclusion-exclusion.
+                            </p>
+                        </div>
+
+                        <!-- Canvas 11 -->
+                        <div style="background: rgba(39,174,96,0.05); padding: 20px; border-left: 4px solid var(--c11-lime); border-radius: 6px;">
+                            <h5 style="color: var(--c11-lime); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 11: 🔢 Nested Density Rings - Sequential φ(n)/n Visualization
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Concentric Ring Structure:</strong> Each ring n (from 2 to M) displays all integers 1 ≤ k < n on a circle of radius proportional to n. Coprime points (gcd(k,n) = 1) are shown in lime green, revealing the density φ(n)/n geometrically.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Visual Density Comparison:</strong> Ring opacity/brightness is proportional to φ(n)/n. Prime rings are almost fully bright (only one missing point). Highly composite rings are dimmer, reflecting lower coprime density. This allows instant visual comparison across moduli.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Radial Alignment:</strong> A vertical ray from center intersects each ring at the point k = ⌊n/2⌋. Following this ray outward shows how a particular residue class evolves across increasing moduli, demonstrating the lifting structure.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Pattern Recognition:</strong> Composite n with small prime factors show clear "gaps" - empty sectors where all multiples of those primes lie. Prime powers p^k show regular p-fold rotational symmetry in their gap structure.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Applications:</strong> Visual verification of coprime density trends, understanding how (ℤ/nℤ)× grows with n, identifying highly composite vs prime moduli, and seeing the self-similar structure of coprimality across scales.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- GROUP 3: DIRICHLET CHARACTERS (Canvas 12) -->
+                    <h4 style="color: var(--gold); font-size: 1.4em; margin: 40px 0 15px; background: linear-gradient(90deg, rgba(255,215,0,0.2), transparent); padding: 10px; border-left: 4px solid var(--gold);">Group 3: Analytic Number Theory (Canvas 12)</h4>
+
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin: 20px 0;">
+                        <!-- Canvas 12 -->
+                        <div style="background: rgba(156,39,176,0.05); padding: 20px; border-left: 4px solid var(--c12-magenta); border-radius: 6px;">
+                            <h5 style="color: var(--c12-magenta); font-size: 1.2em; margin: 0 0 12px 0;">
+                                Canvas 12: 🌟 Dirichlet Characters - Multiplicative Characters & L-Functions
+                            </h5>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Dirichlet Character Definition:</strong> A <strong>Dirichlet character</strong> modulo M is a group homomorphism χ: (ℤ/Mℤ)× → ℂ× extended to all of ℤ/Mℤ by setting χ(n) = 0 if gcd(n,M) > 1. The character is <strong>completely multiplicative</strong>: χ(mn) = χ(m)χ(n) for all m,n.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Principal Character:</strong> The <strong>principal character</strong> χ₀ is defined by χ₀(n) = 1 if gcd(n,M) = 1 and χ₀(n) = 0 otherwise. This is the trivial homomorphism on (ℤ/Mℤ)×. The visualization shows this character: green points (χ = 1) for coprime n, faded points (χ = 0) for non-coprime n.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Character Group:</strong> The set of all Dirichlet characters mod M forms a group under pointwise multiplication, isomorphic to the dual group (ℤ/Mℤ)^×. There are exactly φ(M) distinct characters. For cyclic (ℤ/Mℤ)× (when primitive roots exist), characters correspond to powers of a primitive root of unity.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Order Coloring:</strong> Points are colored by the multiplicative order of n in (ℤ/Mℤ)×. This order equals the smallest positive k such that n^k ≡ 1 (mod M). For any character χ, we have χ(n)^{ord(n)} = 1, so χ(n) is an ord(n)-th root of unity. The color coding reveals this structure.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Dirichlet L-Function:</strong> For a character χ, the <strong>Dirichlet L-function</strong> is L(s,χ) = ∑_{n≥1} χ(n)/n^s for Re(s) > 1. This generalizes the Riemann zeta function (L(s,χ₀) = ζ(s)∏_{p|M}(1-p^{-s})). The Euler product is L(s,χ) = ∏_p (1-χ(p)p^{-s})^{-1}.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Orthogonality Relations:</strong> Characters satisfy beautiful orthogonality: ∑_{n mod M} χ(n)ψ̄(n) = φ(M)δ_{χ,ψ} (character orthogonality) and ∑_χ χ(n)χ̄(m) = φ(M)δ_{n,m} (where δ is 1 if arguments equal, 0 otherwise). These are analogs of Fourier orthogonality.
+                            </p>
+                            <p style="margin-bottom: 12px; line-height: 1.7;">
+                                <strong>Applications to Prime Distribution:</strong> Dirichlet's theorem on primes in arithmetic progressions uses characters: π(x;M,a) ~ x/(φ(M)log x) is proved via L(1,χ) ≠ 0 for non-principal χ. The Generalized Riemann Hypothesis (GRH) concerns zeros of L(s,χ): all non-trivial zeros should satisfy Re(s) = 1/2.
+                            </p>
+                            <p style="line-height: 1.7;">
+                                <strong>Advanced Connections:</strong> Class field theory, Artin L-functions, automorphic forms, Hecke characters, algebraic number theory, Langlands program, and the study of Galois representations.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- UNIFYING PRINCIPLES -->
+                    <div style="background: linear-gradient(135deg, rgba(255,215,0,0.1), rgba(0,255,255,0.1)); padding: 25px; border: 3px solid var(--gold); border-radius: 10px; margin: 35px 0;">
+                        <h4 style="color: var(--gold); font-size: 1.5em; margin: 0 0 15px 0;">Unifying Mathematical Principles Across All 12 Canvases</h4>
+                        <ul style="list-style: none; padding: 0;">
+                            <li style="margin-bottom: 15px; padding-left: 20px; border-left: 3px solid var(--cyan);">
+                                <strong style="color: var(--cyan);">Modular Arithmetic:</strong> The foundation underlying all visualizations. The structure of ℤ/Mℤ and its unit group (ℤ/Mℤ)× appears in every canvas, from Farey fractions (canvas 1) to Dirichlet characters (canvas 12).
+                            </li>
+                            <li style="margin-bottom: 15px; padding-left: 20px; border-left: 3px solid var(--cyan);">
+                                <strong style="color: var(--cyan);">Coprimality & φ(M):</strong> Euler's totient function connects geometric density (canvases 7,11), statistical limits (canvases 8,9,10), group structure (canvases 3,6), and character theory (canvas 12).
+                            </li>
+                            <li style="margin-bottom: 15px; padding-left: 20px; border-left: 3px solid var(--cyan);">
+                                <strong style="color: var(--cyan);">Conformal Geometry:</strong> Cayley transforms (canvas 2) and Möbius transformations (canvas 5) provide the geometric framework connecting hyperbolic geometry to number theory via the modular group PSL(2,ℤ).
+                            </li>
+                            <li style="margin-bottom: 15px; padding-left: 20px; border-left: 3px solid var(--cyan);">
+                                <strong style="color: var(--cyan);">Prime Distribution:</strong> Dirichlet's theorem appears geometrically (canvas 1), through residue classes (canvas 3), via channel decomposition (canvas 4), and analytically via L-functions (canvas 12).
+                            </li>
+                            <li style="margin-bottom: 15px; padding-left: 20px; border-left: 3px solid var(--cyan);">
+                                <strong style="color: var(--cyan);">Group Theory:</strong> The structure of (ℤ/Mℤ)× unifies the nested rings (canvas 3), primitive roots (canvas 6), and Dirichlet characters (canvas 12), showing how abstract algebra manifests geometrically.
+                            </li>
+                            <li style="padding-left: 20px; border-left: 3px solid var(--cyan);">
+                                <strong style="color: var(--cyan);">Asymptotic Density:</strong> The limit 6/π² connects coprime probability (canvas 9), matrix density (canvas 10), and the average behavior of φ(n)/n (canvas 8), demonstrating how local arithmetic determines global statistics.
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- REFERENCES -->
+                    <div style="background: rgba(0,0,0,0.3); padding: 20px; margin-top: 35px; border-radius: 8px;">
+                        <h4 style="color: var(--gold); margin: 0 0 15px 0;">Mathematical References & Further Reading</h4>
+                        <ul style="font-size: 0.9em; line-height: 1.8; color: rgba(255,255,255,0.8);">
+                            <li>Hardy & Wright, "An Introduction to the Theory of Numbers" - Classic reference for number theory fundamentals</li>
+                            <li>Ireland & Rosen, "A Classical Introduction to Modern Number Theory" - Comprehensive treatment of algebraic number theory</li>
+                            <li>Apostol, "Introduction to Analytic Number Theory" - Dirichlet characters, L-functions, and prime number theorem</li>
+                            <li>Silverman, "The Arithmetic of Elliptic Curves" - Connections to modular curves and modular forms</li>
+                            <li>Serre, "A Course in Arithmetic" - Modular forms and quadratic forms</li>
+                            <li>Needham, "Visual Complex Analysis" - Geometric approach to complex analysis and Möbius transformations</li>
+                            <li>Anderson & Feil, "A First Course in Abstract Algebra" - Group theory and ring theory foundations</li>
+                            <li>Davenport, "Multiplicative Number Theory" - Advanced treatment of Dirichlet series and L-functions</li>
+                        </ul>
+                    </div>
                 </div>r| = 1 (mediant property). The sequence has ∑_{k=1}^n φ(k) terms, where φ is Euler's totient function.
                         </li>
                         <li style="margin-bottom: 12px;">
@@ -1225,6 +1652,9 @@
                         <div class="panel-title">𝔻 Unit Disk</div>
                         <div class="panel-subtitle">Custom Farey Configuration</div>
                     </div>
+                    <button class="btn btn-small" onclick="exportSingleCanvas('diskCanvas', 'unit_disk_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
                 </div>
                 <canvas id="diskCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1235,6 +1665,9 @@
                         <div class="panel-title">ℍ Upper Half-Plane</div>
                         <div class="panel-subtitle">Cayley Transform & Geodesics</div>
                     </div>
+                    <button class="btn btn-small" onclick="exportSingleCanvas('cayleyCanvas', 'cayley_plane_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
                 </div>
                 <canvas id="cayleyCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1245,6 +1678,9 @@
                         <div class="panel-title">⊚ Nested Modular Rings</div>
                         <div class="panel-subtitle">Unlimited GCD Structure</div>
                     </div>
+                    <button class="btn btn-small" onclick="exportSingleCanvas('nestedCanvas', 'nested_rings_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
                 </div>
                 <canvas id="nestedCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1255,6 +1691,9 @@
                         <div class="panel-title">Modular Reduction Projection</div>
                         <div class="panel-subtitle">Farey Channel Decomposition: r/M → r'/M' where M' = M/gcd(r,M)</div>
                     </div>
+                    <button class="btn btn-small" onclick="exportSingleCanvas('reductionCanvas', 'modular_reduction_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
                 </div>
                 <canvas id="reductionCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1265,6 +1704,9 @@
                         <div class="panel-title">ℂ Full Complex Plane</div>
                         <div class="panel-subtitle">Complete Cayley Transform View (Interior + Exterior)</div>
                     </div>
+                    <button class="btn btn-small" onclick="exportSingleCanvas('fullPlaneCanvas', 'full_plane_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
                 </div>
                 <canvas id="fullPlaneCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1272,12 +1714,99 @@
             <div class="canvas-panel" id="primitiveRootsPanel">
                 <div class="panel-header">
                     <div>
-                        <div class="panel-title">Primitive Roots Power Sequence</div>
-                        <div class="panel-subtitle">nth Roots of Unity: g^n mod M visualized on unit circle with Pixi.js</div>
+                        <div class="panel-title" style="color: var(--c6-pink);">6. ⚙ Primitive Roots</div>
+                        <div class="panel-subtitle">Power Sequence g^n mod M</div>
                     </div>
+                    <button class="btn btn-small" onclick="exportPixiCanvas()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
                 </div>
                 <div id="pixiPrimitiveRootsContainer" style="width: 100%; height: 1000px; display: flex; justify-content: center; align-items: center;"></div>
                 <canvas id="primitiveRootsCanvas" width="1000" height="1000" style="display: none;"></canvas>
+            </div>
+
+            <!-- Canvas 7: Coprime Circle -->
+            <div class="canvas-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title" style="color: var(--c7-green);">7. 🔵 Coprime Circle</div>
+                        <div class="panel-subtitle">Visual Coprimality Patterns</div>
+                    </div>
+                    <button class="btn btn-small" onclick="exportCanvas7()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
+                </div>
+                <canvas id="canvas7" width="1000" height="1000"></canvas>
+            </div>
+
+            <!-- Canvas 8: Phi Ratios Chart -->
+            <div class="canvas-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title" style="color: var(--c8-yellow);">8. 📊 Phi Ratios</div>
+                        <div class="panel-subtitle">φ(n)/n Convergence Chart</div>
+                    </div>
+                    <button class="btn btn-small" onclick="exportCanvas8()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
+                </div>
+                <canvas id="canvas8" width="1000" height="800"></canvas>
+            </div>
+
+            <!-- Canvas 9: Convergence to 6/π² -->
+            <div class="canvas-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title" style="color: var(--c9-red);">9. 📈 Convergence</div>
+                        <div class="panel-subtitle">Limit to 6/π² ≈ 0.6079</div>
+                    </div>
+                    <button class="btn btn-small" onclick="exportCanvas9()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
+                </div>
+                <canvas id="canvas9" width="1000" height="800"></canvas>
+            </div>
+
+            <!-- Canvas 10: Coprime Pairs Grid -->
+            <div class="canvas-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title" style="color: var(--c10-indigo);">10. 🎯 Coprime Grid</div>
+                        <div class="panel-subtitle">GCD Pairs Matrix View</div>
+                    </div>
+                    <button class="btn btn-small" onclick="exportCanvas10()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
+                </div>
+                <canvas id="canvas10" width="1000" height="1000"></canvas>
+            </div>
+
+            <!-- Canvas 11: Nested Density Rings -->
+            <div class="canvas-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title" style="color: var(--c11-lime);">11. 🔢 Density Rings</div>
+                        <div class="panel-subtitle">Nested 1→n Coprime View</div>
+                    </div>
+                    <button class="btn btn-small" onclick="exportCanvas11()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
+                </div>
+                <canvas id="canvas11" width="1000" height="1000"></canvas>
+            </div>
+
+            <!-- Canvas 12: Dirichlet Characters -->
+            <div class="canvas-panel">
+                <div class="panel-header">
+                    <div>
+                        <div class="panel-title" style="color: var(--c12-magenta);">12. 🌟 Dirichlet Characters</div>
+                        <div class="panel-subtitle">χ(n) mod M Character Visualization</div>
+                    </div>
+                    <button class="btn btn-small" onclick="exportCanvas12()" style="padding: 6px 12px; font-size: 0.85em;">
+                        📥 Export 2K
+                    </button>
+                </div>
+                <canvas id="canvas12" width="1000" height="1000"></canvas>
             </div>
         </div>
 
@@ -1584,6 +2113,21 @@
             <div class="controls-body">
                 <!-- Basic Parameters -->
                 <div class="section-header canvas-global">Basic Parameters</div>
+                
+                <!-- Angular Layout Mode -->
+                <div class="control-row">
+                    <div class="control-item" data-tooltip="Choose how residues are positioned on circles: by angle (natural fractions) or by sequential order (1, 2, 3, ...)">
+                        <div class="control-label">
+                            <span>Angular Layout Mode</span>
+                        </div>
+                        <select id="angularLayoutMode" onchange="updateAngularLayoutMode(this.value)" style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-mid); color: var(--text); border: 1px solid var(--border); border-radius: 4px; font-family: 'Fira Code', monospace;">
+                            <option value="fractional">Fractional: θ = 2πk/m (Natural Angles)</option>
+                            <option value="sequential">Sequential: Order by Index (1→2→3→...→m)</option>
+                        </select>
+                        <div class="help-text" id="layoutModeHelp">Fractional mode uses natural angular positions based on k/m</div>
+                    </div>
+                </div>
+                
                 <div class="control-row">
                     <div class="control-item" data-tooltip="Rotates all visualizations by this angle. Animated when auto-rotate is enabled.">
                         <div class="control-label">
@@ -2440,6 +2984,21 @@
                     </div>
                 </div>
 
+                <!-- Plot Order Control -->
+                <div class="section-header canvas-global">Plot Order & Arrangement</div>
+                <div class="control-row">
+                    <div class="control-item" data-tooltip="Choose how to arrange residues on the circle: by angle (standard) or sequentially by value (1,2,3,...,m-1)">
+                        <div class="control-label">
+                            <span>Plot Order</span>
+                        </div>
+                        <select id="plotOrder" onchange="updatePlotOrder()" style="width: 100%; padding: 8px; margin-top: 8px; background: var(--bg-mid); color: var(--text); border: 1px solid var(--border); border-radius: 4px; font-family: 'Fira Code', monospace;">
+                            <option value="angular">Angular Position (Standard: 2πk/m)</option>
+                            <option value="sequential">Sequential Order (1,2,3,...,m-1)</option>
+                        </select>
+                        <div class="help-text" id="plotOrderHelp">Angular: positions by fraction of circle | Sequential: places in sorted order</div>
+                    </div>
+                </div>
+
                 <!-- Toggles -->
                 <div class="section-header canvas-global">Display Options</div>
                 <div class="toggle-grid">
@@ -2686,6 +3245,7 @@
             maxRing: 101,
             ringSpacing: 1.0,
             ringRotation: 0,
+            angularLayoutMode: 'fractional', // 'fractional' or 'sequential'
             globalLineThickness: 1.0,
             connectionMode: 'none',
             gcdFilter: 'both',
@@ -2738,6 +3298,8 @@
             filterGCDValue: 1,
             filterModulusRange: [1, 100],
             filterResidueClass: null,
+            plotOrder: 'angular',  // 'angular' or 'sequential'
+            showConnections: false,  // For canvas 7 coprime connections
             fareyPoints: [
                 {num: 1, den: 1},
                 {num: 0, den: 1},
@@ -2817,6 +3379,7 @@
         }
 
         function initCanvases() {
+            // Original 6 canvases
             canvases.disk = document.getElementById('diskCanvas');
             canvases.cayley = document.getElementById('cayleyCanvas');
             canvases.nested = document.getElementById('nestedCanvas');
@@ -2824,16 +3387,35 @@
             canvases.primitiveRoots = document.getElementById('primitiveRootsCanvas');
             canvases.fullPlane = document.getElementById('fullPlaneCanvas');
             
+            // New 6 canvases
+            canvases.canvas7 = document.getElementById('canvas7');
+            canvases.canvas8 = document.getElementById('canvas8');
+            canvases.canvas9 = document.getElementById('canvas9');
+            canvases.canvas10 = document.getElementById('canvas10');
+            canvases.canvas11 = document.getElementById('canvas11');
+            canvases.canvas12 = document.getElementById('canvas12');
+            
             const dpr = window.devicePixelRatio || 1;
             
-            [canvases.disk, canvases.cayley, canvases.nested, canvases.reduction, canvases.primitiveRoots, canvases.fullPlane].forEach(canvas => {
-                const rect = canvas.getBoundingClientRect();
-                canvas.width = canvas.width * dpr;
-                canvas.height = canvas.height * dpr;
-                const ctx = canvas.getContext('2d');
-                ctx.scale(dpr, dpr);
+            // Scale all 12 canvases
+            const allCanvases = [
+                canvases.disk, canvases.cayley, canvases.nested, canvases.reduction, 
+                canvases.primitiveRoots, canvases.fullPlane,
+                canvases.canvas7, canvases.canvas8, canvases.canvas9,
+                canvases.canvas10, canvases.canvas11, canvases.canvas12
+            ];
+            
+            allCanvases.forEach(canvas => {
+                if (canvas) {
+                    const rect = canvas.getBoundingClientRect();
+                    canvas.width = canvas.width * dpr;
+                    canvas.height = canvas.height * dpr;
+                    const ctx = canvas.getContext('2d');
+                    ctx.scale(dpr, dpr);
+                }
             });
             
+            // Store contexts
             canvases.diskCtx = canvases.disk.getContext('2d');
             canvases.cayleyCtx = canvases.cayley.getContext('2d');
             canvases.nestedCtx = canvases.nested.getContext('2d');
@@ -2953,8 +3535,16 @@
                 const value = modPow(gen, n, m);
                 powerSequence.push({ n, value });
                 
+                // Apply per-ring rotation for this modulus
+                let perRingOffset = 0;
+                if (state.perRingRotations && state.perRingRotations[m] !== undefined) {
+                    perRingOffset = state.perRingRotations[m] * Math.PI / 180;
+                } else {
+                    perRingOffset = state.ringRotation * Math.PI / 180;
+                }
+                
                 // Calculate angle for this residue
-                const angle = (2 * Math.PI * value / m) - Math.PI / 2 + (state.phase * Math.PI / 180);
+                const angle = (2 * Math.PI * value / m) - Math.PI / 2 + (state.phase * Math.PI / 180) + perRingOffset;
                 angleMap.set(value, angle);
             }
             
@@ -2962,7 +3552,15 @@
             for (let a = 1; a < m; a++) {
                 if (gcd(a, m) !== 1) continue;
                 
-                const angle = (2 * Math.PI * a / m) - Math.PI / 2 + (state.phase * Math.PI / 180);
+                // Apply per-ring rotation
+                let perRingOffset = 0;
+                if (state.perRingRotations && state.perRingRotations[m] !== undefined) {
+                    perRingOffset = state.perRingRotations[m] * Math.PI / 180;
+                } else {
+                    perRingOffset = state.ringRotation * Math.PI / 180;
+                }
+                
+                const angle = (2 * Math.PI * a / m) - Math.PI / 2 + (state.phase * Math.PI / 180) + perRingOffset;
                 const x = centerX + radius * Math.cos(angle);
                 const y = centerY + radius * Math.sin(angle);
                 
@@ -3196,6 +3794,43 @@
         function selectElementFromOrder(value) {
             if (!value) return;
             updateGenerator(parseInt(value));
+        }
+
+        // Update plot order mode
+        function updatePlotOrder() {
+            const mode = document.getElementById('plotOrder').value;
+            state.plotOrder = mode;
+            
+            const helpText = mode === 'angular' 
+                ? 'Angular: positions by fraction of circle (2πk/m)'
+                : 'Sequential: places residues 1,2,3,...,m-1 in order around circle';
+            document.getElementById('plotOrderHelp').textContent = helpText;
+            
+            updateAll();
+        }
+
+        // Calculate angle based on plot order mode
+        function getPlotAngle(value, modulus, baseAngle, perRingOffset = 0) {
+            const phase = state.phase * Math.PI / 180;
+            
+            if (state.plotOrder === 'sequential') {
+                // Sequential: arrange coprime residues 1,2,3,...,m-1 in order
+                // Find position in sorted list of coprime elements
+                const coprimes = [];
+                for (let k = 1; k < modulus; k++) {
+                    if (gcd(k, modulus) === 1) coprimes.push(k);
+                }
+                const index = coprimes.indexOf(value);
+                if (index === -1) {
+                    // Non-coprime, place by standard position
+                    return (2 * Math.PI * value / modulus) + phase + perRingOffset;
+                }
+                // Place sequentially around circle
+                return (2 * Math.PI * index / coprimes.length) + phase + perRingOffset;
+            } else {
+                // Angular: standard positioning by 2πk/m
+                return baseAngle + phase + perRingOffset;
+            }
         }
 
         // Show detailed order table
@@ -6032,6 +6667,9 @@ Generated: ${new Date().toLocaleString()}
             return phi;
         }
 
+        // Alias for eulerPhi - used by new canvases 7-12
+        const phi = eulerPhi;
+
         // Pre-compute GCDs and Phi for dyadic families
         function precomputeDyadicFamily(M0, b, n0, nMax) {
             console.log('Precomputing GCDs and totients for dyadic family...');
@@ -6364,7 +7002,9 @@ Generated: ${new Date().toLocaleString()}
                         perRingOffset = state.ringRotation * Math.PI / 180;
                     }
 
-                    const angle = 2 * Math.PI * p / state.modulus + phase + perRingOffset;
+                    // Use sequential or angular plotting
+                    const baseAngle = 2 * Math.PI * p / state.modulus;
+                    const angle = getPlotAngle(p, state.modulus, baseAngle, perRingOffset);
                     const x = cx + r * Math.cos(angle);
                     const y = cy + r * Math.sin(angle);
 
@@ -6396,7 +7036,9 @@ Generated: ${new Date().toLocaleString()}
                             perRingOffset = state.ringRotation * Math.PI / 180;
                         }
                         
-                        const angle = 2 * Math.PI * frac + phase + perRingOffset;
+                        // Use sequential or angular plotting
+                        const baseAngle = 2 * Math.PI * frac;
+                        const angle = getPlotAngle(Math.round(frac * m), m, baseAngle, perRingOffset);
                         return {
                             x: cx + r * Math.cos(angle),
                             y: cy + r * Math.sin(angle),
@@ -8468,21 +9110,28 @@ Generated: ${new Date().toLocaleString()}
         }
 
         function updateAll() {
+            // Draw canvases 1-6
             drawDisk();
             drawCayley();
             drawNested();
             drawReduction();
-            
-            // Always draw Pixi primitive roots (6th canvas)
             drawPixiPrimitiveRoots();
             
             // Draw full plane if visible
-            if (document.getElementById('toggleFullPlane').checked) {
+            if (document.getElementById('toggleFullPlane') && document.getElementById('toggleFullPlane').checked) {
                 drawFullPlane();
             }
             
+            // Draw canvases 7-12
+            drawCanvas7();
+            drawCanvas8();
+            drawCanvas9();
+            drawCanvas10();
+            drawCanvas11();
+            drawCanvas12();
+            
             // Update stats if panel is visible
-            if (document.getElementById('statsPanel').style.display !== 'none') {
+            if (document.getElementById('statsPanel') && document.getElementById('statsPanel').style.display !== 'none') {
                 updateStats();
             }
             
@@ -8732,6 +9381,39 @@ Generated: ${new Date().toLocaleString()}
             document.getElementById('ringRotationInput').value = val;
             document.getElementById('ringRotationInput2').value = val;
             if (!state.animationId) updateAll();
+        }
+
+        // Angular layout mode functions
+        function updateAngularLayoutMode(mode) {
+            state.angularLayoutMode = mode;
+            
+            // Update help text
+            if (mode === 'sequential') {
+                document.getElementById('layoutModeHelp').textContent = 
+                    'Sequential mode: residues 0, 1, 2, 3, ... placed in numerical order (0° → 2π)';
+            } else {
+                document.getElementById('layoutModeHelp').textContent = 
+                    'Fractional mode: natural angular positions based on fraction k/m';
+            }
+            
+            updateAll();
+        }
+
+        // Calculate angle based on layout mode
+        // k = residue value, m = modulus
+        function getLayoutAngle(k, m, phase, perRingOffset) {
+            const phaseRad = phase * Math.PI / 180;
+            
+            if (state.angularLayoutMode === 'sequential') {
+                // Sequential: residue k goes at position k
+                // So residue 0 at 0°, residue 1 at 2π/m, residue 2 at 4π/m, etc.
+                // This places them in numerical order: 0, 1, 2, 3, ..., m-1
+                return (2 * Math.PI * k / m) + phaseRad + perRingOffset;
+            } else {
+                // Fractional: natural angle based on k/m fraction
+                // For Farey points p/q, this gives angle 2π(p/q)
+                return (2 * Math.PI * k / m) + phaseRad + perRingOffset;
+            }
         }
 
         // Nested rings mode functions
@@ -9024,6 +9706,148 @@ Generated: ${new Date().toLocaleString()}
             updateAll();
         }
 
+        // Export single canvas as 4K PNG
+        function exportSingleCanvas(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) {
+                console.error('Canvas not found:', canvasId);
+                return;
+            }
+
+            // Canvas metadata for titles
+            const canvasInfo = {
+                'diskCanvas': { title: '1. Unit Disk - Farey & Primes', color: '#ffd700' },
+                'cayleyCanvas': { title: '2. Cayley Plane - Hyperbolic Geometry', color: '#1abc9c' },
+                'nestedCanvas': { title: '3. Nested Modular Rings', color: '#3498db' },
+                'reductionCanvas': { title: '4. Modular Reduction', color: '#e67e22' },
+                'fullPlaneCanvas': { title: '5. Full Complex Plane', color: '#9b59b6' },
+                'primitiveRootsCanvas': { title: '6. Primitive Roots', color: '#e91e63' },
+                'canvas7': { title: '7. Coprime Circle', color: '#2ecc71' },
+                'canvas8': { title: '8. Phi Ratios Chart', color: '#f1c40f' },
+                'canvas9': { title: '9. Convergence to 6/π²', color: '#e74c3c' },
+                'canvas10': { title: '10. Coprime Pairs Grid', color: '#6366f1' },
+                'canvas11': { title: '11. Nested Density Rings', color: '#27ae60' },
+                'canvas12': { title: '12. Dirichlet Characters', color: '#9c27b0' }
+            };
+
+            const info = canvasInfo[canvasId] || { title: 'Canvas Export', color: '#ffd700' };
+
+            // Create a 2K export canvas with space for title and legend
+            const exportCanvas = document.createElement('canvas');
+            const exportWidth = 2000;
+            const exportHeight = 2200; // Extra space for title and legend
+            exportCanvas.width = exportWidth;
+            exportCanvas.height = exportHeight;
+            
+            const ctx = exportCanvas.getContext('2d');
+            
+            // Fill background
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, exportWidth, exportHeight);
+            
+            // Draw title at top
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(info.title, exportWidth / 2, 60);
+            
+            // Draw subtitle
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '28px Arial';
+            ctx.fillText(`Modulus M = ${state.modulus} | Phase = ${state.phase.toFixed(1)}°`, exportWidth / 2, 105);
+            
+            // Draw author credit
+            ctx.font = '20px Arial';
+            ctx.fillStyle = 'rgba(255,255,255,0.7)';
+            ctx.fillText('By Wessen Getachew', exportWidth / 2, 140);
+            
+            // Calculate scaling to fit canvas content
+            const contentTop = 170;
+            const contentHeight = exportHeight - contentTop - 50;
+            const canvasAspect = canvas.width / canvas.height;
+            
+            let drawWidth = exportWidth - 100;
+            let drawHeight = drawWidth / canvasAspect;
+            
+            if (drawHeight > contentHeight) {
+                drawHeight = contentHeight;
+                drawWidth = drawHeight * canvasAspect;
+            }
+            
+            const drawX = (exportWidth - drawWidth) / 2;
+            const drawY = contentTop;
+            
+            // Draw the canvas content
+            ctx.drawImage(canvas, drawX, drawY, drawWidth, drawHeight);
+            
+            // Draw legend/info box at bottom
+            ctx.fillStyle = 'rgba(0,0,0,0.7)';
+            ctx.fillRect(50, exportHeight - 40, exportWidth - 100, 35);
+            ctx.fillStyle = info.color;
+            ctx.font = '18px Arial';
+            ctx.textAlign = 'center';
+            const timestamp = new Date().toISOString().split('T')[0];
+            ctx.fillText(`Interactive Modular Arithmetic Research Suite | ${timestamp}`, exportWidth / 2, exportHeight - 15);
+            
+            // Download
+            exportCanvas.toBlob(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename.replace('4k', '2k');
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+        }
+
+        // Export Pixi canvas (Primitive Roots)
+        function exportPixiCanvas() {
+            if (!canvases.pixiApp || !canvases.pixiApp.renderer) {
+                console.error('Pixi app not initialized');
+                return;
+            }
+
+            try {
+                // Extract image from Pixi renderer
+                const app = canvases.pixiApp;
+                const scale = 4; // 4K resolution
+                
+                // Create temporary renderer at higher resolution
+                const tempApp = new PIXI.Application({
+                    width: app.view.width * scale,
+                    height: app.view.height * scale,
+                    backgroundColor: 0x0a0e27,
+                    antialias: true,
+                    resolution: scale,
+                    preserveDrawingBuffer: true
+                });
+                
+                // Copy the stage
+                tempApp.stage.addChild(app.stage.clone());
+                
+                // Render and extract
+                tempApp.renderer.render(tempApp.stage);
+                const imageData = tempApp.renderer.view.toDataURL('image/png');
+                
+                // Download
+                const a = document.createElement('a');
+                a.href = imageData;
+                a.download = 'primitive_roots_4k.png';
+                a.click();
+                
+                // Cleanup
+                tempApp.destroy(true);
+            } catch (error) {
+                console.error('Error exporting Pixi canvas:', error);
+                // Fallback: export current view
+                const imageData = canvases.pixiApp.renderer.view.toDataURL('image/png');
+                const a = document.createElement('a');
+                a.href = imageData;
+                a.download = 'primitive_roots.png';
+                a.click();
+            }
+        }
+
         function exportVisualization() {
             // Create export dialog if it doesn't exist
             if (!document.getElementById('exportDialog')) {
@@ -9051,32 +9875,62 @@ Generated: ${new Date().toLocaleString()}
                                 <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
                                     <input type="checkbox" class="canvas-checkbox" value="disk" checked>
                                     <span style="width: 16px; height: 16px; background: #ffd700; border-radius: 2px; flex-shrink: 0;"></span>
-                                    <span style="flex: 1;">Unit Disk 𝔻</span>
+                                    <span style="flex: 1;">1. Unit Disk 𝔻</span>
                                 </label>
                                 <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
                                     <input type="checkbox" class="canvas-checkbox" value="cayley" checked>
-                                    <span style="width: 16px; height: 16px; background: #00ffff; border-radius: 2px; flex-shrink: 0;"></span>
-                                    <span style="flex: 1;">Upper Half-Plane ℍ</span>
+                                    <span style="width: 16px; height: 16px; background: #1abc9c; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">2. Cayley Plane ℍ</span>
                                 </label>
                                 <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
                                     <input type="checkbox" class="canvas-checkbox" value="nested" checked>
-                                    <span style="width: 16px; height: 16px; background: #1abc9c; border-radius: 2px; flex-shrink: 0;"></span>
-                                    <span style="flex: 1;">Nested Rings ⊚</span>
+                                    <span style="width: 16px; height: 16px; background: #3498db; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">3. Nested Rings ⊚</span>
                                 </label>
                                 <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
                                     <input type="checkbox" class="canvas-checkbox" value="reduction" checked>
                                     <span style="width: 16px; height: 16px; background: #e67e22; border-radius: 2px; flex-shrink: 0;"></span>
-                                    <span style="flex: 1;">Modular Reduction ⊗</span>
+                                    <span style="flex: 1;">4. Reduction ⊗</span>
                                 </label>
                                 <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
                                     <input type="checkbox" class="canvas-checkbox" value="fullplane" checked>
-                                    <span style="width: 16px; height: 16px; background: #3498db; border-radius: 2px; flex-shrink: 0;"></span>
-                                    <span style="flex: 1;">Full Complex Plane ℂ</span>
+                                    <span style="width: 16px; height: 16px; background: #9b59b6; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">5. Full Plane ℂ</span>
                                 </label>
                                 <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
                                     <input type="checkbox" class="canvas-checkbox" value="primitiveroots" checked>
-                                    <span style="width: 16px; height: 16px; background: #ff00ff; border-radius: 2px; flex-shrink: 0;"></span>
-                                    <span style="flex: 1;">Primitive Roots ⚙</span>
+                                    <span style="width: 16px; height: 16px; background: #e91e63; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">6. Primitive Roots ⚙</span>
+                                </label>
+                                <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" class="canvas-checkbox" value="canvas7" checked>
+                                    <span style="width: 16px; height: 16px; background: #2ecc71; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">7. Coprime Circle</span>
+                                </label>
+                                <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" class="canvas-checkbox" value="canvas8" checked>
+                                    <span style="width: 16px; height: 16px; background: #f1c40f; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">8. Phi Ratios</span>
+                                </label>
+                                <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" class="canvas-checkbox" value="canvas9" checked>
+                                    <span style="width: 16px; height: 16px; background: #e74c3c; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">9. Convergence</span>
+                                </label>
+                                <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" class="canvas-checkbox" value="canvas10" checked>
+                                    <span style="width: 16px; height: 16px; background: #6366f1; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">10. Coprime Grid</span>
+                                </label>
+                                <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" class="canvas-checkbox" value="canvas11" checked>
+                                    <span style="width: 16px; height: 16px; background: #27ae60; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">11. Density Rings</span>
+                                </label>
+                                <label class="export-checkbox" style="display: flex; align-items: center; gap: 8px; padding: 8px; background: rgba(0,255,255,0.05); border: 1px solid rgba(0,255,255,0.2); border-radius: 4px; cursor: pointer;">
+                                    <input type="checkbox" class="canvas-checkbox" value="canvas12" checked>
+                                    <span style="width: 16px; height: 16px; background: #9c27b0; border-radius: 2px; flex-shrink: 0;"></span>
+                                    <span style="flex: 1;">12. Dirichlet Chars</span>
                                 </label>
                             </div>
                             <div style="display: flex; gap: 8px;">
@@ -9088,7 +9942,7 @@ Generated: ${new Date().toLocaleString()}
                                 </button>
                             </div>
                             <div id="canvasSelectionCount" style="margin-top: 8px; color: var(--cyan); font-size: 0.9em; text-align: center;">
-                                6 canvases selected
+                                12 canvases selected
                             </div>
                         </div>
                         
@@ -9220,17 +10074,23 @@ Generated: ${new Date().toLocaleString()}
             
             // Canvas metadata with colors
             const canvasInfo = {
-                'disk': { canvas: canvases.disk, title: 'Unit Disk 𝔻', color: '#ffd700', subtitle: 'Farey Configuration' },
-                'cayley': { canvas: canvases.cayley, title: 'Upper Half-Plane ℍ', color: '#00ffff', subtitle: 'Cayley Transform' },
-                'nested': { canvas: canvases.nested, title: 'Nested Rings ⊚', color: '#1abc9c', subtitle: 'Multi-Modulus' },
-                'reduction': { canvas: canvases.reduction, title: 'Modular Reduction ⊗', color: '#e67e22', subtitle: 'Channel Projection' },
-                'fullplane': { canvas: canvases.fullPlane, title: 'Full Complex Plane ℂ', color: '#3498db', subtitle: 'Complete View' },
+                'disk': { canvas: canvases.disk, title: '1. Unit Disk 𝔻', color: '#ffd700', subtitle: 'Farey & Primes' },
+                'cayley': { canvas: canvases.cayley, title: '2. Cayley Plane ℍ', color: '#1abc9c', subtitle: 'Hyperbolic Geometry' },
+                'nested': { canvas: canvases.nested, title: '3. Nested Rings ⊚', color: '#3498db', subtitle: 'Modular Structure' },
+                'reduction': { canvas: canvases.reduction, title: '4. Reduction ⊗', color: '#e67e22', subtitle: 'Channel Projection' },
+                'fullplane': { canvas: canvases.fullPlane, title: '5. Full Plane ℂ', color: '#9b59b6', subtitle: 'Complete View' },
                 'primitiveroots': { 
                     canvas: canvases.pixiApp ? canvases.pixiApp.renderer.view : null, 
-                    title: 'Primitive Roots ⚙', 
-                    color: '#ff00ff',
+                    title: '6. Primitive Roots ⚙', 
+                    color: '#e91e63',
                     subtitle: 'Cyclic Structure'
-                }
+                },
+                'canvas7': { canvas: canvases.canvas7, title: '7. Coprime Circle', color: '#2ecc71', subtitle: 'φ(M)/M Density' },
+                'canvas8': { canvas: canvases.canvas8, title: '8. Phi Ratios', color: '#f1c40f', subtitle: 'φ(n)/n Chart' },
+                'canvas9': { canvas: canvases.canvas9, title: '9. Convergence', color: '#e74c3c', subtitle: 'Limit to 6/π²' },
+                'canvas10': { canvas: canvases.canvas10, title: '10. Coprime Grid', color: '#6366f1', subtitle: 'GCD Matrix' },
+                'canvas11': { canvas: canvases.canvas11, title: '11. Density Rings', color: '#27ae60', subtitle: 'Nested View' },
+                'canvas12': { canvas: canvases.canvas12, title: '12. Dirichlet', color: '#9c27b0', subtitle: 'Characters mod M' }
             };
             
             // Determine grid layout
@@ -9239,7 +10099,9 @@ Generated: ${new Date().toLocaleString()}
             if (count <= 2) { cols = count; rows = 1; }
             else if (count <= 4) { cols = 2; rows = 2; }
             else if (count <= 6) { cols = 3; rows = 2; }
-            else { cols = 3; rows = Math.ceil(count / 3); }
+            else if (count <= 9) { cols = 3; rows = 3; }
+            else if (count <= 12) { cols = 4; rows = 3; }
+            else { cols = 4; rows = Math.ceil(count / 4); }
             
             const canvasSize = baseSize / Math.max(rows, cols);
             const gridWidth = canvasSize * cols;
@@ -10854,6 +11716,472 @@ Generated: ${new Date().toLocaleString()}
             
             console.log('\n=====================================================');
         }
+
+        // ========================================
+        // CANVAS 7: Coprime Circle
+        // ========================================
+        function drawCanvas7() {
+            const canvas = document.getElementById('canvas7');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) * 0.4;
+            
+            // Clear
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, w, h);
+            
+            const n = state.modulus;
+            const phase = state.phase * Math.PI / 180;
+            
+            // Draw circle
+            ctx.strokeStyle = 'rgba(46, 204, 113, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Draw points colored by coprimality
+            for (let i = 1; i < n; i++) {
+                const angle = 2 * Math.PI * i / n + phase;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                
+                const isCoprime = gcd(i, n) === 1;
+                ctx.fillStyle = isCoprime ? '#2ecc71' : 'rgba(231, 76, 60, 0.5)';
+                ctx.beginPath();
+                ctx.arc(x, y, isCoprime ? 5 : 3, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                // Draw connections between coprimes
+                if (isCoprime && state.showConnections) {
+                    for (let j = i + 1; j < n; j++) {
+                        if (gcd(j, n) === 1) {
+                            const angle2 = 2 * Math.PI * j / n + phase;
+                            const x2 = cx + radius * Math.cos(angle2);
+                            const y2 = cy + radius * Math.sin(angle2);
+                            
+                            ctx.strokeStyle = 'rgba(46, 204, 113, 0.1)';
+                            ctx.lineWidth = 0.5;
+                            ctx.beginPath();
+                            ctx.moveTo(x, y);
+                            ctx.lineTo(x2, y2);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            // Center label
+            ctx.fillStyle = '#2ecc71';
+            ctx.font = 'bold 24px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(`φ(${n}) = ${phi(n)}`, cx, cy - 20);
+            ctx.font = '16px monospace';
+            ctx.fillText(`${phi(n)}/${n} = ${(phi(n)/n).toFixed(4)}`, cx, cy + 10);
+        }
+
+        // ========================================
+        // CANVAS 8: Phi Ratios Chart
+        // ========================================
+        function drawCanvas8() {
+            const canvas = document.getElementById('canvas8');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            
+            // Clear
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, w, h);
+            
+            const maxN = Math.min(state.modulus, 200);
+            const margin = 80;
+            const chartWidth = w - 2 * margin;
+            const chartHeight = h - 2 * margin;
+            
+            // Draw axes
+            ctx.strokeStyle = '#f1c40f';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin, h - margin);
+            ctx.lineTo(w - margin, h - margin);
+            ctx.stroke();
+            
+            // Draw phi(n)/n values
+            ctx.strokeStyle = '#f1c40f';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            
+            let firstPoint = true;
+            for (let n = 2; n <= maxN; n++) {
+                const ratio = phi(n) / n;
+                const x = margin + (n / maxN) * chartWidth;
+                const y = h - margin - ratio * chartHeight;
+                
+                if (firstPoint) {
+                    ctx.moveTo(x, y);
+                    firstPoint = false;
+                } else {
+                    ctx.lineTo(x, y);
+                }
+                
+                // Mark primes
+                if (isPrime(n)) {
+                    ctx.fillStyle = '#e74c3c';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#f1c40f';
+            ctx.font = 'bold 20px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('φ(n)/n Ratio Chart', w / 2, 40);
+            
+            ctx.font = '14px monospace';
+            ctx.fillText('n', w - margin + 20, h - margin + 5);
+            ctx.save();
+            ctx.translate(margin - 50, h / 2);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('φ(n)/n', 0, 0);
+            ctx.restore();
+        }
+
+        // ========================================
+        // CANVAS 9: Convergence to 6/π²
+        // ========================================
+        function drawCanvas9() {
+            const canvas = document.getElementById('canvas9');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            
+            // Clear
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, w, h);
+            
+            const maxN = Math.min(state.modulus, 500);
+            const margin = 80;
+            const chartWidth = w - 2 * margin;
+            const chartHeight = h - 2 * margin;
+            const target = 6 / (Math.PI * Math.PI);
+            
+            // Draw axes
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(margin, h - margin);
+            ctx.lineTo(w - margin, h - margin);
+            ctx.stroke();
+            
+            // Draw target line
+            const targetY = h - margin - (target / 1.0) * chartHeight;
+            ctx.strokeStyle = 'rgba(46, 204, 113, 0.5)';
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(margin, targetY);
+            ctx.lineTo(w - margin, targetY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Calculate cumulative coprime density
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            let coprimeCount = 0;
+            let totalCount = 0;
+            let firstPoint = true;
+            
+            for (let n = 1; n <= maxN; n++) {
+                for (let k = 1; k < n; k++) {
+                    totalCount++;
+                    if (gcd(k, n) === 1) coprimeCount++;
+                }
+                
+                const density = coprimeCount / totalCount;
+                const x = margin + (n / maxN) * chartWidth;
+                const y = h - margin - (density / 1.0) * chartHeight;
+                
+                if (firstPoint) {
+                    ctx.moveTo(x, y);
+                    firstPoint = false;
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            }
+            ctx.stroke();
+            
+            // Labels
+            ctx.fillStyle = '#e74c3c';
+            ctx.font = 'bold 20px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('Convergence to 6/π²', w / 2, 40);
+            
+            ctx.font = '14px monospace';
+            ctx.fillStyle = '#2ecc71';
+            ctx.fillText(`Target: ${target.toFixed(6)}`, w / 2, 65);
+        }
+
+        // ========================================
+        // CANVAS 10: Coprime Pairs Grid
+        // ========================================
+        function drawCanvas10() {
+            const canvas = document.getElementById('canvas10');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            
+            // Clear
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, w, h);
+            
+            const n = Math.min(state.modulus, 50);
+            const margin = 60;
+            const gridSize = Math.min((w - 2 * margin) / n, (h - 2 * margin) / n);
+            
+            // Draw grid
+            for (let i = 1; i < n; i++) {
+                for (let j = 1; j < n; j++) {
+                    const x = margin + i * gridSize;
+                    const y = margin + j * gridSize;
+                    
+                    const g = gcd(i, j);
+                    const isCoprime = g === 1;
+                    
+                    ctx.fillStyle = isCoprime ? 
+                        'rgba(99, 102, 241, 0.8)' : 
+                        `rgba(99, 102, 241, ${0.1 + (1 / g) * 0.3})`;
+                    ctx.fillRect(x, y, gridSize - 1, gridSize - 1);
+                    
+                    // Mark diagonal
+                    if (i === j) {
+                        ctx.strokeStyle = '#f1c40f';
+                        ctx.lineWidth = 2;
+                        ctx.strokeRect(x, y, gridSize - 1, gridSize - 1);
+                    }
+                }
+            }
+            
+            // Title
+            ctx.fillStyle = '#6366f1';
+            ctx.font = 'bold 20px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('Coprime Pairs Matrix', w / 2, 35);
+            ctx.font = '14px monospace';
+            ctx.fillText('Brighter = Coprime', w / 2, 55);
+        }
+
+        // ========================================
+        // CANVAS 11: Nested Density Rings
+        // ========================================
+        function drawCanvas11() {
+            const canvas = document.getElementById('canvas11');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            const cx = w / 2;
+            const cy = h / 2;
+            const maxRadius = Math.min(w, h) * 0.45;
+            
+            // Clear
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, w, h);
+            
+            const maxN = Math.min(state.modulus, 30);
+            const phase = state.phase * Math.PI / 180;
+            
+            // Draw rings from 1 to maxN
+            for (let n = 2; n <= maxN; n++) {
+                const radius = (n / maxN) * maxRadius;
+                const phiN = phi(n);
+                
+                // Per-ring rotation support
+                let perRingOffset = 0;
+                if (state.perRingRotations && state.perRingRotations[n] !== undefined) {
+                    perRingOffset = state.perRingRotations[n] * Math.PI / 180;
+                }
+                
+                // Draw ring circle
+                ctx.strokeStyle = `rgba(39, 174, 96, ${0.2 + (phiN / n) * 0.5})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+                
+                // Draw coprime points on this ring
+                for (let k = 1; k < n; k++) {
+                    if (gcd(k, n) === 1) {
+                        const angle = 2 * Math.PI * k / n + phase + perRingOffset;
+                        const x = cx + radius * Math.cos(angle);
+                        const y = cy + radius * Math.sin(angle);
+                        
+                        ctx.fillStyle = '#27ae60';
+                        ctx.beginPath();
+                        ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                        ctx.fill();
+                    }
+                }
+                
+                // Label every 5th ring
+                if (n % 5 === 0) {
+                    ctx.fillStyle = '#27ae60';
+                    ctx.font = '12px monospace';
+                    ctx.textAlign = 'left';
+                    ctx.fillText(`n=${n}`, cx + radius + 10, cy);
+                }
+            }
+            
+            // Center label
+            ctx.fillStyle = '#27ae60';
+            ctx.font = 'bold 18px monospace';
+            ctx.textAlign = 'center';
+            ctx.fillText('Nested Density Rings', cx, cy);
+            ctx.font = '14px monospace';
+            ctx.fillText(`Showing 1 to ${maxN}`, cx, cy + 25);
+        }
+
+        // ========================================
+        // CANVAS 12: Dirichlet Characters
+        // ========================================
+        function drawCanvas12() {
+            const canvas = document.getElementById('canvas12');
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            const cx = w / 2;
+            const cy = h / 2;
+            const radius = Math.min(w, h) * 0.4;
+            
+            // Clear
+            ctx.fillStyle = '#0a0e27';
+            ctx.fillRect(0, 0, w, h);
+            
+            const m = state.modulus;
+            const phase = state.phase * Math.PI / 180;
+            
+            // Draw main circle
+            ctx.strokeStyle = 'rgba(156, 39, 176, 0.5)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Calculate principal Dirichlet character mod m
+            // χ(n) = 1 if gcd(n,m)=1, 0 otherwise (principal character)
+            const phiM = phi(m);
+            const colors = ['#9c27b0', '#e91e63', '#f44336', '#ff9800', '#ffc107', '#8bc34a', '#4caf50', '#00bcd4'];
+            
+            // For each residue class, calculate character value
+            for (let n = 1; n < m; n++) {
+                const g = gcd(n, m);
+                const angle = 2 * Math.PI * n / m + phase;
+                const x = cx + radius * Math.cos(angle);
+                const y = cy + radius * Math.sin(angle);
+                
+                if (g === 1) {
+                    // Coprime - part of character group
+                    // Calculate order of n in (Z/mZ)*
+                    let order = 1;
+                    let power = n % m;
+                    while (power !== 1 && order < m) {
+                        power = (power * n) % m;
+                        order++;
+                    }
+                    
+                    const colorIndex = order % colors.length;
+                    ctx.fillStyle = colors[colorIndex];
+                    ctx.beginPath();
+                    ctx.arc(x, y, 6, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Draw ray for character
+                    ctx.strokeStyle = colors[colorIndex] + '40';
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.moveTo(cx, cy);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                } else {
+                    // Not coprime - χ(n) = 0
+                    ctx.fillStyle = 'rgba(156, 39, 176, 0.2)';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 3, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+            
+            // Center labels
+            ctx.fillStyle = '#9c27b0';
+            ctx.font = 'bold 20px monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Dirichlet Characters', cx, cy - 30);
+            ctx.font = '16px monospace';
+            ctx.fillText(`mod ${m}`, cx, cy);
+            ctx.font = '14px monospace';
+            ctx.fillText(`φ(${m}) = ${phiM}`, cx, cy + 25);
+        }
+
+        // ========================================
+        // Export Functions for Canvases 7-12
+        // ========================================
+        function exportCanvas7() { exportSingleCanvas('canvas7', 'coprime_circle_4k.png'); }
+        function exportCanvas8() { exportSingleCanvas('canvas8', 'phi_ratios_4k.png'); }
+        function exportCanvas9() { exportSingleCanvas('canvas9', 'convergence_4k.png'); }
+        function exportCanvas10() { exportSingleCanvas('canvas10', 'coprime_grid_4k.png'); }
+        function exportCanvas11() { exportSingleCanvas('canvas11', 'density_rings_4k.png'); }
+        function exportCanvas12() { exportSingleCanvas('canvas12', 'dirichlet_characters_4k.png'); }
+
+        // ========================================
+        // Master Draw Function - All 12 Canvases
+        // ========================================
+        function drawAll() {
+            drawDisk();
+            drawCayley();
+            drawNested();
+            drawReduction();
+            drawFullPlane();
+            // Canvas 6 (Pixi) draws itself
+            drawCanvas7();
+            drawCanvas8();
+            drawCanvas9();
+            drawCanvas10();
+            drawCanvas11();
+            drawCanvas12();
+        }
+
+        console.log('✅ 12-Canvas Mega Research Tool Initialized');
+        console.log('By Wessen Getachew');
+        console.log('Canvases 1-6: Farey & Transform Suite');
+        console.log('Canvases 7-11: Coprime Density Analysis');
+        console.log('Canvas 12: Dirichlet Characters (NEW)');
     </script>
 </body>
 </html>
