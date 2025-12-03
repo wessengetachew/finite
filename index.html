@@ -1802,9 +1802,14 @@
                         <div class="panel-title" style="color: var(--c7-green);">7. 🔵 Coprime Circle</div>
                         <div class="panel-subtitle">Visual Coprimality Patterns</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportCanvas7()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportCanvas7()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(7)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="canvas7" width="1000" height="1000"></canvas>
             </div>
@@ -1816,9 +1821,14 @@
                         <div class="panel-title" style="color: var(--c8-yellow);">8. 📊 Phi Ratios</div>
                         <div class="panel-subtitle">φ(n)/n Convergence Chart</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportCanvas8()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportCanvas8()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(8)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="canvas8" width="1000" height="800"></canvas>
             </div>
@@ -1830,9 +1840,14 @@
                         <div class="panel-title" style="color: var(--c9-red);">9. 📈 Convergence</div>
                         <div class="panel-subtitle">Limit to 6/π² ≈ 0.6079</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportCanvas9()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportCanvas9()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(9)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="canvas9" width="1000" height="800"></canvas>
             </div>
@@ -1844,9 +1859,14 @@
                         <div class="panel-title" style="color: var(--c10-indigo);">10. 🎯 Coprime Grid</div>
                         <div class="panel-subtitle">GCD Pairs Matrix View</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportCanvas10()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportCanvas10()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(10)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="canvas10" width="1000" height="1000"></canvas>
             </div>
@@ -1858,9 +1878,14 @@
                         <div class="panel-title" style="color: var(--c11-lime);">11. 🔢 Density Rings</div>
                         <div class="panel-subtitle">Nested 1→n Coprime View</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportCanvas11()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportCanvas11()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(11)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="canvas11" width="1000" height="1000"></canvas>
             </div>
@@ -1872,9 +1897,14 @@
                         <div class="panel-title" style="color: var(--c12-magenta);">12. 🌟 Dirichlet Characters</div>
                         <div class="panel-subtitle">χ(n) mod M Character Visualization</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportCanvas12()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportCanvas12()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(12)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="canvas12" width="1000" height="1000"></canvas>
             </div>
@@ -1908,8 +1938,8 @@
                             <div class="help-text">Different color schemes reveal different patterns</div>
                         </div>
                         <select id="colorScheme" onchange="updateColorScheme()">
-                            <option value="gcd">By GCD Value (Default)</option>
-                            <option value="modulus">By Modulus (Ring)</option>
+                            <option value="gcd">By GCD Value</option>
+                            <option value="modulus" selected>By Modulus (Ring) - Default</option>
                             <option value="coprime">Coprime vs Non-Coprime</option>
                             <option value="plasma">Plasma Gradient</option>
                             <option value="viridis">Viridis Gradient</option>
@@ -1977,7 +2007,7 @@
                         <select id="labelMode" onchange="updateLabelMode()">
                             <option value="none">No Labels</option>
                             <option value="farey">Farey Fractions (p/q)</option>
-                            <option value="residue">Residue Values (k)</option>
+                            <option value="residue" selected>Residue Values (k) - Default</option>
                             <option value="both">Both (p/q, k)</option>
                             <option value="primes">Primes Only</option>
                         </select>
@@ -2069,7 +2099,8 @@
             <div class="controls-header">DISPLAY OPTIONS</div>
             <div class="controls-body">
                 <div class="control-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
-                    <!-- Row 1 -->
+                    
+                    <!-- Core Display Toggles -->
                     <label class="toggle-option" style="background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3);">
                         <input type="checkbox" id="showFareyTriangle" checked onchange="updateDisplay()">
                         <span>Farey Triangle</span>
@@ -2085,7 +2116,6 @@
                         <span>Prime Distribution</span>
                     </label>
                     
-                    <!-- Row 2 -->
                     <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
                         <input type="checkbox" id="showResidueChannels" checked onchange="updateDisplay()">
                         <span>Residue Channels</span>
@@ -2101,7 +2131,6 @@
                         <span>Ring Circles</span>
                     </label>
                     
-                    <!-- Row 3 -->
                     <label class="toggle-option" style="background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.3);">
                         <input type="checkbox" id="showGcdColoring" checked onchange="updateDisplay()">
                         <span>GCD Coloring</span>
@@ -2117,7 +2146,6 @@
                         <span>Fundamental Domain</span>
                     </label>
                     
-                    <!-- Row 4 -->
                     <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
                         <input type="checkbox" id="showVerticalGeodesics" onchange="updateDisplay()">
                         <span>Vertical Geodesics</span>
@@ -2133,71 +2161,21 @@
                         <span>Ford Circles</span>
                     </label>
                     
-                    <!-- Row 5 -->
-                    <label class="toggle-option" style="background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.3);">
-                        <input type="checkbox" id="showFullComplexPlane" checked onchange="updateDisplay()">
-                        <span>Full Complex Plane View</span>
-                    </label>
-                    
-                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3);">
-                        <input type="checkbox" id="showModularReduction" checked onchange="updateDisplay()">
-                        <span>Modular Reduction View</span>
-                    </label>
-                    
-                    <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
-                        <input type="checkbox" id="showReductionProjectionLines" onchange="updateDisplay()">
-                        <span>Reduction: Projection Lines</span>
-                    </label>
-                    
-                    <!-- Row 6 -->
-                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
-                        <input type="checkbox" id="showReductionChannelRings" checked onchange="updateDisplay()">
-                        <span>Reduction: Channel Rings</span>
-                    </label>
-                    
-                    <label class="toggle-option" style="background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3);">
-                        <input type="checkbox" id="showReductionInverseImage" onchange="updateDisplay()">
-                        <span>Reduction: Inverse (Inner→Outer)</span>
-                    </label>
-                    
-                    <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
-                        <input type="checkbox" id="showReductionStatistics" checked onchange="updateDisplay()">
-                        <span>Reduction: Show Statistics Overlay</span>
-                    </label>
-                    
-                    <!-- Row 7 -->
-                    <label class="toggle-option" style="background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.3);">
-                        <input type="checkbox" id="showPrimitiveRootsPower" checked onchange="updateDisplay()">
-                        <span>Primitive Roots Power Sequence</span>
-                    </label>
-                    
-                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3);">
-                        <input type="checkbox" id="showPrimitiveRootsOverlay" checked onchange="updateDisplay()">
-                        <span>Primitive Roots: Show Statistics Overlay</span>
-                    </label>
-                    
                     <label class="toggle-option" style="background: rgba(26,188,156,0.1); border: 1px solid rgba(26,188,156,0.3);">
                         <input type="checkbox" id="showAutoRotate" onchange="updateDisplay()">
                         <span>Auto-Rotate</span>
                     </label>
                     
-                    <!-- Row 8 -->
                     <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
                         <input type="checkbox" id="showInvertRingOrder" onchange="updateDisplay()">
-                        <span>Invert Ring Order (Outer↔Inner)</span>
+                        <span>Invert Ring Order</span>
                     </label>
                     
-                    <label class="toggle-option" style="background: rgba(189,195,199,0.1); border: 1px solid rgba(189,195,199,0.3);">
-                        <input type="checkbox" id="showInvertAllCanvases" onchange="updateDisplay()">
-                        <span>Invert All Canvases</span>
+                    <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
+                        <input type="checkbox" id="showReductionStatistics" checked onchange="updateDisplay()">
+                        <span>Show Statistics</span>
                     </label>
-                    
-                    <label class="toggle-option" style="background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3);">
-                        <input type="checkbox" id="showNestedOnlyGcd1" onchange="updateDisplay()">
-                        <span>Nested: Show Only GCD=1 (Non-Coprime)</span>
-                    </label>
-                    
-                    <!-- Row 9 -->
+
                     <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
                         <input type="checkbox" id="showNestedOnlyGcd1Coprime" onchange="updateDisplay()">
                         <span>Nested: Show Only GCD=1 (Coprime)</span>
@@ -2206,25 +2184,6 @@
             </div>
         </div>
 
-        <!-- ========================================
-             GLOBAL CONNECTION VISUALIZATION
-             ======================================== -->
-        <div class="controls-section">
-            <div class="controls-header">GLOBAL CONNECTION VISUALIZATION (ALL CANVASES)</div>
-            <div class="controls-body">
-                <div class="control-row">
-                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); padding: 12px;">
-                        <input type="checkbox" id="showGlobalFareyConnections" onchange="updateGlobalConnections()">
-                        <span>Show r → r Connections</span>
-                    </label>
-                    
-                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3); padding: 12px;">
-                        <input type="checkbox" id="showGlobalTwinConnections" onchange="updateGlobalConnections()">
-                        <span>Show r → r+M≫2ⁿ Connections</span>
-                    </label>
-                </div>
-            </div>
-        </div>
 
         <div class="controls-section">
             <div class="controls-header" style="cursor: pointer;" onclick="toggleStats()">
@@ -3668,13 +3627,13 @@
             maxGap: 8,
             connectionThickness: 1.0,
             connectionOpacity: 0.3,
-            labelMode: 'farey',
+            labelMode: 'residue',  // Default: show integer residue values
             labelSize: 10,
             labelFreq: 1,
             labelPosition: 'radial',
             labelOffset: 18,
             globalLabelScale: 1.0,  // Global multiplier for all label sizes
-            nestedColorScheme: 'gcd',
+            nestedColorScheme: 'modulus',  // Default: colorful modulus-based gradients
             cayleyHRange: 6,
             cayleyVRange: 4,
             cayleyVOffset: 0,
