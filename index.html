@@ -1136,12 +1136,11 @@
             <div class="research-meta-item" style="margin-top: 10px;">
                 <span class="research-meta-label">More Tools:</span>
                 <span style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 5px;">
-                    <a href="https://wessengetachew.github.io/Primes/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Prime Explorer</a>
-                    <a href="https://wessengetachew.github.io/Rational-/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Rational points</a>
                     <a href="https://wessengetachew.github.io/Transform/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Transform Explorer</a>
                     <a href="https://wessengetachew.github.io/Composite/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Composite Analysis</a>
                     <a href="https://wessengetachew.github.io/Gemini/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Gemini Explorer</a>
                     <a href="https://wessengetachew.github.io/Goldbach/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Goldbach Conjecture</a>
+                    <a href="https://wessengetachew.github.io/Primes/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Prime Explorer</a>
                     <a href="https://wessengetachew.github.io/Farey/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">Farey Sequences</a>
                     <a href="https://wessengetachew.github.io/2pir/" target="_blank" style="color: #00ffff; text-decoration: none; padding: 4px 8px; background: rgba(0,255,255,0.1); border-radius: 4px; font-size: 0.9em; transition: all 0.3s;" onmouseover="this.style.background='rgba(0,255,255,0.2)'" onmouseout="this.style.background='rgba(0,255,255,0.1)'">2πr Analysis</a>
                 </span>
@@ -1653,9 +1652,14 @@
                         <div class="panel-title">𝔻 Unit Disk</div>
                         <div class="panel-subtitle">Custom Farey Configuration</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('diskCanvas', 'unit_disk_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportSingleCanvas('diskCanvas', 'unit_disk_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(1)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="diskCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1666,7 +1670,7 @@
                         <div class="panel-title">ℍ Upper Half-Plane</div>
                         <div class="panel-subtitle">Cayley Transform & Geodesics</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('cayleyCanvas', 'cayley_plane_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                    <div style="display: flex; gap: 6px;"><button class="btn btn-small" onclick="exportSingleCanvas('cayleyCanvas', 'cayley_plane_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">
                         📥 Export 2K
                     </button>
                 </div>
@@ -1679,9 +1683,7 @@
                         <div class="panel-title">⊚ Nested Modular Rings</div>
                         <div class="panel-subtitle">Unlimited GCD Structure</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('nestedCanvas', 'nested_rings_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;"><button class="btn btn-small" onclick="exportSingleCanvas('nestedCanvas', 'nested_rings_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">📥 PNG</button><button class="btn btn-small" onclick="exportCanvasCSV(3)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">📊 CSV</button></div>
                 </div>
                 <canvas id="nestedCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1705,9 +1707,7 @@
                         <div class="panel-title">ℂ Full Complex Plane</div>
                         <div class="panel-subtitle">Complete Cayley Transform View (Interior + Exterior)</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('fullPlaneCanvas', 'full_plane_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;"><button class="btn btn-small" onclick="exportSingleCanvas('fullPlaneCanvas', 'full_plane_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">📥 PNG</button><button class="btn btn-small" onclick="exportCanvasCSV(5)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">📊 CSV</button></div>
                 </div>
                 <canvas id="fullPlaneCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1718,9 +1718,7 @@
                         <div class="panel-title" style="color: var(--c6-pink);">6. ⚙ Primitive Roots</div>
                         <div class="panel-subtitle">Power Sequence g^n mod M</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportPixiCanvas()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;"><button class="btn btn-small" onclick="exportPixiCanvas()" style="padding: 6px 12px; font-size: 0.85em;">📥 PNG</button><button class="btn btn-small" onclick="exportCanvasCSV(6)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">📊 CSV</button></div>
                 </div>
                 <div id="pixiPrimitiveRootsContainer" style="width: 100%; height: 1000px; display: flex; justify-content: center; align-items: center;"></div>
                 <canvas id="primitiveRootsCanvas" width="1000" height="1000" style="display: none;"></canvas>
@@ -1812,6 +1810,66 @@
         </div>
 
         <!-- Statistical Analysis Panel -->
+        <!-- Display Options -->
+        <div class="controls-section">
+            <div class="controls-header" style="cursor: pointer;" onclick="toggleDisplayOptions()">
+                <span id="displayToggle">▼</span> Display Options
+            </div>
+            <div class="controls-body" id="displayPanel">
+                <div class="control-row">
+                    <div class="control-item">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,255,255,0.05); border-radius: 6px; transition: all 0.3s;">
+                            <input type="checkbox" id="showLabelsAll" onchange="toggleLabelsAll(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--cyan);">Show Point Labels</div>
+                                <div style="font-size: 0.85em; color: rgba(255,255,255,0.6);">Display fraction labels (p/q) on Farey points</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="control-item">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,255,255,0.05); border-radius: 6px; transition: all 0.3s;">
+                            <input type="checkbox" id="showConnectionsAll" onchange="toggleConnectionsAll(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--cyan);">Show Connections</div>
+                                <div style="font-size: 0.85em; color: rgba(255,255,255,0.6);">Draw lines between related points (Farey neighbors, coprime pairs)</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="control-item">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,255,255,0.05); border-radius: 6px; transition: all 0.3s;">
+                            <input type="checkbox" id="showPrimeLabels" checked onchange="togglePrimeLabels(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--prime);">Highlight Primes</div>
+                                <div style="font-size: 0.85em; color: rgba(255,255,255,0.6);">Mark prime numbers with special coloring</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="control-item">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,255,255,0.05); border-radius: 6px; transition: all 0.3s;">
+                            <input type="checkbox" id="showGeodesicsToggle" onchange="toggleGeodesics(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--geodesic);">Show Geodesics</div>
+                                <div style="font-size: 0.85em; color: rgba(255,255,255,0.6);">Display hyperbolic geodesic lines (Cayley canvas)</div>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="control-item">
+                        <label class="checkbox-label" style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: rgba(0,255,255,0.05); border-radius: 6px; transition: all 0.3s;">
+                            <input type="checkbox" id="showFordCircles" onchange="toggleFordCircles(this.checked)" style="width: 18px; height: 18px; cursor: pointer;">
+                            <div>
+                                <div style="font-weight: 600; color: var(--cyan);">Show Ford Circles</div>
+                                <div style="font-size: 0.85em; color: rgba(255,255,255,0.6);">Display Ford circles in Cayley plane</div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="controls-section">
             <div class="controls-header" style="cursor: pointer;" onclick="toggleStats()">
                 <span id="statsToggle">▼</span> Live Statistical Analysis
@@ -3301,6 +3359,10 @@
             filterResidueClass: null,
             plotOrder: 'angular',  // 'angular' or 'sequential'
             showConnections: false,  // For canvas 7 coprime connections
+            showLabels: false,  // Show point labels
+            showPrimeHighlights: true,  // Highlight primes
+            showGeodesics: false,  // Show geodesic lines
+            showFordCircles: false,  // Show Ford circles
             fareyPoints: [
                 {num: 1, den: 1},
                 {num: 0, den: 1},
@@ -6286,6 +6348,44 @@ Generated: ${new Date().toLocaleString()}
                 toggle.textContent = '▶';
             }
         }
+
+        function toggleDisplayOptions() {
+            const panel = document.getElementById('displayPanel');
+            const toggle = document.getElementById('displayToggle');
+            if (panel.style.display === 'none') {
+                panel.style.display = 'block';
+                toggle.textContent = '▼';
+            } else {
+                panel.style.display = 'none';
+                toggle.textContent = '▶';
+            }
+        }
+
+        function toggleLabelsAll(checked) {
+            state.showLabels = checked;
+            updateAll();
+        }
+
+        function toggleConnectionsAll(checked) {
+            state.showConnections = checked;
+            updateAll();
+        }
+
+        function togglePrimeLabels(checked) {
+            state.showPrimeHighlights = checked;
+            updateAll();
+        }
+
+        function toggleGeodesics(checked) {
+            state.showGeodesics = checked;
+            updateAll();
+        }
+
+        function toggleFordCircles(checked) {
+            state.showFordCircles = checked;
+            updateAll();
+        }
+
 
         function updateStats() {
             const rings = getRingSequence();
@@ -9707,7 +9807,7 @@ Generated: ${new Date().toLocaleString()}
             updateAll();
         }
 
-        // Export single canvas as 4K PNG
+        // Export single canvas as 2K PNG with full legend
         function exportSingleCanvas(canvasId, filename) {
             const canvas = document.getElementById(canvasId);
             if (!canvas) {
@@ -9717,26 +9817,127 @@ Generated: ${new Date().toLocaleString()}
 
             // Canvas metadata for titles
             const canvasInfo = {
-                'diskCanvas': { title: '1. Unit Disk - Farey & Primes', color: '#ffd700' },
-                'cayleyCanvas': { title: '2. Cayley Plane - Hyperbolic Geometry', color: '#1abc9c' },
-                'nestedCanvas': { title: '3. Nested Modular Rings', color: '#3498db' },
-                'reductionCanvas': { title: '4. Modular Reduction', color: '#e67e22' },
-                'fullPlaneCanvas': { title: '5. Full Complex Plane', color: '#9b59b6' },
-                'primitiveRootsCanvas': { title: '6. Primitive Roots', color: '#e91e63' },
-                'canvas7': { title: '7. Coprime Circle', color: '#2ecc71' },
-                'canvas8': { title: '8. Phi Ratios Chart', color: '#f1c40f' },
-                'canvas9': { title: '9. Convergence to 6/π²', color: '#e74c3c' },
-                'canvas10': { title: '10. Coprime Pairs Grid', color: '#6366f1' },
-                'canvas11': { title: '11. Nested Density Rings', color: '#27ae60' },
-                'canvas12': { title: '12. Dirichlet Characters', color: '#9c27b0' }
+                'diskCanvas': { 
+                    title: '1. Unit Disk - Farey & Primes', 
+                    color: '#ffd700',
+                    legend: [
+                        `Farey Sequence: F${state.fareyOrder} (${state.fareyOrder} terms)`,
+                        `Primes shown: Up to ${state.maxPrimes}`,
+                        `Phase angle: ${state.phase.toFixed(2)}°`,
+                        `Geodesics: ${state.showGeodesics ? 'Enabled' : 'Disabled'}`
+                    ]
+                },
+                'cayleyCanvas': { 
+                    title: '2. Cayley Plane - Hyperbolic Geometry', 
+                    color: '#1abc9c',
+                    legend: [
+                        `Transform: ${state.transformType}`,
+                        `Ford Circles: ${state.showFordCircles ? 'Visible' : 'Hidden'}`,
+                        `Geodesics: ${state.showGeodesics ? 'Enabled' : 'Disabled'}`
+                    ]
+                },
+                'nestedCanvas': { 
+                    title: '3. Nested Modular Rings', 
+                    color: '#3498db',
+                    legend: [
+                        `Moduli range: ${state.minMod} to ${state.maxMod}`,
+                        `Connections: ${state.showConnections ? 'Enabled' : 'Disabled'}`,
+                        `φ(${state.modulus}) = ${phi(state.modulus)}`
+                    ]
+                },
+                'reductionCanvas': { 
+                    title: '4. Modular Reduction', 
+                    color: '#e67e22',
+                    legend: [
+                        `Base modulus M₀: ${state.baseModulus}`,
+                        `Reduction factor: ${state.reductionFactor}`,
+                        `Channels shown: ${state.showChannels ? 'Visible' : 'Hidden'}`
+                    ]
+                },
+                'fullPlaneCanvas': { 
+                    title: '5. Full Complex Plane', 
+                    color: '#9b59b6',
+                    legend: [
+                        `Complete Riemann sphere view`,
+                        `Transform type: ${state.transformType}`,
+                        `All regions visible`
+                    ]
+                },
+                'primitiveRootsCanvas': { 
+                    title: '6. Primitive Roots', 
+                    color: '#e91e63',
+                    legend: [
+                        `Generator g: ${state.primitiveRoot || 'Auto'}`,
+                        `Order: ${phi(state.modulus)}`,
+                        `Cyclic structure: (ℤ/${state.modulus}ℤ)×`
+                    ]
+                },
+                'canvas7': { 
+                    title: '7. Coprime Circle', 
+                    color: '#2ecc71',
+                    legend: [
+                        `φ(${state.modulus}) = ${phi(state.modulus)}`,
+                        `Density: ${(phi(state.modulus)/state.modulus).toFixed(4)}`,
+                        `Coprime count: ${phi(state.modulus)}/${state.modulus}`
+                    ]
+                },
+                'canvas8': { 
+                    title: '8. Phi Ratios Chart', 
+                    color: '#f1c40f',
+                    legend: [
+                        `Range: 2 to ${state.modulus}`,
+                        `Primes marked in red`,
+                        `Convergence to pattern visible`
+                    ]
+                },
+                'canvas9': { 
+                    title: '9. Convergence to 6/π²', 
+                    color: '#e74c3c',
+                    legend: [
+                        `Target: 6/π² ≈ 0.6079`,
+                        `Sample size: ${state.modulus} pairs`,
+                        `Cumulative coprime probability`
+                    ]
+                },
+                'canvas10': { 
+                    title: '10. Coprime Pairs Grid', 
+                    color: '#6366f1',
+                    legend: [
+                        `Matrix size: ${state.modulus}×${state.modulus}`,
+                        `Bright = gcd(i,j)=1`,
+                        `Symmetric about diagonal`
+                    ]
+                },
+                'canvas11': { 
+                    title: '11. Nested Density Rings', 
+                    color: '#27ae60',
+                    legend: [
+                        `Rings: 2 to ${state.modulus}`,
+                        `Each shows φ(n)/n density`,
+                        `Sequential visualization`
+                    ]
+                },
+                'canvas12': { 
+                    title: '12. Dirichlet Characters', 
+                    color: '#9c27b0',
+                    legend: [
+                        `Character: χ₀ (principal)`,
+                        `Modulus: ${state.modulus}`,
+                        `Units: φ(${state.modulus}) = ${phi(state.modulus)}`
+                    ]
+                }
             };
 
-            const info = canvasInfo[canvasId] || { title: 'Canvas Export', color: '#ffd700' };
+            const info = canvasInfo[canvasId] || { 
+                title: 'Canvas Export', 
+                color: '#ffd700',
+                legend: ['No legend available']
+            };
 
             // Create a 2K export canvas with space for title and legend
             const exportCanvas = document.createElement('canvas');
             const exportWidth = 2000;
-            const exportHeight = 2200; // Extra space for title and legend
+            const exportHeight = 2400; // More space for legend
             exportCanvas.width = exportWidth;
             exportCanvas.height = exportHeight;
             
@@ -9764,7 +9965,8 @@ Generated: ${new Date().toLocaleString()}
             
             // Calculate scaling to fit canvas content
             const contentTop = 170;
-            const contentHeight = exportHeight - contentTop - 50;
+            const legendHeight = 150;
+            const contentHeight = exportHeight - contentTop - legendHeight;
             const canvasAspect = canvas.width / canvas.height;
             
             let drawWidth = exportWidth - 100;
@@ -9781,7 +9983,34 @@ Generated: ${new Date().toLocaleString()}
             // Draw the canvas content
             ctx.drawImage(canvas, drawX, drawY, drawWidth, drawHeight);
             
-            // Draw legend/info box at bottom
+            // Draw legend box
+            const legendTop = drawY + drawHeight + 20;
+            const legendBoxHeight = 120;
+            
+            // Legend background
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            ctx.fillRect(50, legendTop, exportWidth - 100, legendBoxHeight);
+            
+            // Legend border
+            ctx.strokeStyle = info.color;
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, legendTop, exportWidth - 100, legendBoxHeight);
+            
+            // Legend title
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'left';
+            ctx.fillText('Parameters & Legend:', 70, legendTop + 35);
+            
+            // Legend items
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '18px Arial';
+            let yOffset = legendTop + 60;
+            info.legend.forEach((item, idx) => {
+                ctx.fillText(`• ${item}`, 90, yOffset + (idx * 25));
+            });
+            
+            // Draw footer
             ctx.fillStyle = 'rgba(0,0,0,0.7)';
             ctx.fillRect(50, exportHeight - 40, exportWidth - 100, 35);
             ctx.fillStyle = info.color;
@@ -9795,10 +10024,183 @@ Generated: ${new Date().toLocaleString()}
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = filename.replace('4k', '2k');
+                a.download = filename;
                 a.click();
                 URL.revokeObjectURL(url);
             });
+        }
+
+        // Export canvas data as CSV
+        function exportCanvasCSV(canvasNum) {
+            let csvContent = '';
+            let filename = '';
+            
+            const M = state.modulus;
+            const phase = state.phase;
+            
+            switch(canvasNum) {
+                case 1: // Unit Disk - Farey & Primes
+                    filename = `canvas1_unit_disk_M${M}.csv`;
+                    csvContent = 'Canvas,FareyNumerator,FareyDenominator,Angle,IsPrime,GCD\n';
+                    for (let q = 1; q <= state.fareyOrder; q++) {
+                        for (let p = 0; p <= q; p++) {
+                            if (gcd(p, q) === 1) {
+                                const angle = (2 * Math.PI * p / q) + (phase * Math.PI / 180);
+                                const isPrimeVal = isPrime(p);
+                                csvContent += `1,${p},${q},${angle},${isPrimeVal},${gcd(p,q)}\n`;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 2: // Cayley Plane
+                    filename = `canvas2_cayley_M${M}.csv`;
+                    csvContent = 'Canvas,FareyP,FareyQ,Angle,TransformRe,TransformIm\n';
+                    for (let q = 1; q <= state.fareyOrder; q++) {
+                        for (let p = 0; p <= q; p++) {
+                            if (gcd(p, q) === 1) {
+                                const angle = 2 * Math.PI * p / q;
+                                csvContent += `2,${p},${q},${angle},0,0\n`;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 3: // Nested Rings
+                    filename = `canvas3_nested_rings_M${M}.csv`;
+                    csvContent = 'Canvas,Modulus,Residue,Angle,IsCoprime,GCD\n';
+                    for (let m = state.minMod; m <= state.maxMod; m++) {
+                        for (let k = 0; k < m; k++) {
+                            const angle = (2 * Math.PI * k / m) + (phase * Math.PI / 180);
+                            const isCoprime = gcd(k, m) === 1;
+                            csvContent += `3,${m},${k},${angle},${isCoprime},${gcd(k,m)}\n`;
+                        }
+                    }
+                    break;
+                    
+                case 4: // Reduction
+                    filename = `canvas4_reduction_M${M}.csv`;
+                    csvContent = 'Canvas,OriginalMod,ReducedMod,Residue,Channel\n';
+                    for (let k = 0; k < M; k++) {
+                        const g = gcd(k, M);
+                        const reduced = M / g;
+                        csvContent += `4,${M},${reduced},${k},${g}\n`;
+                    }
+                    break;
+                    
+                case 5: // Full Plane
+                    filename = `canvas5_full_plane_M${M}.csv`;
+                    csvContent = 'Canvas,Region,FareyP,FareyQ,Angle\n';
+                    for (let q = 1; q <= state.fareyOrder; q++) {
+                        for (let p = 0; p <= q; p++) {
+                            if (gcd(p, q) === 1) {
+                                const angle = 2 * Math.PI * p / q;
+                                csvContent += `5,all,${p},${q},${angle}\n`;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 6: // Primitive Roots
+                    filename = `canvas6_primitive_roots_M${M}.csv`;
+                    csvContent = 'Canvas,Power,Value,Angle,Order\n';
+                    const phiM = phi(M);
+                    for (let n = 0; n < phiM; n++) {
+                        const val = (state.primitiveRoot ** n) % M;
+                        const angle = (2 * Math.PI * val / M) + (phase * Math.PI / 180);
+                        csvContent += `6,${n},${val},${angle},${phiM}\n`;
+                    }
+                    break;
+                    
+                case 7: // Coprime Circle
+                    filename = `canvas7_coprime_circle_M${M}.csv`;
+                    csvContent = 'Canvas,Residue,Angle,IsCoprime,Phi,Density\n';
+                    const phiM7 = phi(M);
+                    for (let i = 1; i < M; i++) {
+                        const angle = (2 * Math.PI * i / M) + (phase * Math.PI / 180);
+                        const isCoprime = gcd(i, M) === 1;
+                        csvContent += `7,${i},${angle},${isCoprime},${phiM7},${(phiM7/M).toFixed(6)}\n`;
+                    }
+                    break;
+                    
+                case 8: // Phi Ratios
+                    filename = `canvas8_phi_ratios_M${M}.csv`;
+                    csvContent = 'Canvas,N,PhiN,Ratio,IsPrime\n';
+                    for (let n = 2; n <= M; n++) {
+                        const phiN = phi(n);
+                        const ratio = phiN / n;
+                        const isPrimeVal = isPrime(n);
+                        csvContent += `8,${n},${phiN},${ratio.toFixed(6)},${isPrimeVal}\n`;
+                    }
+                    break;
+                    
+                case 9: // Convergence
+                    filename = `canvas9_convergence_M${M}.csv`;
+                    csvContent = 'Canvas,N,CoprimePairs,TotalPairs,Ratio,Target\n';
+                    let coprimePairs = 0;
+                    const target = 6 / (Math.PI * Math.PI);
+                    for (let n = 2; n <= M; n++) {
+                        for (let i = 1; i < n; i++) {
+                            if (gcd(i, n) === 1) coprimePairs++;
+                        }
+                        const totalPairs = n * (n - 1) / 2;
+                        const ratio = coprimePairs / totalPairs;
+                        csvContent += `9,${n},${coprimePairs},${totalPairs},${ratio.toFixed(6)},${target.toFixed(6)}\n`;
+                    }
+                    break;
+                    
+                case 10: // Coprime Grid
+                    filename = `canvas10_coprime_grid_M${M}.csv`;
+                    csvContent = 'Canvas,Row,Col,GCD,IsCoprime\n';
+                    for (let i = 1; i < M; i++) {
+                        for (let j = 1; j < M; j++) {
+                            const gcdVal = gcd(i, j);
+                            const isCoprime = gcdVal === 1;
+                            csvContent += `10,${i},${j},${gcdVal},${isCoprime}\n`;
+                        }
+                    }
+                    break;
+                    
+                case 11: // Density Rings
+                    filename = `canvas11_density_rings_M${M}.csv`;
+                    csvContent = 'Canvas,Ring,Residue,Angle,IsCoprime,PhiN,Density\n';
+                    for (let n = 2; n <= M; n++) {
+                        const phiN = phi(n);
+                        const density = phiN / n;
+                        for (let k = 1; k < n; k++) {
+                            const angle = (2 * Math.PI * k / n) + (phase * Math.PI / 180);
+                            const isCoprime = gcd(k, n) === 1;
+                            csvContent += `11,${n},${k},${angle},${isCoprime},${phiN},${density.toFixed(6)}\n`;
+                        }
+                    }
+                    break;
+                    
+                case 12: // Dirichlet Characters
+                    filename = `canvas12_dirichlet_M${M}.csv`;
+                    csvContent = 'Canvas,Residue,Angle,CharacterValue,IsCoprime,Order\n';
+                    for (let n = 1; n < M; n++) {
+                        const angle = (2 * Math.PI * n / M) + (phase * Math.PI / 180);
+                        const isCoprime = gcd(n, M) === 1;
+                        const charValue = isCoprime ? 1 : 0;
+                        csvContent += `12,${n},${angle},${charValue},${isCoprime},${phi(M)}\n`;
+                    }
+                    break;
+                    
+                default:
+                    console.error('Invalid canvas number:', canvasNum);
+                    return;
+            }
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            console.log(`✅ Exported ${filename}`);
         }
 
         // Export Pixi canvas (Primitive Roots)
