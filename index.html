@@ -3889,7 +3889,7 @@
             
             const m = state.modulus;
             const gen = state.generator || 3;
-            const phi = eulerPhi(m);
+            const phi = phi(m);
             const primitiveRoots = findAllPrimitiveRoots(m);
             const isPrimitiveRoot = primitiveRoots.includes(gen);
             const order = getOrderOfElement(gen, m);
@@ -4161,14 +4161,14 @@
                 return;
             }
             
-            alert(`All primitive roots mod ${m}:\n\n{${roots.join(', ')}}\n\nTotal: ${roots.length} primitive root(s)\nφ(${m}) = ${eulerPhi(m)}`);
+            alert(`All primitive roots mod ${m}:\n\n{${roots.join(', ')}}\n\nTotal: ${roots.length} primitive root(s)\nφ(${m}) = ${phi(m)}`);
         }
 
         // Populate order dropdown with all coprime elements
         function populateOrderDropdown() {
             const m = state.modulus;
             const select = document.getElementById('orderElementSelect');
-            const phi = eulerPhi(m);
+            const phi = phi(m);
             
             // Clear existing options except first
             select.innerHTML = '<option value="">-- Select element by order --</option>';
@@ -4258,7 +4258,7 @@
         // Show detailed order table
         function showOrderTable() {
             const m = state.modulus;
-            const phi = eulerPhi(m);
+            const phi = phi(m);
             
             // Calculate orders for all coprime elements
             const orderGroups = {};
@@ -4328,7 +4328,7 @@
             const roots = [];
             if (m === 1) return [1];
             
-            const phi = eulerPhi(m);
+            const phi = phi(m);
             for (let g = 1; g < m; g++) {
                 if (isPrimitive(g, m, phi)) {
                     roots.push(g);
@@ -4341,7 +4341,7 @@
             if (gcd(g, m) !== 1) return false;
             
             if (phi === undefined) {
-                phi = eulerPhi(m);
+                phi = phi(m);
             }
             
             const factors = primeFactors(phi);
@@ -5304,7 +5304,7 @@
                                 m: m,
                                 frac: k / m,
                                 gcd: g,
-                                phi: eulerPhi(m),
+                                phi: phi(m),
                                 isCoprime: g === 1,
                                 ringIndex: ringIndex,
                                 x: px,
@@ -5878,7 +5878,7 @@
             
             rings.forEach(m => {
                 totalPoints += m;
-                const phi = eulerPhi(m);
+                const phi = phi(m);
                 coprimePoints += phi;
                 
                 for (let k = 0; k < m; k++) {
@@ -5930,7 +5930,7 @@
                     </div>
                     <div class="analysis-stat">
                         <div class="stat-label">φ(${state.modulus})</div>
-                        <div class="stat-value">${eulerPhi(state.modulus)}</div>
+                        <div class="stat-value">${phi(state.modulus)}</div>
                     </div>
                     <div class="analysis-stat">
                         <div class="stat-label">Unique GCD Values</div>
@@ -6123,7 +6123,7 @@
             // Precompute GCDs for all moduli
             console.log('Applying custom moduli sequence:', state.ringSequence);
             state.ringSequence.forEach(m => {
-                eulerPhi(m);
+                phi(m);
                 for (let k = 0; k < m; k++) {
                     gcd(k, m);
                 }
@@ -6777,7 +6777,7 @@ Generated: ${new Date().toLocaleString()}
             
             rings.forEach(m => {
                 totalPoints += m;
-                const phi = eulerPhi(m);
+                const phi = phi(m);
                 coprimePoints += phi;
                 
                 for (let k = 0; k < m; k++) {
@@ -6808,7 +6808,7 @@ Generated: ${new Date().toLocaleString()}
                 </div>
                 <div class="stat-card">
                     <div class="stat-label">φ(${state.modulus})</div>
-                    <div class="stat-value">${eulerPhi(state.modulus)}</div>
+                    <div class="stat-value">${phi(state.modulus)}</div>
                     <div class="stat-subtext">Euler totient</div>
                 </div>
                 <div class="stat-card">
@@ -6910,7 +6910,7 @@ Generated: ${new Date().toLocaleString()}
             const rings = getRingSequence();
             rings.forEach(m => {
                 config.metadata.totalPoints += m;
-                config.metadata.coprimePoints += eulerPhi(m);
+                config.metadata.coprimePoints += phi(m);
             });
             config.metadata.ringCount = rings.length;
 
@@ -7163,31 +7163,6 @@ Generated: ${new Date().toLocaleString()}
             return true;
         }
 
-        function eulerPhi(n) {
-            // Check cache first
-            if (phiCache.has(n)) {
-                return phiCache.get(n);
-            }
-            
-            let result = n;
-            let temp = n;
-            for (let p = 2; p * p <= temp; p++) {
-                if (temp % p === 0) {
-                    while (temp % p === 0) temp /= p;
-                    result -= result / p;
-                }
-            }
-            if (temp > 1) result -= result / temp;
-            
-            const phi = Math.round(result);
-            phiCache.set(n, phi);
-            
-            return phi;
-        }
-
-        // Alias for eulerPhi - used by new canvases 7-12
-        const phi = eulerPhi;
-
         // Pre-compute GCDs and Phi for dyadic families
         function precomputeDyadicFamily(M0, b, n0, nMax) {
             console.log('Precomputing GCDs and totients for dyadic family...');
@@ -7197,7 +7172,7 @@ Generated: ${new Date().toLocaleString()}
                 const m = M0 * Math.pow(b, n);
                 
                 // Precompute phi(m)
-                eulerPhi(m);
+                phi(m);
                 
                 // Precompute gcd(k, m) for all k in [0, m)
                 for (let k = 0; k < m; k++) {
@@ -7383,7 +7358,7 @@ Generated: ${new Date().toLocaleString()}
                 
                 case 'totient':
                     // Color by totient class - how many coprimes
-                    const phi = eulerPhi(m);
+                    const phi = phi(m);
                     const ratio = phi / m;
                     const totientHue = ratio * 120; // 0-120 (red to green)
                     return g === 1 ? 
@@ -8836,10 +8811,10 @@ Generated: ${new Date().toLocaleString()}
                         const x = cx + ringRadius * Math.cos(angle);
                         const y = cy + ringRadius * Math.sin(angle);
 
-                        // Determine color
+                        // Determine color using selected scheme
                         let color;
                         if (colorByGCD) {
-                            color = GCD_COLORS[g] || GCD_COLORS.default;
+                            color = getColorByScheme(g, state.nestedColorScheme);
                         } else {
                             color = g === 1 ? CONFIG.colors.gold : 'rgba(255, 255, 255, 0.3)';
                         }
@@ -8891,7 +8866,8 @@ Generated: ${new Date().toLocaleString()}
 
                     let ly = legendY + 35;
                     legendItems.forEach(item => {
-                        const color = item.gcd === 'default' ? GCD_COLORS.default : GCD_COLORS[item.gcd];
+                        const gcdValue = item.gcd === 'default' ? 6 : item.gcd;
+                        const color = getColorByScheme(gcdValue, state.nestedColorScheme);
                         
                         ctx.fillStyle = color;
                         ctx.beginPath();
@@ -11308,7 +11284,7 @@ Generated: ${new Date().toLocaleString()}
             ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
             ctx.font = `${baseFont * 0.85}px "Fira Code"`;
             
-            const phi = eulerPhi(state.modulus);
+            const phi = phi(state.modulus);
             const mathInfo = [
                 `φ(${state.modulus}) = ${phi}`,
                 `Coprime count: ${phi}`,
@@ -11546,7 +11522,7 @@ Generated: ${new Date().toLocaleString()}
                 
                 ctx.fillText(`Modulus: m = ${state.modulus}`, rightX, currentY); currentY += padding * 0.6;
                 ctx.fillText(`Rings: [${state.minRing}, ${state.maxRing}]`, rightX, currentY); currentY += padding * 0.6;
-                ctx.fillText(`φ(m) = ${eulerPhi(state.modulus)}`, rightX, currentY); currentY += padding * 1.2;
+                ctx.fillText(`φ(m) = ${phi(state.modulus)}`, rightX, currentY); currentY += padding * 1.2;
                 
                 // Statistics
                 ctx.font = `bold ${baseSize * 0.018}px "Fira Code"`;
@@ -11675,7 +11651,7 @@ Generated: ${new Date().toLocaleString()}
                 ctx.fillStyle = 'rgba(255,255,255,0.9)';
                 
                 // Calculate comprehensive stats
-                const phi_m = eulerPhi(state.modulus);
+                const phi_m = phi(state.modulus);
                 const coprimeCount = state.fareyPoints.filter(fp => gcd(fp.num, fp.den) === 1).length;
                 const coprimeDensity = (coprimeCount / state.fareyPoints.length * 100).toFixed(1);
                 
@@ -11684,7 +11660,7 @@ Generated: ${new Date().toLocaleString()}
                 let totalCoprimeRingPoints = 0;
                 for (let m = state.minRing; m <= state.maxRing; m++) {
                     totalRingPoints += m;
-                    totalCoprimeRingPoints += eulerPhi(m);
+                    totalCoprimeRingPoints += phi(m);
                 }
                 const ringCoprimeDensity = (totalCoprimeRingPoints / totalRingPoints * 100).toFixed(1);
                 
@@ -12296,7 +12272,7 @@ Generated: ${new Date().toLocaleString()}
                 const primeLimit = state.primes[state.primes.length - 1] || 0;
                 
                 parameters = [
-                    `m=${state.modulus} (φ(m)=${eulerPhi(state.modulus)})`,
+                    `m=${state.modulus} (φ(m)=${phi(state.modulus)})`,
                     `Farey: ${state.fareyPoints.length} pts`,
                     `Coprime: ${coprimeCount} (${coprimePct}%)`,
                     `Primes: ${visiblePrimes}/${state.primes.length}`,
@@ -12340,7 +12316,7 @@ Generated: ${new Date().toLocaleString()}
                 let coprimePoints = 0;
                 for (let m = state.minRing; m <= state.maxRing; m++) {
                     totalPoints += m;
-                    coprimePoints += eulerPhi(m);
+                    coprimePoints += phi(m);
                 }
                 const coprimeDensity = ((coprimePoints / totalPoints) * 100).toFixed(1);
                 
@@ -12469,14 +12445,14 @@ Generated: ${new Date().toLocaleString()}
                 console.log('Calculating ring points from', state.minRing, 'to', state.maxRing);
                 for (let m = state.minRing; m <= state.maxRing; m++) {
                     totalRingPoints += m;
-                    totalCoprimeRingPoints += eulerPhi(m);
+                    totalCoprimeRingPoints += phi(m);
                 }
                 console.log('Total ring points:', totalRingPoints, 'Coprime:', totalCoprimeRingPoints);
                 
                 const coprimePctM = ((coprimeM / M) * 100).toFixed(1);
                 
                 parameters = [
-                    `m=${state.modulus} (φ=${eulerPhi(state.modulus)})`,
+                    `m=${state.modulus} (φ=${phi(state.modulus)})`,
                     `Type: ${isPrime(M) ? 'Prime' : formatPrimeFactorization(M)}`,
                     `Farey: ${state.fareyPoints.length} (${coprimeCount} coprime)`,
                     `Reduction: ${coprimeM} coprime (${coprimePctM}%)`,
@@ -12620,7 +12596,7 @@ Generated: ${new Date().toLocaleString()}
                     insights.push(`Coprime density: ${(coprimeDensity * 100).toFixed(0)}%`);
                     
                     if (state.modulus > 1) {
-                        const phiRatio = (eulerPhi(state.modulus) / state.modulus).toFixed(3);
+                        const phiRatio = (phi(state.modulus) / state.modulus).toFixed(3);
                         insights.push(`φ(m)/m = ${phiRatio}`);
                     }
                 }
@@ -13057,13 +13033,42 @@ Generated: ${new Date().toLocaleString()}
             ctx.setLineDash([]);
             
             // Calculate cumulative coprime density
-            ctx.strokeStyle = '#e74c3c';
+            const colorScheme = state.nestedColorScheme;
+            let lineColor = '#e74c3c'; // Default red
+            
+            // Use color scheme for line color
+            if (colorScheme === 'gcd') {
+                lineColor = '#00ff00'; // Green (coprime)
+            } else if (colorScheme === 'coprime') {
+                lineColor = '#00ff00'; // Green
+            } else if (colorScheme === 'angle') {
+                lineColor = '#ff00ff'; // Magenta
+            } else if (colorScheme === 'modulus') {
+                lineColor = '#6366f1'; // Blue-violet
+            } else if (colorScheme === 'primefactor') {
+                lineColor = '#f59e0b'; // Amber
+            } else if (colorScheme === 'totient') {
+                lineColor = '#8b5cf6'; // Purple
+            } else if (colorScheme === 'monochrome') {
+                lineColor = '#ffd700'; // Gold
+            } else if (colorScheme === 'bluered') {
+                lineColor = '#3498db'; // Blue
+            } else if (colorScheme === 'fire') {
+                lineColor = '#ff6b35'; // Orange-red
+            } else if (colorScheme === 'plasma') {
+                lineColor = '#ff006e'; // Hot pink
+            } else if (colorScheme === 'viridis') {
+                lineColor = '#440154'; // Dark purple
+            }
+            
+            ctx.strokeStyle = lineColor;
             ctx.lineWidth = 3;
             ctx.beginPath();
             
             let coprimeCount = 0;
             let totalCount = 0;
             let firstPoint = true;
+            let finalDensity = 0;
             
             for (let n = 1; n <= maxN; n++) {
                 for (let k = 1; k < n; k++) {
@@ -13072,6 +13077,7 @@ Generated: ${new Date().toLocaleString()}
                 }
                 
                 const density = coprimeCount / totalCount;
+                finalDensity = density;
                 const x = margin + (n / maxN) * chartWidth;
                 const y = h - margin - (density / 1.0) * chartHeight;
                 
@@ -13085,7 +13091,7 @@ Generated: ${new Date().toLocaleString()}
             ctx.stroke();
             
             // Labels
-            ctx.fillStyle = '#e74c3c';
+            ctx.fillStyle = lineColor;
             ctx.font = 'bold 20px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('Convergence to 6/π²', w / 2, 40);
@@ -13093,11 +13099,41 @@ Generated: ${new Date().toLocaleString()}
             ctx.font = '14px monospace';
             ctx.fillStyle = '#2ecc71';
             ctx.fillText(`Target: ${target.toFixed(6)}`, w / 2, 65);
+            
+            // Add convergence information below the line
+            const infoY = targetY + 50;
+            const error = Math.abs(finalDensity - target);
+            const errorPercent = (error / target * 100);
+            const convergenceRate = error > 0.001 ? 'Approaching' : 'Near';
+            
+            ctx.font = 'bold 16px monospace';
+            ctx.fillStyle = '#3498db';
+            ctx.textAlign = 'left';
+            ctx.fillText('CONVERGENCE ANALYSIS', margin + 20, infoY);
+            
+            ctx.font = '13px monospace';
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillText(`Current Density: ${finalDensity.toFixed(8)}`, margin + 20, infoY + 25);
+            ctx.fillText(`Target (6/π²):   ${target.toFixed(8)}`, margin + 20, infoY + 45);
+            
+            ctx.fillStyle = error < 0.001 ? '#2ecc71' : '#f39c12';
+            ctx.fillText(`Error:           ${error.toFixed(8)}`, margin + 20, infoY + 65);
+            ctx.fillText(`Error %:         ${errorPercent.toFixed(4)}%`, margin + 20, infoY + 85);
+            
+            ctx.fillStyle = '#9b59b6';
+            ctx.fillText(`Status:          ${convergenceRate}`, margin + 20, infoY + 105);
+            ctx.fillText(`Sample Size:     ${totalCount} pairs`, margin + 20, infoY + 125);
+            ctx.fillText(`Coprime Pairs:   ${coprimeCount}`, margin + 20, infoY + 145);
+            
+            // Add theoretical info on right
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#7f8c8d';
+            ctx.font = 'italic 12px monospace';
+            ctx.fillText('lim (coprime pairs) / (all pairs) = 6/π²', w - margin - 20, infoY + 25);
+            ctx.fillText('Euler (1748): ζ(2) = π²/6', w - margin - 20, infoY + 45);
+            ctx.fillText('Basel Problem Solution', w - margin - 20, infoY + 65);
         }
 
-        // ========================================
-        // CANVAS 10: Coprime Pairs Grid
-        // ========================================
         function drawCanvas10() {
             const canvas = document.getElementById('canvas10');
             if (!canvas) return;
@@ -13127,7 +13163,7 @@ Generated: ${new Date().toLocaleString()}
                     // Use color scheme
                     let cellColor;
                     if (state.showGcdColoring) {
-                        cellColor = getColorByScheme(g, 'gcd');
+                        cellColor = getColorByScheme(g, state.nestedColorScheme);
                         // Adjust opacity based on coprimality
                         const alpha = isCoprime ? 0.8 : 0.3;
                         const rgb = cellColor.match(/\d+/g);
@@ -13135,9 +13171,13 @@ Generated: ${new Date().toLocaleString()}
                             cellColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
                         }
                     } else {
-                        cellColor = isCoprime ? 
-                            'rgba(99, 102, 241, 0.8)' : 
-                            `rgba(99, 102, 241, ${0.1 + (1 / g) * 0.3})`;
+                        // Use scheme-based color with opacity
+                        cellColor = getColorByScheme(g, state.nestedColorScheme);
+                        const alpha = isCoprime ? 0.8 : (0.1 + (1 / g) * 0.3);
+                        const rgb = cellColor.match(/\d+/g);
+                        if (rgb) {
+                            cellColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                        }
                     }
                     
                     ctx.fillStyle = cellColor;
