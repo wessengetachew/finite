@@ -2023,6 +2023,17 @@
                         <input type="range" id="labelOffset" min="5" max="50" step="1" value="18" 
                                oninput="updateLabelOffset(this.value)">
                     </div>
+                    
+                    <!-- Global Label Scale -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>GLOBAL LABEL SCALE (ALL 12 CANVASES)</span>
+                            <span class="value-display" id="globalLabelScaleValue">100%</span>
+                        </div>
+                        <input type="range" id="globalLabelScale" min="50" max="200" step="5" value="100" 
+                               oninput="updateGlobalLabelScale(this.value)">
+                        <div class="help-text">Multiplies label size across all canvases</div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -2639,7 +2650,7 @@
                             <span>Primitive Roots Zoom</span>
                             <span class="control-value" id="primitiveZoomValue">100%</span>
                         </div>
-                        <input type="range" id="primitiveZoomSlider" min="50" max="300" value="100" step="5">
+                        <input type="range" id="primitiveZoomSlider" min="50" max="300" value="95" step="5">
                     </div>
                 </div>
 
@@ -3662,6 +3673,7 @@
             labelFreq: 1,
             labelPosition: 'radial',
             labelOffset: 18,
+            globalLabelScale: 1.0,  // Global multiplier for all label sizes
             nestedColorScheme: 'gcd',
             cayleyHRange: 6,
             cayleyVRange: 4,
@@ -3677,7 +3689,7 @@
             nestedZoom: 1.0,
             reductionZoom: 1.0,
             fullPlaneZoom: 1.0,
-            primitiveZoom: 1.0,
+            primitiveZoom: 0.95,  // Default 95% (zoomed out 5%)
             ringGenerationMode: 'manual',
             baseMod: 30,
             scaleFactor: 2,
@@ -6788,6 +6800,13 @@ Generated: ${new Date().toLocaleString()}
         function updateLabelOffset(value) {
             document.getElementById('labelOffsetValue').textContent = value;
             state.labelOffset = parseInt(value);
+            updateAll();
+        }
+        
+        function updateGlobalLabelScale(value) {
+            const percent = parseInt(value);
+            document.getElementById('globalLabelScaleValue').textContent = percent + '%';
+            state.globalLabelScale = percent / 100;
             updateAll();
         }
         
@@ -10663,7 +10682,8 @@ Generated: ${new Date().toLocaleString()}
         function drawLabel(ctx, x, y, text, options = {}) {
             if (state.labelMode === 'none') return;
             
-            const size = options.size || state.labelSize;
+            const baseSize = options.size || state.labelSize;
+            const size = baseSize * state.globalLabelScale;  // Apply global scale
             const position = options.position || state.labelPosition;
             const offset = options.offset || state.labelOffset;
             const color = options.color || 'rgba(255,255,255,0.9)';
@@ -12855,33 +12875,92 @@ Generated: ${new Date().toLocaleString()}
             ctx.lineTo(w - margin, h - margin);
             ctx.stroke();
             
-            // Draw phi(n)/n values
-            ctx.strokeStyle = '#f1c40f';
-            ctx.lineWidth = 2;
+            // Draw reference line at y = 1
+            ctx.strokeStyle = 'rgba(255,255,255,0.2)';
+            ctx.setLineDash([5, 5]);
             ctx.beginPath();
+            ctx.moveTo(margin, margin);
+            ctx.lineTo(w - margin, margin);
+            ctx.stroke();
+            ctx.setLineDash([]);
             
-            let firstPoint = true;
+            // Plot ALL phi(n)/n values with different colors
             for (let n = 2; n <= maxN; n++) {
                 const ratio = phi(n) / n;
                 const x = margin + (n / maxN) * chartWidth;
                 const y = h - margin - ratio * chartHeight;
                 
-                if (firstPoint) {
-                    ctx.moveTo(x, y);
-                    firstPoint = false;
-                } else {
-                    ctx.lineTo(x, y);
-                }
-                
-                // Mark primes
+                // Color based on prime vs composite
                 if (isPrime(n)) {
-                    ctx.fillStyle = '#e74c3c';
+                    ctx.fillStyle = '#e74c3c';  // Red for primes
+                    ctx.beginPath();
+                    ctx.arc(x, y, 5, 0, 2 * Math.PI);
+                    ctx.fill();
+                } else {
+                    // Color composites by their structure
+                    const primeFactorCount = getPrimeFactorCount(n);
+                    if (primeFactorCount === 1) {
+                        ctx.fillStyle = '#9b59b6';  // Purple for prime powers
+                    } else if (primeFactorCount === 2) {
+                        ctx.fillStyle = '#3498db';  // Blue for 2 distinct factors
+                    } else {
+                        ctx.fillStyle = '#2ecc71';  // Green for 3+ factors
+                    }
                     ctx.beginPath();
                     ctx.arc(x, y, 4, 0, 2 * Math.PI);
                     ctx.fill();
                 }
+                
+                // Draw connecting line
+                if (n > 2) {
+                    const prevRatio = phi(n-1) / (n-1);
+                    const prevX = margin + ((n-1) / maxN) * chartWidth;
+                    const prevY = h - margin - prevRatio * chartHeight;
+                    
+                    ctx.strokeStyle = 'rgba(241, 196, 15, 0.3)';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevY);
+                    ctx.lineTo(x, y);
+                    ctx.stroke();
+                }
             }
-            ctx.stroke();
+            
+            // Legend
+            const legendX = w - margin - 150;
+            const legendY = margin + 30;
+            const legendSpacing = 25;
+            
+            ctx.textAlign = 'left';
+            ctx.font = '12px monospace';
+            
+            // Prime
+            ctx.fillStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.arc(legendX, legendY, 5, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillText('Primes', legendX + 15, legendY + 4);
+            
+            // Prime powers
+            ctx.fillStyle = '#9b59b6';
+            ctx.beginPath();
+            ctx.arc(legendX, legendY + legendSpacing, 4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillText('Prime powers (p^k)', legendX + 15, legendY + legendSpacing + 4);
+            
+            // 2 factors
+            ctx.fillStyle = '#3498db';
+            ctx.beginPath();
+            ctx.arc(legendX, legendY + 2*legendSpacing, 4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillText('2 prime factors', legendX + 15, legendY + 2*legendSpacing + 4);
+            
+            // 3+ factors
+            ctx.fillStyle = '#2ecc71';
+            ctx.beginPath();
+            ctx.arc(legendX, legendY + 3*legendSpacing, 4, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.fillText('3+ prime factors', legendX + 15, legendY + 3*legendSpacing + 4);
             
             // Labels
             ctx.fillStyle = '#f1c40f';
@@ -13108,9 +13187,49 @@ Generated: ${new Date().toLocaleString()}
             const maxN = Math.min(state.modulus, 30);
             const phase = state.phase * Math.PI / 180;
             
-            // Draw rings from 1 to maxN
+            // SPECIAL: Draw mod 1 as the unit circle (outermost)
+            // Only coprime to 1 is 1 itself, so we plot gcd(1,1)=1 point
+            const unitCircleRadius = maxRadius;
+            
+            if (state.showUnitDiskOutline) {
+                ctx.strokeStyle = 'rgba(255, 215, 0, 0.5)';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.arc(cx, cy, unitCircleRadius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+            
+            // Plot the single coprime point for mod 1 at angle 0
+            const unitAngle = phase;
+            const unitX = cx + unitCircleRadius * Math.cos(unitAngle);
+            const unitY = cy + unitCircleRadius * Math.sin(unitAngle);
+            
+            // Use nested ring coloring scheme
+            const unitColor = getColorByScheme(1, 'gcd'); // gcd(1,1) = 1
+            ctx.fillStyle = unitColor;
+            ctx.beginPath();
+            ctx.arc(unitX, unitY, 6, 0, 2 * Math.PI);
+            ctx.fill();
+            
+            // Add halo for visibility
+            ctx.strokeStyle = unitColor;
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.arc(unitX, unitY, 10, 0, 2 * Math.PI);
+            ctx.stroke();
+            
+            // Label for mod 1
+            if (state.labelMode !== 'none') {
+                drawLabel(ctx, unitX, unitY, 'n=1, gcd=1', {
+                    color: '#ffd700',
+                    size: state.labelSize,
+                    position: state.labelPosition
+                });
+            }
+            
+            // Draw rings from 2 to maxN (nested inside)
             for (let n = 2; n <= maxN; n++) {
-                const radius = (n / maxN) * maxRadius;
+                const radius = ((n - 1) / maxN) * maxRadius; // Adjust scale for unit circle
                 const phiN = phi(n);
                 
                 // Per-ring rotation support
@@ -13119,43 +13238,77 @@ Generated: ${new Date().toLocaleString()}
                     perRingOffset = state.perRingRotations[n] * Math.PI / 180;
                 }
                 
-                // Draw ring circle
-                ctx.strokeStyle = `rgba(39, 174, 96, ${0.2 + (phiN / n) * 0.5})`;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
-                ctx.stroke();
+                // Draw ring circle if enabled
+                if (state.showRingCircles) {
+                    ctx.strokeStyle = `rgba(39, 174, 96, ${0.15 + (phiN / n) * 0.3})`;
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+                    ctx.stroke();
+                }
                 
-                // Draw coprime points on this ring
+                // Draw ALL points on this ring with nested coloring scheme
                 for (let k = 1; k < n; k++) {
-                    if (gcd(k, n) === 1) {
-                        const angle = 2 * Math.PI * k / n + phase + perRingOffset;
-                        const x = cx + radius * Math.cos(angle);
-                        const y = cy + radius * Math.sin(angle);
+                    const g = gcd(k, n);
+                    const isCoprime = g === 1;
+                    
+                    // Apply connection filter
+                    if (state.connectionFilter === 'coprime' && !isCoprime) continue;
+                    if (state.connectionFilter === 'noncoprime' && isCoprime) continue;
+                    
+                    const angle = 2 * Math.PI * k / n + phase + perRingOffset;
+                    const x = cx + radius * Math.cos(angle);
+                    const y = cy + radius * Math.sin(angle);
+                    
+                    // Use nested ring coloring scheme (same as Canvas 3)
+                    let pointColor = getColorByScheme(g, state.nestedColorScheme);
+                    
+                    ctx.fillStyle = pointColor;
+                    const pointSize = isCoprime ? 4 : 3;
+                    ctx.beginPath();
+                    ctx.arc(x, y, pointSize, 0, 2 * Math.PI);
+                    ctx.fill();
+                    
+                    // Labels
+                    if (state.labelMode !== 'none' && k % state.labelFreq === 0) {
+                        let labelText = '';
+                        if (state.labelMode === 'residue' || state.labelMode === 'both') {
+                            labelText = `${k}`;
+                        }
+                        if (state.labelMode === 'farey') {
+                            labelText = `gcd=${g}`;
+                        }
+                        if (state.labelMode === 'primes' && isPrime(k)) {
+                            labelText = `${k}`;
+                        }
                         
-                        ctx.fillStyle = '#27ae60';
-                        ctx.beginPath();
-                        ctx.arc(x, y, 3, 0, 2 * Math.PI);
-                        ctx.fill();
+                        if (labelText) {
+                            drawLabel(ctx, x, y, labelText, {
+                                color: isCoprime ? '#00ff00' : '#ffffff',
+                                size: state.labelSize * 0.8
+                            });
+                        }
                     }
                 }
                 
-                // Label every 5th ring
-                if (n % 5 === 0) {
+                // Ring labels every Nth ring
+                if (n % state.labelFreq === 0 && state.labelMode !== 'none') {
                     ctx.fillStyle = '#27ae60';
-                    ctx.font = '12px monospace';
+                    ctx.font = `${state.labelSize}px monospace`;
                     ctx.textAlign = 'left';
                     ctx.fillText(`n=${n}`, cx + radius + 10, cy);
                 }
             }
             
             // Center label
-            ctx.fillStyle = '#27ae60';
-            ctx.font = 'bold 18px monospace';
-            ctx.textAlign = 'center';
-            ctx.fillText('Nested Density Rings', cx, cy);
-            ctx.font = '14px monospace';
-            ctx.fillText(`Showing 1 to ${maxN}`, cx, cy + 25);
+            if (state.showReductionStatistics) {
+                ctx.fillStyle = '#27ae60';
+                ctx.font = 'bold 18px monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('Nested Density Rings', cx, cy - 10);
+                ctx.font = '14px monospace';
+                ctx.fillText(`mod 1 to ${maxN}`, cx, cy + 15);
+            }
         }
 
         // ========================================
