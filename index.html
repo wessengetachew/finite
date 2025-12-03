@@ -8836,10 +8836,10 @@ Generated: ${new Date().toLocaleString()}
                         const x = cx + ringRadius * Math.cos(angle);
                         const y = cy + ringRadius * Math.sin(angle);
 
-                        // Determine color
+                        // Determine color using selected scheme
                         let color;
                         if (colorByGCD) {
-                            color = GCD_COLORS[g] || GCD_COLORS.default;
+                            color = getColorByScheme(g, state.nestedColorScheme);
                         } else {
                             color = g === 1 ? CONFIG.colors.gold : 'rgba(255, 255, 255, 0.3)';
                         }
@@ -8891,7 +8891,8 @@ Generated: ${new Date().toLocaleString()}
 
                     let ly = legendY + 35;
                     legendItems.forEach(item => {
-                        const color = item.gcd === 'default' ? GCD_COLORS.default : GCD_COLORS[item.gcd];
+                        const gcdValue = item.gcd === 'default' ? 6 : item.gcd;
+                        const color = getColorByScheme(gcdValue, state.nestedColorScheme);
                         
                         ctx.fillStyle = color;
                         ctx.beginPath();
@@ -13057,13 +13058,42 @@ Generated: ${new Date().toLocaleString()}
             ctx.setLineDash([]);
             
             // Calculate cumulative coprime density
-            ctx.strokeStyle = '#e74c3c';
+            const colorScheme = state.nestedColorScheme;
+            let lineColor = '#e74c3c'; // Default red
+            
+            // Use color scheme for line color
+            if (colorScheme === 'gcd') {
+                lineColor = '#00ff00'; // Green (coprime)
+            } else if (colorScheme === 'coprime') {
+                lineColor = '#00ff00'; // Green
+            } else if (colorScheme === 'angle') {
+                lineColor = '#ff00ff'; // Magenta
+            } else if (colorScheme === 'modulus') {
+                lineColor = '#6366f1'; // Blue-violet
+            } else if (colorScheme === 'primefactor') {
+                lineColor = '#f59e0b'; // Amber
+            } else if (colorScheme === 'totient') {
+                lineColor = '#8b5cf6'; // Purple
+            } else if (colorScheme === 'monochrome') {
+                lineColor = '#ffd700'; // Gold
+            } else if (colorScheme === 'bluered') {
+                lineColor = '#3498db'; // Blue
+            } else if (colorScheme === 'fire') {
+                lineColor = '#ff6b35'; // Orange-red
+            } else if (colorScheme === 'plasma') {
+                lineColor = '#ff006e'; // Hot pink
+            } else if (colorScheme === 'viridis') {
+                lineColor = '#440154'; // Dark purple
+            }
+            
+            ctx.strokeStyle = lineColor;
             ctx.lineWidth = 3;
             ctx.beginPath();
             
             let coprimeCount = 0;
             let totalCount = 0;
             let firstPoint = true;
+            let finalDensity = 0;
             
             for (let n = 1; n <= maxN; n++) {
                 for (let k = 1; k < n; k++) {
@@ -13072,6 +13102,7 @@ Generated: ${new Date().toLocaleString()}
                 }
                 
                 const density = coprimeCount / totalCount;
+                finalDensity = density;
                 const x = margin + (n / maxN) * chartWidth;
                 const y = h - margin - (density / 1.0) * chartHeight;
                 
@@ -13085,7 +13116,7 @@ Generated: ${new Date().toLocaleString()}
             ctx.stroke();
             
             // Labels
-            ctx.fillStyle = '#e74c3c';
+            ctx.fillStyle = lineColor;
             ctx.font = 'bold 20px monospace';
             ctx.textAlign = 'center';
             ctx.fillText('Convergence to 6/π²', w / 2, 40);
@@ -13093,11 +13124,41 @@ Generated: ${new Date().toLocaleString()}
             ctx.font = '14px monospace';
             ctx.fillStyle = '#2ecc71';
             ctx.fillText(`Target: ${target.toFixed(6)}`, w / 2, 65);
+            
+            // Add convergence information below the line
+            const infoY = targetY + 50;
+            const error = Math.abs(finalDensity - target);
+            const errorPercent = (error / target * 100);
+            const convergenceRate = error > 0.001 ? 'Approaching' : 'Near';
+            
+            ctx.font = 'bold 16px monospace';
+            ctx.fillStyle = '#3498db';
+            ctx.textAlign = 'left';
+            ctx.fillText('CONVERGENCE ANALYSIS', margin + 20, infoY);
+            
+            ctx.font = '13px monospace';
+            ctx.fillStyle = '#ecf0f1';
+            ctx.fillText(`Current Density: ${finalDensity.toFixed(8)}`, margin + 20, infoY + 25);
+            ctx.fillText(`Target (6/π²):   ${target.toFixed(8)}`, margin + 20, infoY + 45);
+            
+            ctx.fillStyle = error < 0.001 ? '#2ecc71' : '#f39c12';
+            ctx.fillText(`Error:           ${error.toFixed(8)}`, margin + 20, infoY + 65);
+            ctx.fillText(`Error %:         ${errorPercent.toFixed(4)}%`, margin + 20, infoY + 85);
+            
+            ctx.fillStyle = '#9b59b6';
+            ctx.fillText(`Status:          ${convergenceRate}`, margin + 20, infoY + 105);
+            ctx.fillText(`Sample Size:     ${totalCount} pairs`, margin + 20, infoY + 125);
+            ctx.fillText(`Coprime Pairs:   ${coprimeCount}`, margin + 20, infoY + 145);
+            
+            // Add theoretical info on right
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#7f8c8d';
+            ctx.font = 'italic 12px monospace';
+            ctx.fillText('lim (coprime pairs) / (all pairs) = 6/π²', w - margin - 20, infoY + 25);
+            ctx.fillText('Euler (1748): ζ(2) = π²/6', w - margin - 20, infoY + 45);
+            ctx.fillText('Basel Problem Solution', w - margin - 20, infoY + 65);
         }
 
-        // ========================================
-        // CANVAS 10: Coprime Pairs Grid
-        // ========================================
         function drawCanvas10() {
             const canvas = document.getElementById('canvas10');
             if (!canvas) return;
@@ -13127,7 +13188,7 @@ Generated: ${new Date().toLocaleString()}
                     // Use color scheme
                     let cellColor;
                     if (state.showGcdColoring) {
-                        cellColor = getColorByScheme(g, 'gcd');
+                        cellColor = getColorByScheme(g, state.nestedColorScheme);
                         // Adjust opacity based on coprimality
                         const alpha = isCoprime ? 0.8 : 0.3;
                         const rgb = cellColor.match(/\d+/g);
@@ -13135,9 +13196,13 @@ Generated: ${new Date().toLocaleString()}
                             cellColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
                         }
                     } else {
-                        cellColor = isCoprime ? 
-                            'rgba(99, 102, 241, 0.8)' : 
-                            `rgba(99, 102, 241, ${0.1 + (1 / g) * 0.3})`;
+                        // Use scheme-based color with opacity
+                        cellColor = getColorByScheme(g, state.nestedColorScheme);
+                        const alpha = isCoprime ? 0.8 : (0.1 + (1 / g) * 0.3);
+                        const rgb = cellColor.match(/\d+/g);
+                        if (rgb) {
+                            cellColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                        }
                     }
                     
                     ctx.fillStyle = cellColor;
