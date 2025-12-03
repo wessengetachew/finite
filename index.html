@@ -1653,9 +1653,14 @@
                         <div class="panel-title">𝔻 Unit Disk</div>
                         <div class="panel-subtitle">Custom Farey Configuration</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('diskCanvas', 'unit_disk_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportSingleCanvas('diskCanvas', 'unit_disk_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(1)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="diskCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1666,9 +1671,14 @@
                         <div class="panel-title">ℍ Upper Half-Plane</div>
                         <div class="panel-subtitle">Cayley Transform & Geodesics</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('cayleyCanvas', 'cayley_plane_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportSingleCanvas('cayleyCanvas', 'cayley_plane_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(2)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="cayleyCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1679,9 +1689,14 @@
                         <div class="panel-title">⊚ Nested Modular Rings</div>
                         <div class="panel-subtitle">Unlimited GCD Structure</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('nestedCanvas', 'nested_rings_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportSingleCanvas('nestedCanvas', 'nested_rings_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(3)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="nestedCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1705,9 +1720,14 @@
                         <div class="panel-title">ℂ Full Complex Plane</div>
                         <div class="panel-subtitle">Complete Cayley Transform View (Interior + Exterior)</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('fullPlaneCanvas', 'full_plane_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportSingleCanvas('fullPlaneCanvas', 'full_plane_2k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(5)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="fullPlaneCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -1718,9 +1738,14 @@
                         <div class="panel-title" style="color: var(--c6-pink);">6. ⚙ Primitive Roots</div>
                         <div class="panel-subtitle">Power Sequence g^n mod M</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportPixiCanvas()" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportPixiCanvas()" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(6)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <div id="pixiPrimitiveRootsContainer" style="width: 100%; height: 1000px; display: flex; justify-content: center; align-items: center;"></div>
                 <canvas id="primitiveRootsCanvas" width="1000" height="1000" style="display: none;"></canvas>
@@ -9847,6 +9872,321 @@ Generated: ${new Date().toLocaleString()}
                 a.download = 'primitive_roots.png';
                 a.click();
             }
+        }
+
+        // ========================================
+        // CSV EXPORT FOR ALL 12 CANVASES
+        // ========================================
+        function exportCanvasCSV(canvasNum) {
+            let csvContent = '';
+            let filename = '';
+            
+            const M = state.modulus;
+            const phase = state.phase;
+            
+            switch(canvasNum) {
+                case 1: // Canvas 1: Unit Disk - Farey & Primes
+                    filename = `canvas1_unit_disk_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,FareyNumerator,FareyDenominator,FareyFraction,Angle_Radians,Angle_Degrees,IsPrime,GCD,X_Coordinate,Y_Coordinate\n';
+                    
+                    for (let q = 1; q <= 20; q++) { // Farey order
+                        for (let p = 0; p <= q; p++) {
+                            if (gcd(p, q) === 1) {
+                                const fraction = q === 0 ? 0 : p / q;
+                                const angleRad = (2 * Math.PI * p / q) + (phase * Math.PI / 180);
+                                const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                                const isPrimeVal = isPrime(p);
+                                const gcdVal = gcd(p, q);
+                                const x = Math.cos(angleRad);
+                                const y = Math.sin(angleRad);
+                                csvContent += `1,${p},${q},${fraction.toFixed(6)},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${isPrimeVal},${gcdVal},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 2: // Canvas 2: Cayley Plane - Hyperbolic Geometry
+                    filename = `canvas2_cayley_plane_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,FareyP,FareyQ,FareyFraction,Angle_Radians,Angle_Degrees,IsPrime,HyperbolicHeight\n';
+                    
+                    for (let q = 1; q <= 20; q++) {
+                        for (let p = 0; p <= q; p++) {
+                            if (gcd(p, q) === 1) {
+                                const fraction = q === 0 ? 0 : p / q;
+                                const angleRad = 2 * Math.PI * p / q;
+                                const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                                const isPrimeVal = isPrime(p);
+                                const hypHeight = 1.0 / (q * q); // Ford circle height
+                                csvContent += `2,${p},${q},${fraction.toFixed(6)},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${isPrimeVal},${hypHeight.toFixed(8)}\n`;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 3: // Canvas 3: Nested Rings
+                    filename = `canvas3_nested_rings_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,Modulus,Residue,RingRadius,Angle_Radians,Angle_Degrees,IsCoprime,GCD,EulerPhi,Density,X_Coord,Y_Coord\n';
+                    
+                    const minMod = 2;
+                    const maxMod = Math.min(M, 50); // Limit for reasonable CSV size
+                    for (let m = minMod; m <= maxMod; m++) {
+                        const phiM = phi(m);
+                        const density = phiM / m;
+                        const radius = m / maxMod; // Normalized radius
+                        
+                        for (let k = 0; k < m; k++) {
+                            const angleRad = (2 * Math.PI * k / m) + (phase * Math.PI / 180);
+                            const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                            const isCoprime = gcd(k, m) === 1;
+                            const gcdVal = gcd(k, m);
+                            const x = radius * Math.cos(angleRad);
+                            const y = radius * Math.sin(angleRad);
+                            csvContent += `3,${m},${k},${radius.toFixed(4)},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${isCoprime},${gcdVal},${phiM},${density.toFixed(6)},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                        }
+                    }
+                    break;
+                    
+                case 4: // Canvas 4: Modular Reduction
+                    filename = `canvas4_reduction_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,OriginalModulus,Residue,GCD,ReducedModulus,Channel,ChannelIndex,IsCoprime,X_Coord,Y_Coord\n';
+                    
+                    for (let k = 0; k < M; k++) {
+                        const gcdVal = gcd(k, M);
+                        const reducedMod = M / gcdVal;
+                        const channelIdx = k / gcdVal;
+                        const isCoprime = gcdVal === 1;
+                        const angleRad = (2 * Math.PI * k / M) + (phase * Math.PI / 180);
+                        const x = Math.cos(angleRad);
+                        const y = Math.sin(angleRad);
+                        csvContent += `4,${M},${k},${gcdVal},${reducedMod},${gcdVal},${channelIdx.toFixed(0)},${isCoprime},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                    }
+                    break;
+                    
+                case 5: // Canvas 5: Full Complex Plane
+                    filename = `canvas5_full_plane_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,Region,FareyP,FareyQ,FareyFraction,Angle_Radians,Angle_Degrees,ComplexRe,ComplexIm,Magnitude\n';
+                    
+                    // All Farey points on unit circle
+                    for (let q = 1; q <= 20; q++) {
+                        for (let p = 0; p <= q; p++) {
+                            if (gcd(p, q) === 1) {
+                                const fraction = q === 0 ? 0 : p / q;
+                                const angleRad = 2 * Math.PI * p / q;
+                                const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                                const re = Math.cos(angleRad);
+                                const im = Math.sin(angleRad);
+                                csvContent += `5,boundary,${p},${q},${fraction.toFixed(6)},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${re.toFixed(6)},${im.toFixed(6)},1.000000\n`;
+                            }
+                        }
+                    }
+                    break;
+                    
+                case 6: // Canvas 6: Primitive Roots
+                    filename = `canvas6_primitive_roots_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,Power,GeneratorValue,Value_Mod_M,Angle_Radians,Angle_Degrees,Order,IsCoprime,CyclePosition,X_Coord,Y_Coord\n';
+                    
+                    const phiM6 = phi(M);
+                    let g = 2;
+                    // Find a primitive root
+                    while (g < M && !isPrimitiveRoot(g, M)) {
+                        g++;
+                    }
+                    
+                    for (let n = 0; n < phiM6; n++) {
+                        const val = modPow(g, n, M);
+                        const angleRad = (2 * Math.PI * val / M) + (phase * Math.PI / 180);
+                        const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                        const isCoprime = gcd(val, M) === 1;
+                        const cyclePos = n / phiM6;
+                        const x = Math.cos(angleRad);
+                        const y = Math.sin(angleRad);
+                        csvContent += `6,${n},${g},${val},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${phiM6},${isCoprime},${cyclePos.toFixed(4)},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                    }
+                    break;
+                    
+                case 7: // Canvas 7: Coprime Circle
+                    filename = `canvas7_coprime_circle_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,Residue,Angle_Radians,Angle_Degrees,IsCoprime,GCD,EulerPhi_M,Density,Probability,X_Coord,Y_Coord\n';
+                    
+                    const phiM7 = phi(M);
+                    const density7 = phiM7 / M;
+                    
+                    for (let i = 1; i < M; i++) {
+                        const angleRad = (2 * Math.PI * i / M) + (phase * Math.PI / 180);
+                        const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                        const isCoprime = gcd(i, M) === 1;
+                        const gcdVal = gcd(i, M);
+                        const prob = isCoprime ? 1.0 : 0.0;
+                        const x = Math.cos(angleRad);
+                        const y = Math.sin(angleRad);
+                        csvContent += `7,${i},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${isCoprime},${gcdVal},${phiM7},${density7.toFixed(6)},${prob.toFixed(1)},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                    }
+                    break;
+                    
+                case 8: // Canvas 8: Phi Ratios Chart
+                    filename = `canvas8_phi_ratios_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,N,EulerPhi_N,Ratio_Phi_N,IsPrime,PrimeFactorCount,IsSquareFree,MobiusMu\n';
+                    
+                    for (let n = 2; n <= M; n++) {
+                        const phiN = phi(n);
+                        const ratio = phiN / n;
+                        const isPrimeVal = isPrime(n);
+                        const primeFactors = getPrimeFactorCount(n);
+                        const isSquareFree = checkSquareFree(n);
+                        const mobiusMu = calculateMobius(n);
+                        csvContent += `8,${n},${phiN},${ratio.toFixed(6)},${isPrimeVal},${primeFactors},${isSquareFree},${mobiusMu}\n`;
+                    }
+                    break;
+                    
+                case 9: // Canvas 9: Convergence to 6/π²
+                    filename = `canvas9_convergence_6_pi2_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,N,CoprimePairs_UpTo_N,TotalPairs_UpTo_N,CumulativeRatio,Target_6_pi2,AbsoluteError,RelativeError_Percent\n';
+                    
+                    let coprimePairs = 0;
+                    const target = 6 / (Math.PI * Math.PI);
+                    
+                    for (let n = 2; n <= Math.min(M, 500); n++) {
+                        // Count NEW coprime pairs for this n
+                        for (let i = 1; i < n; i++) {
+                            if (gcd(i, n) === 1) coprimePairs++;
+                        }
+                        
+                        const totalPairs = n * (n - 1) / 2;
+                        const ratio = totalPairs > 0 ? coprimePairs / totalPairs : 0;
+                        const absError = Math.abs(ratio - target);
+                        const relError = target !== 0 ? (absError / target) * 100 : 0;
+                        csvContent += `9,${n},${coprimePairs},${totalPairs},${ratio.toFixed(8)},${target.toFixed(8)},${absError.toFixed(8)},${relError.toFixed(4)}\n`;
+                    }
+                    break;
+                    
+                case 10: // Canvas 10: Coprime Pairs Grid
+                    filename = `canvas10_coprime_grid_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,Row_i,Col_j,GCD_i_j,IsCoprime,IsSymmetric,OnDiagonal\n';
+                    
+                    const gridSize = Math.min(M, 100); // Limit for reasonable file size
+                    for (let i = 1; i <= gridSize; i++) {
+                        for (let j = 1; j <= gridSize; j++) {
+                            const gcdVal = gcd(i, j);
+                            const isCoprime = gcdVal === 1;
+                            const isSymmetric = true; // gcd is always symmetric
+                            const onDiagonal = i === j;
+                            csvContent += `10,${i},${j},${gcdVal},${isCoprime},${isSymmetric},${onDiagonal}\n`;
+                        }
+                    }
+                    break;
+                    
+                case 11: // Canvas 11: Nested Density Rings
+                    filename = `canvas11_density_rings_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,RingNumber,Residue,Angle_Radians,Angle_Degrees,IsCoprime,GCD,EulerPhi_N,Density_Phi_N,X_Coord,Y_Coord\n';
+                    
+                    const maxRings = Math.min(M, 50);
+                    for (let n = 2; n <= maxRings; n++) {
+                        const phiN = phi(n);
+                        const densityN = phiN / n;
+                        const radius = n / maxRings;
+                        
+                        for (let k = 1; k < n; k++) {
+                            const angleRad = (2 * Math.PI * k / n) + (phase * Math.PI / 180);
+                            const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                            const isCoprime = gcd(k, n) === 1;
+                            const gcdVal = gcd(k, n);
+                            const x = radius * Math.cos(angleRad);
+                            const y = radius * Math.sin(angleRad);
+                            csvContent += `11,${n},${k},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${isCoprime},${gcdVal},${phiN},${densityN.toFixed(6)},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                        }
+                    }
+                    break;
+                    
+                case 12: // Canvas 12: Dirichlet Characters
+                    filename = `canvas12_dirichlet_characters_M${M}_phase${phase.toFixed(0)}.csv`;
+                    csvContent = 'CanvasID,Residue,Angle_Radians,Angle_Degrees,IsCoprime,PrincipalChar_Value,IsUnit,MultOrder,X_Coord,Y_Coord\n';
+                    
+                    const phiM12 = phi(M);
+                    for (let n = 1; n < M; n++) {
+                        const angleRad = (2 * Math.PI * n / M) + (phase * Math.PI / 180);
+                        const angleDeg = (angleRad * 180 / Math.PI) % 360;
+                        const isCoprime = gcd(n, M) === 1;
+                        const charValue = isCoprime ? 1 : 0; // Principal character χ₀
+                        const isUnit = isCoprime;
+                        const multOrder = isCoprime ? findMultOrder(n, M) : 0;
+                        const x = Math.cos(angleRad);
+                        const y = Math.sin(angleRad);
+                        csvContent += `12,${n},${angleRad.toFixed(6)},${angleDeg.toFixed(2)},${isCoprime},${charValue},${isUnit},${multOrder},${x.toFixed(6)},${y.toFixed(6)}\n`;
+                    }
+                    break;
+                    
+                default:
+                    console.error('Invalid canvas number:', canvasNum);
+                    alert('Invalid canvas number: ' + canvasNum);
+                    return;
+            }
+            
+            // Create blob and download
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            URL.revokeObjectURL(url);
+            
+            console.log(`✅ Exported ${filename} (${csvContent.split('\n').length - 1} rows)`);
+        }
+        
+        // Helper functions for CSV export
+        function getPrimeFactorCount(n) {
+            let count = 0;
+            let temp = n;
+            for (let i = 2; i * i <= temp; i++) {
+                if (temp % i === 0) {
+                    count++;
+                    while (temp % i === 0) temp /= i;
+                }
+            }
+            if (temp > 1) count++;
+            return count;
+        }
+        
+        function checkSquareFree(n) {
+            for (let i = 2; i * i <= n; i++) {
+                if (n % (i * i) === 0) return false;
+            }
+            return true;
+        }
+        
+        function calculateMobius(n) {
+            if (n === 1) return 1;
+            if (!checkSquareFree(n)) return 0;
+            const primeCount = getPrimeFactorCount(n);
+            return primeCount % 2 === 0 ? 1 : -1;
+        }
+        
+        function findMultOrder(a, m) {
+            if (gcd(a, m) !== 1) return 0;
+            let order = 1;
+            let current = a % m;
+            while (current !== 1 && order < m) {
+                current = (current * a) % m;
+                order++;
+            }
+            return current === 1 ? order : 0;
+        }
+        
+        function isPrimitiveRoot(g, m) {
+            if (gcd(g, m) !== 1) return false;
+            const order = findMultOrder(g, m);
+            return order === phi(m);
+        }
+        
+        function modPow(base, exp, mod) {
+            let result = 1;
+            base = base % mod;
+            while (exp > 0) {
+                if (exp % 2 === 1) result = (result * base) % mod;
+                exp = Math.floor(exp / 2);
+                base = (base * base) % mod;
+            }
+            return result;
         }
 
         function exportVisualization() {
