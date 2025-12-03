@@ -1938,11 +1938,17 @@
                             <div class="help-text">Different color schemes reveal different patterns</div>
                         </div>
                         <select id="colorScheme" onchange="updateColorScheme()">
-                            <option value="gcd">By GCD Value</option>
-                            <option value="modulus" selected>By Modulus (Ring) - Default</option>
-                            <option value="coprime">Coprime vs Non-Coprime</option>
-                            <option value="plasma">Plasma Gradient</option>
-                            <option value="viridis">Viridis Gradient</option>
+                            <option value="gcd">By GCD Value (Default)</option>
+                            <option value="coprime">Binary (Coprime vs Non-Coprime)</option>
+                            <option value="angle">Rainbow by Angle</option>
+                            <option value="modulus" selected>By Ring (Modulus)</option>
+                            <option value="primefactor">Prime Factorization</option>
+                            <option value="totient">Totient Class</option>
+                            <option value="monochrome">Monochrome (Gold)</option>
+                            <option value="bluered">Blue-Red Gradient</option>
+                            <option value="fire">Fire (Black-Red-Orange-Yellow)</option>
+                            <option value="plasma">Plasma (Purple-Pink-Yellow)</option>
+                            <option value="viridis">Viridis (Purple-Green-Yellow)</option>
                         </select>
                     </div>
 
@@ -1952,11 +1958,14 @@
                             <span>CONNECT POINTS BY</span>
                         </div>
                         <select id="connectionMode" onchange="updateConnectionMode()">
-                            <option value="none">No Connections</option>
-                            <option value="farey">Farey Neighbors</option>
-                            <option value="coprime">Coprime Pairs</option>
-                            <option value="samegcd">Same GCD Value</option>
-                            <option value="lifting">Dyadic Lifting</option>
+                            <option value="none" selected>No Connections</option>
+                            <option value="farey">Farey Points Only</option>
+                            <option value="samemodulus">Same Modulus</option>
+                            <option value="sameangle">Same Angle</option>
+                            <option value="samegcd">Same GCD</option>
+                            <option value="samefraction">Same Fraction Value</option>
+                            <option value="gap2n">Gap-2n (r to r+2n)</option>
+                            <option value="multieven">Multiple Even Gaps</option>
                         </select>
                     </div>
 
@@ -2006,10 +2015,12 @@
                         </div>
                         <select id="labelMode" onchange="updateLabelMode()">
                             <option value="none">No Labels</option>
-                            <option value="farey">Farey Fractions (p/q)</option>
-                            <option value="residue" selected>Residue Values (k) - Default</option>
-                            <option value="both">Both (p/q, k)</option>
-                            <option value="primes">Primes Only</option>
+                            <option value="farey">Farey Points Only</option>
+                            <option value="residue">Integers (k) Only</option>
+                            <option value="both">All Points (Fractions)</option>
+                            <option value="coprime">Coprime Only</option>
+                            <option value="rings" selected>Ring Numbers Only</option>
+                            <option value="everything">Everything</option>
                         </select>
                     </div>
 
@@ -3627,7 +3638,7 @@
             maxGap: 8,
             connectionThickness: 1.0,
             connectionOpacity: 0.3,
-            labelMode: 'residue',  // Default: show integer residue values
+            labelMode: 'rings',  // Default: Ring Numbers Only
             labelSize: 10,
             labelFreq: 1,
             labelPosition: 'radial',
@@ -7128,6 +7139,14 @@ Generated: ${new Date().toLocaleString()}
             return true;
         }
 
+        function countPrimesUpTo(n) {
+            let count = 0;
+            for (let i = 2; i <= n; i++) {
+                if (isPrime(i)) count++;
+            }
+            return count;
+        }
+
         function updateGlobalLineThickness(value) {
             state.globalLineThickness = parseFloat(value);
             document.getElementById('globalLineThicknessValue').textContent = parseFloat(value).toFixed(2);
@@ -10329,12 +10348,18 @@ Generated: ${new Date().toLocaleString()}
             ctx.textAlign = 'center';
             ctx.fillText('STATISTICS', legendX + legendWidth / 2, legendY + 40);
             
-            // Gather statistics
-            const phiN = phi(state.modulus);
-            const primeCount = countPrimesUpTo(state.modulus);
-            const coprimeCount = phiN;
-            const totalPoints = state.modulus;
-            const coprimePercent = (phiN / state.modulus * 100).toFixed(1);
+            // Gather statistics (with safe fallbacks)
+            let phiN, primeCount, coprimePercent;
+            try {
+                phiN = phi(state.modulus);
+                primeCount = countPrimesUpTo(state.modulus);
+                coprimePercent = (phiN / state.modulus * 100).toFixed(1);
+            } catch (e) {
+                phiN = 'N/A';
+                primeCount = 'N/A';
+                coprimePercent = 'N/A';
+            }
+            const totalPoints = state.modulus || 0;
             
             // Draw stats text
             ctx.textAlign = 'left';
@@ -10352,13 +10377,13 @@ Generated: ${new Date().toLocaleString()}
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '18px monospace';
-            ctx.fillText(`Modulus: ${state.modulus}`, statX, statY);
+            ctx.fillText(`Modulus: ${state.modulus || 0}`, statX, statY);
             statY += lineHeight;
-            ctx.fillText(`Phase: ${state.phase.toFixed(1)}°`, statX, statY);
+            ctx.fillText(`Phase: ${(state.phase || 0).toFixed(1)}°`, statX, statY);
             statY += lineHeight;
-            ctx.fillText(`Min Ring: ${state.minRing}`, statX, statY);
+            ctx.fillText(`Min Ring: ${state.minRing || 1}`, statX, statY);
             statY += lineHeight;
-            ctx.fillText(`Max Ring: ${state.maxRing}`, statX, statY);
+            ctx.fillText(`Max Ring: ${state.maxRing || 10}`, statX, statY);
             statY += lineHeight + 10;
             
             // Euler phi function
@@ -10369,7 +10394,7 @@ Generated: ${new Date().toLocaleString()}
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '18px monospace';
-            ctx.fillText(`φ(${state.modulus}) = ${phiN}`, statX, statY);
+            ctx.fillText(`φ(${state.modulus || 0}) = ${phiN}`, statX, statY);
             statY += lineHeight;
             ctx.fillText(`Coprime: ${coprimePercent}%`, statX, statY);
             statY += lineHeight;
@@ -10384,7 +10409,7 @@ Generated: ${new Date().toLocaleString()}
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '18px monospace';
-            ctx.fillText(`π(${state.modulus}) = ${primeCount}`, statX, statY);
+            ctx.fillText(`π(${state.modulus || 0}) = ${primeCount}`, statX, statY);
             statY += lineHeight;
             
             // Display settings
@@ -10396,9 +10421,9 @@ Generated: ${new Date().toLocaleString()}
             
             ctx.fillStyle = '#ffffff';
             ctx.font = '18px monospace';
-            ctx.fillText(`Labels: ${state.labelMode}`, statX, statY);
+            ctx.fillText(`Labels: ${state.labelMode || 'none'}`, statX, statY);
             statY += lineHeight;
-            ctx.fillText(`Colors: ${state.nestedColorScheme}`, statX, statY);
+            ctx.fillText(`Colors: ${state.nestedColorScheme || 'gcd'}`, statX, statY);
             statY += lineHeight;
             
             // Timestamp at bottom of legend
@@ -10815,23 +10840,59 @@ Generated: ${new Date().toLocaleString()}
                     7: '#ff00ff',  // Magenta for GCD=7
                 };
                 return gcdColors[value] || '#888888';
-            } else if (scheme === 'modulus') {
+            } else if (scheme === 'modulus' || scheme === 'ring') {
                 // Color by ring/modulus
                 const hue = (value * 137.5) % 360; // Golden angle for distribution
                 return `hsl(${hue}, 70%, 60%)`;
             } else if (scheme === 'coprime') {
                 // Binary: coprime vs non-coprime
                 return value === 1 ? '#00ff00' : '#ff0000';
+            } else if (scheme === 'angle') {
+                // Rainbow by angle
+                const hue = (value * 360) % 360;
+                return `hsl(${hue}, 90%, 60%)`;
+            } else if (scheme === 'primefactor') {
+                // Color by prime factorization
+                const factorCount = getPrimeFactorCount(value);
+                const hue = factorCount * 60;
+                return `hsl(${hue}, 70%, 60%)`;
+            } else if (scheme === 'totient') {
+                // Color by totient class
+                const phiVal = phi(value);
+                const hue = (phiVal * 137.5) % 360;
+                return `hsl(${hue}, 70%, 60%)`;
+            } else if (scheme === 'monochrome') {
+                // Monochrome gold
+                return '#ffd700';
+            } else if (scheme === 'bluered') {
+                // Blue-Red gradient
+                const t = (value % 20) / 20;
+                const r = Math.floor(255 * t);
+                const b = Math.floor(255 * (1 - t));
+                return `rgb(${r},0,${b})`;
+            } else if (scheme === 'fire') {
+                // Fire: Black-Red-Orange-Yellow
+                const t = (value % 10) / 10;
+                if (t < 0.33) {
+                    const r = Math.floor(255 * (t / 0.33));
+                    return `rgb(${r},0,0)`;
+                } else if (t < 0.66) {
+                    const g = Math.floor(165 * ((t - 0.33) / 0.33));
+                    return `rgb(255,${g},0)`;
+                } else {
+                    const g = Math.floor(165 + 90 * ((t - 0.66) / 0.34));
+                    return `rgb(255,${g},0)`;
+                }
             } else if (scheme === 'plasma') {
-                // Plasma gradient
-                const t = value % 1;
+                // Plasma: Purple-Pink-Yellow
+                const t = (value % 10) / 10;
                 const r = Math.floor(255 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t)));
                 const g = Math.floor(255 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t + 2)));
                 const b = Math.floor(255 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t + 4)));
                 return `rgb(${r},${g},${b})`;
             } else if (scheme === 'viridis') {
-                // Viridis-like gradient
-                const t = value % 1;
+                // Viridis: Purple-Green-Yellow
+                const t = (value % 10) / 10;
                 const r = Math.floor(255 * (0.267 + 0.329 * t));
                 const g = Math.floor(255 * (0.005 + 0.880 * t));
                 const b = Math.floor(255 * (0.329 - 0.329 * t));
