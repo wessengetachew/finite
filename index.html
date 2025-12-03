@@ -319,6 +319,50 @@
             box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
         }
 
+        .toggle-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9em;
+            user-select: none;
+        }
+
+        .toggle-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .toggle-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .toggle-option span {
+            flex: 1;
+            color: var(--text);
+        }
+
+        .value-display {
+            color: var(--cyan);
+            font-weight: 600;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.1em;
+        }
+
+        .help-text {
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.5);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+
         input[type="range"] {
             width: 100%;
             height: 6px;
@@ -1837,6 +1881,340 @@
         </div>
 
         <!-- Statistical Analysis Panel -->
+        <!-- ========================================
+             CONNECTION OPTIONS
+             ======================================== -->
+        <div class="controls-section">
+            <div class="controls-header">CONNECTION OPTIONS</div>
+            <div class="controls-body">
+                <div class="control-row">
+                    <!-- Apply Connections To -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>APPLY CONNECTIONS TO</span>
+                            <div class="help-text">Filter points by their GCD relationship</div>
+                        </div>
+                        <select id="connectionFilter" onchange="updateConnectionFilter()">
+                            <option value="both">Both GCD=1 and GCD≠1</option>
+                            <option value="coprime">Only GCD=1 (Coprime)</option>
+                            <option value="noncoprime">Only GCD≠1 (Non-Coprime)</option>
+                        </select>
+                    </div>
+
+                    <!-- Color Scheme -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>NESTED RINGS COLOR SCHEME</span>
+                            <div class="help-text">Different color schemes reveal different patterns</div>
+                        </div>
+                        <select id="colorScheme" onchange="updateColorScheme()">
+                            <option value="gcd">By GCD Value (Default)</option>
+                            <option value="modulus">By Modulus (Ring)</option>
+                            <option value="coprime">Coprime vs Non-Coprime</option>
+                            <option value="plasma">Plasma Gradient</option>
+                            <option value="viridis">Viridis Gradient</option>
+                        </select>
+                    </div>
+
+                    <!-- Connect Points By -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>CONNECT POINTS BY</span>
+                        </div>
+                        <select id="connectionMode" onchange="updateConnectionMode()">
+                            <option value="none">No Connections</option>
+                            <option value="farey">Farey Neighbors</option>
+                            <option value="coprime">Coprime Pairs</option>
+                            <option value="samegcd">Same GCD Value</option>
+                            <option value="lifting">Dyadic Lifting</option>
+                        </select>
+                    </div>
+
+                    <!-- Gap Size -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>GAP SIZE (2n)</span>
+                            <div class="help-text">Connect r to r+gap in residue space</div>
+                        </div>
+                        <input type="number" id="gapSize" value="2" min="2" max="100" step="2" onchange="updateGapSize()">
+                    </div>
+
+                    <!-- Connection Thickness -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>CONNECTION THICKNESS</span>
+                            <span class="value-display" id="connThickValue">1.0</span>
+                        </div>
+                        <input type="range" id="connectionThickness" min="0.1" max="5" step="0.1" value="1.0" 
+                               oninput="updateConnectionThickness(this.value)">
+                    </div>
+
+                    <!-- Connection Opacity -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>CONNECTION OPACITY</span>
+                            <span class="value-display" id="connOpacityValue">0.3</span>
+                        </div>
+                        <input type="range" id="connectionOpacity" min="0.1" max="1" step="0.1" value="0.3" 
+                               oninput="updateConnectionOpacity(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             LABEL OPTIONS
+             ======================================== -->
+        <div class="controls-section">
+            <div class="controls-header">LABEL OPTIONS</div>
+            <div class="controls-body">
+                <div class="control-row">
+                    <!-- Label Mode -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>LABEL MODE</span>
+                        </div>
+                        <select id="labelMode" onchange="updateLabelMode()">
+                            <option value="none">No Labels</option>
+                            <option value="farey">Farey Fractions (p/q)</option>
+                            <option value="residue">Residue Values (k)</option>
+                            <option value="both">Both (p/q, k)</option>
+                            <option value="primes">Primes Only</option>
+                        </select>
+                    </div>
+
+                    <!-- Label Size -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>LABEL SIZE</span>
+                            <span class="value-display" id="labelSizeValue">10</span>
+                        </div>
+                        <input type="range" id="labelSize" min="6" max="24" step="1" value="10" 
+                               oninput="updateLabelSize(this.value)">
+                    </div>
+
+                    <!-- Label Every Nth Ring -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>LABEL EVERY NTH RING</span>
+                        </div>
+                        <input type="number" id="labelFrequency" value="1" min="1" max="20" step="1" onchange="updateLabelFrequency()">
+                    </div>
+
+                    <!-- Label Position -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>LABEL POSITION</span>
+                        </div>
+                        <select id="labelPosition" onchange="updateLabelPosition()">
+                            <option value="radial">Radial (Outside Point)</option>
+                            <option value="tangent">Tangential</option>
+                            <option value="inside">Inside Point</option>
+                            <option value="center">At Center</option>
+                        </select>
+                    </div>
+
+                    <!-- Label Offset -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>LABEL OFFSET</span>
+                            <span class="value-display" id="labelOffsetValue">18</span>
+                        </div>
+                        <input type="range" id="labelOffset" min="5" max="50" step="1" value="18" 
+                               oninput="updateLabelOffset(this.value)">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             PLOT ORDER & ARRANGEMENT
+             ======================================== -->
+        <div class="controls-section">
+            <div class="controls-header">PLOT ORDER & ARRANGEMENT</div>
+            <div class="controls-body">
+                <div class="control-row">
+                    <!-- Plot Order -->
+                    <div class="control-item">
+                        <div class="control-label">
+                            <span>PLOT ORDER</span>
+                            <div class="help-text">Angular: position by fraction of circle | Sequential: places in sorted order</div>
+                        </div>
+                        <select id="plotOrder" onchange="updatePlotOrder()">
+                            <option value="angular">Angular Position (Standard: 2πk/m)</option>
+                            <option value="sequential">Sequential: sorted by value</option>
+                            <option value="coprime-first">Coprime First, Then Others</option>
+                            <option value="gcd-groups">Grouped by GCD Value</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             DISPLAY OPTIONS
+             ======================================== -->
+        <div class="controls-section">
+            <div class="controls-header">DISPLAY OPTIONS</div>
+            <div class="controls-body">
+                <div class="control-row" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <!-- Row 1 -->
+                    <label class="toggle-option" style="background: rgba(255,215,0,0.1); border: 1px solid rgba(255,215,0,0.3);">
+                        <input type="checkbox" id="showFareyTriangle" checked onchange="updateDisplay()">
+                        <span>Farey Triangle</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(26,188,156,0.1); border: 1px solid rgba(26,188,156,0.3);">
+                        <input type="checkbox" id="showGeodesicArc" onchange="updateDisplay()">
+                        <span>Geodesic Arc</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3);">
+                        <input type="checkbox" id="showPrimeDistribution" checked onchange="updateDisplay()">
+                        <span>Prime Distribution</span>
+                    </label>
+                    
+                    <!-- Row 2 -->
+                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
+                        <input type="checkbox" id="showResidueChannels" checked onchange="updateDisplay()">
+                        <span>Residue Channels</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(230,126,34,0.1); border: 1px solid rgba(230,126,34,0.3);">
+                        <input type="checkbox" id="showCuspPoints" checked onchange="updateDisplay()">
+                        <span>Cusp Points</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3);">
+                        <input type="checkbox" id="showRingCircles" checked onchange="updateDisplay()">
+                        <span>Ring Circles</span>
+                    </label>
+                    
+                    <!-- Row 3 -->
+                    <label class="toggle-option" style="background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.3);">
+                        <input type="checkbox" id="showGcdColoring" checked onchange="updateDisplay()">
+                        <span>GCD Coloring</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3);">
+                        <input type="checkbox" id="showGridLines" onchange="updateDisplay()">
+                        <span>Grid Lines</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3);">
+                        <input type="checkbox" id="showFundamentalDomain" onchange="updateDisplay()">
+                        <span>Fundamental Domain</span>
+                    </label>
+                    
+                    <!-- Row 4 -->
+                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
+                        <input type="checkbox" id="showVerticalGeodesics" onchange="updateDisplay()">
+                        <span>Vertical Geodesics</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(189,195,199,0.1); border: 1px solid rgba(189,195,199,0.3);">
+                        <input type="checkbox" id="showUnitDiskOutline" checked onchange="updateDisplay()">
+                        <span>Unit Disk Outline</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(230,126,34,0.1); border: 1px solid rgba(230,126,34,0.3);">
+                        <input type="checkbox" id="showFordCircles" onchange="updateDisplay()">
+                        <span>Ford Circles</span>
+                    </label>
+                    
+                    <!-- Row 5 -->
+                    <label class="toggle-option" style="background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.3);">
+                        <input type="checkbox" id="showFullComplexPlane" checked onchange="updateDisplay()">
+                        <span>Full Complex Plane View</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3);">
+                        <input type="checkbox" id="showModularReduction" checked onchange="updateDisplay()">
+                        <span>Modular Reduction View</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
+                        <input type="checkbox" id="showReductionProjectionLines" onchange="updateDisplay()">
+                        <span>Reduction: Projection Lines</span>
+                    </label>
+                    
+                    <!-- Row 6 -->
+                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
+                        <input type="checkbox" id="showReductionChannelRings" checked onchange="updateDisplay()">
+                        <span>Reduction: Channel Rings</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3);">
+                        <input type="checkbox" id="showReductionInverseImage" onchange="updateDisplay()">
+                        <span>Reduction: Inverse (Inner→Outer)</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
+                        <input type="checkbox" id="showReductionStatistics" checked onchange="updateDisplay()">
+                        <span>Reduction: Show Statistics Overlay</span>
+                    </label>
+                    
+                    <!-- Row 7 -->
+                    <label class="toggle-option" style="background: rgba(241,196,15,0.1); border: 1px solid rgba(241,196,15,0.3);">
+                        <input type="checkbox" id="showPrimitiveRootsPower" checked onchange="updateDisplay()">
+                        <span>Primitive Roots Power Sequence</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3);">
+                        <input type="checkbox" id="showPrimitiveRootsOverlay" checked onchange="updateDisplay()">
+                        <span>Primitive Roots: Show Statistics Overlay</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(26,188,156,0.1); border: 1px solid rgba(26,188,156,0.3);">
+                        <input type="checkbox" id="showAutoRotate" onchange="updateDisplay()">
+                        <span>Auto-Rotate</span>
+                    </label>
+                    
+                    <!-- Row 8 -->
+                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3);">
+                        <input type="checkbox" id="showInvertRingOrder" onchange="updateDisplay()">
+                        <span>Invert Ring Order (Outer↔Inner)</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(189,195,199,0.1); border: 1px solid rgba(189,195,199,0.3);">
+                        <input type="checkbox" id="showInvertAllCanvases" onchange="updateDisplay()">
+                        <span>Invert All Canvases</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(155,89,182,0.1); border: 1px solid rgba(155,89,182,0.3);">
+                        <input type="checkbox" id="showNestedOnlyGcd1" onchange="updateDisplay()">
+                        <span>Nested: Show Only GCD=1 (Non-Coprime)</span>
+                    </label>
+                    
+                    <!-- Row 9 -->
+                    <label class="toggle-option" style="background: rgba(231,76,60,0.1); border: 1px solid rgba(231,76,60,0.3);">
+                        <input type="checkbox" id="showNestedOnlyGcd1Coprime" onchange="updateDisplay()">
+                        <span>Nested: Show Only GCD=1 (Coprime)</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             GLOBAL CONNECTION VISUALIZATION
+             ======================================== -->
+        <div class="controls-section">
+            <div class="controls-header">GLOBAL CONNECTION VISUALIZATION (ALL CANVASES)</div>
+            <div class="controls-body">
+                <div class="control-row">
+                    <label class="toggle-option" style="background: rgba(46,204,113,0.1); border: 1px solid rgba(46,204,113,0.3); padding: 12px;">
+                        <input type="checkbox" id="showGlobalFareyConnections" onchange="updateGlobalConnections()">
+                        <span>Show r → r Connections</span>
+                    </label>
+                    
+                    <label class="toggle-option" style="background: rgba(52,152,219,0.1); border: 1px solid rgba(52,152,219,0.3); padding: 12px;">
+                        <input type="checkbox" id="showGlobalTwinConnections" onchange="updateGlobalConnections()">
+                        <span>Show r → r+M≫2ⁿ Connections</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
         <div class="controls-section">
             <div class="controls-header" style="cursor: pointer;" onclick="toggleStats()">
                 <span id="statsToggle">▼</span> Live Statistical Analysis
@@ -3326,6 +3704,37 @@
             filterResidueClass: null,
             plotOrder: 'angular',  // 'angular' or 'sequential'
             showConnections: false,  // For canvas 7 coprime connections
+            connectionFilter: 'both',  // Connection filter mode
+            
+            // Display Options - All Toggles
+            showFareyTriangle: true,
+            showGeodesicArc: false,
+            showPrimeDistribution: true,
+            showResidueChannels: true,
+            showCuspPoints: true,
+            showRingCircles: true,
+            showGcdColoring: true,
+            showGridLines: false,
+            showFundamentalDomain: false,
+            showVerticalGeodesics: false,
+            showUnitDiskOutline: true,
+            showFordCircles: false,
+            showFullComplexPlane: true,
+            showModularReduction: true,
+            showReductionProjectionLines: false,
+            showReductionChannelRings: true,
+            showReductionInverseImage: false,
+            showReductionStatistics: true,
+            showPrimitiveRootsPower: true,
+            showPrimitiveRootsOverlay: true,
+            showAutoRotate: false,
+            showInvertRingOrder: false,
+            showInvertAllCanvases: false,
+            showNestedOnlyGcd1: false,
+            showNestedOnlyGcd1Coprime: false,
+            showGlobalFareyConnections: false,
+            showGlobalTwinConnections: false,
+            
             fareyPoints: [
                 {num: 1, den: 1},
                 {num: 0, den: 1},
@@ -6311,6 +6720,120 @@ Generated: ${new Date().toLocaleString()}
                 toggle.textContent = '▶';
             }
         }
+
+        // ========================================
+        // ALL CONTROL UPDATE FUNCTIONS
+        // ========================================
+        
+        function updateConnectionFilter() {
+            const value = document.getElementById('connectionFilter').value;
+            state.connectionFilter = value;
+            updateAll();
+        }
+        
+        function updateColorScheme() {
+            const value = document.getElementById('colorScheme').value;
+            state.nestedColorScheme = value;
+            updateAll();
+        }
+        
+        function updateConnectionMode() {
+            const value = document.getElementById('connectionMode').value;
+            state.connectionMode = value;
+            updateAll();
+        }
+        
+        function updateGapSize() {
+            const value = parseInt(document.getElementById('gapSize').value);
+            state.gapSize = value;
+            updateAll();
+        }
+        
+        function updateConnectionThickness(value) {
+            document.getElementById('connThickValue').textContent = value;
+            state.connectionThickness = parseFloat(value);
+            updateAll();
+        }
+        
+        function updateConnectionOpacity(value) {
+            document.getElementById('connOpacityValue').textContent = value;
+            state.connectionOpacity = parseFloat(value);
+            updateAll();
+        }
+        
+        function updateLabelMode() {
+            const value = document.getElementById('labelMode').value;
+            state.labelMode = value;
+            updateAll();
+        }
+        
+        function updateLabelSize(value) {
+            document.getElementById('labelSizeValue').textContent = value;
+            state.labelSize = parseInt(value);
+            updateAll();
+        }
+        
+        function updateLabelFrequency() {
+            const value = parseInt(document.getElementById('labelFrequency').value);
+            state.labelFreq = value;
+            updateAll();
+        }
+        
+        function updateLabelPosition() {
+            const value = document.getElementById('labelPosition').value;
+            state.labelPosition = value;
+            updateAll();
+        }
+        
+        function updateLabelOffset(value) {
+            document.getElementById('labelOffsetValue').textContent = value;
+            state.labelOffset = parseInt(value);
+            updateAll();
+        }
+        
+        function updatePlotOrder() {
+            const value = document.getElementById('plotOrder').value;
+            state.plotOrder = value;
+            updateAll();
+        }
+        
+        function updateDisplay() {
+            // Update all display toggles
+            state.showFareyTriangle = document.getElementById('showFareyTriangle')?.checked ?? true;
+            state.showGeodesicArc = document.getElementById('showGeodesicArc')?.checked ?? false;
+            state.showPrimeDistribution = document.getElementById('showPrimeDistribution')?.checked ?? true;
+            state.showResidueChannels = document.getElementById('showResidueChannels')?.checked ?? true;
+            state.showCuspPoints = document.getElementById('showCuspPoints')?.checked ?? true;
+            state.showRingCircles = document.getElementById('showRingCircles')?.checked ?? true;
+            state.showGcdColoring = document.getElementById('showGcdColoring')?.checked ?? true;
+            state.showGridLines = document.getElementById('showGridLines')?.checked ?? false;
+            state.showFundamentalDomain = document.getElementById('showFundamentalDomain')?.checked ?? false;
+            state.showVerticalGeodesics = document.getElementById('showVerticalGeodesics')?.checked ?? false;
+            state.showUnitDiskOutline = document.getElementById('showUnitDiskOutline')?.checked ?? true;
+            state.showFordCircles = document.getElementById('showFordCircles')?.checked ?? false;
+            state.showFullComplexPlane = document.getElementById('showFullComplexPlane')?.checked ?? true;
+            state.showModularReduction = document.getElementById('showModularReduction')?.checked ?? true;
+            state.showReductionProjectionLines = document.getElementById('showReductionProjectionLines')?.checked ?? false;
+            state.showReductionChannelRings = document.getElementById('showReductionChannelRings')?.checked ?? true;
+            state.showReductionInverseImage = document.getElementById('showReductionInverseImage')?.checked ?? false;
+            state.showReductionStatistics = document.getElementById('showReductionStatistics')?.checked ?? true;
+            state.showPrimitiveRootsPower = document.getElementById('showPrimitiveRootsPower')?.checked ?? true;
+            state.showPrimitiveRootsOverlay = document.getElementById('showPrimitiveRootsOverlay')?.checked ?? true;
+            state.showAutoRotate = document.getElementById('showAutoRotate')?.checked ?? false;
+            state.showInvertRingOrder = document.getElementById('showInvertRingOrder')?.checked ?? false;
+            state.showInvertAllCanvases = document.getElementById('showInvertAllCanvases')?.checked ?? false;
+            state.showNestedOnlyGcd1 = document.getElementById('showNestedOnlyGcd1')?.checked ?? false;
+            state.showNestedOnlyGcd1Coprime = document.getElementById('showNestedOnlyGcd1Coprime')?.checked ?? false;
+            
+            updateAll();
+        }
+        
+        function updateGlobalConnections() {
+            state.showGlobalFareyConnections = document.getElementById('showGlobalFareyConnections')?.checked ?? false;
+            state.showGlobalTwinConnections = document.getElementById('showGlobalTwinConnections')?.checked ?? false;
+            updateAll();
+        }
+
 
         function updateStats() {
             const rings = getRingSequence();
@@ -10133,6 +10656,112 @@ Generated: ${new Date().toLocaleString()}
             console.log(`✅ Exported ${filename} (${csvContent.split('\n').length - 1} rows)`);
         }
         
+        // ========================================
+        // LABEL & CONNECTION HELPER FUNCTIONS
+        // ========================================
+        
+        function drawLabel(ctx, x, y, text, options = {}) {
+            if (state.labelMode === 'none') return;
+            
+            const size = options.size || state.labelSize;
+            const position = options.position || state.labelPosition;
+            const offset = options.offset || state.labelOffset;
+            const color = options.color || 'rgba(255,255,255,0.9)';
+            
+            ctx.save();
+            ctx.fillStyle = color;
+            ctx.font = `${size}px "Fira Code", monospace`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Calculate label position based on mode
+            let labelX = x;
+            let labelY = y;
+            
+            if (position === 'radial') {
+                const angle = Math.atan2(y, x);
+                labelX = x + Math.cos(angle) * offset;
+                labelY = y + Math.sin(angle) * offset;
+            } else if (position === 'tangent') {
+                const angle = Math.atan2(y, x) + Math.PI / 2;
+                labelX = x + Math.cos(angle) * offset;
+                labelY = y + Math.sin(angle) * offset;
+            } else if (position === 'inside') {
+                labelY = y + 3; // Slightly below point
+            }
+            // 'center' keeps labelX = x, labelY = y
+            
+            // Draw background for better readability
+            ctx.globalAlpha = 0.7;
+            ctx.fillStyle = 'rgba(0,0,0,0.8)';
+            const metrics = ctx.measureText(text);
+            ctx.fillRect(labelX - metrics.width/2 - 3, labelY - size/2 - 2, metrics.width + 6, size + 4);
+            
+            // Draw text
+            ctx.globalAlpha = 1.0;
+            ctx.fillStyle = color;
+            ctx.fillText(text, labelX, labelY);
+            
+            ctx.restore();
+        }
+        
+        function drawConnection(ctx, x1, y1, x2, y2, options = {}) {
+            if (state.connectionMode === 'none') return;
+            
+            const thickness = options.thickness || state.connectionThickness;
+            const opacity = options.opacity || state.connectionOpacity;
+            const color = options.color || 'rgba(0,255,255,0.5)';
+            
+            ctx.save();
+            ctx.strokeStyle = color;
+            ctx.globalAlpha = opacity;
+            ctx.lineWidth = thickness;
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            ctx.restore();
+        }
+        
+        function getColorByScheme(value, context) {
+            const scheme = state.nestedColorScheme;
+            
+            if (scheme === 'gcd') {
+                // Color by GCD value
+                const gcdColors = {
+                    1: '#00ff00',  // Green for coprime
+                    2: '#ff0000',  // Red for GCD=2
+                    3: '#0000ff',  // Blue for GCD=3
+                    5: '#ffff00',  // Yellow for GCD=5
+                    7: '#ff00ff',  // Magenta for GCD=7
+                };
+                return gcdColors[value] || '#888888';
+            } else if (scheme === 'modulus') {
+                // Color by ring/modulus
+                const hue = (value * 137.5) % 360; // Golden angle for distribution
+                return `hsl(${hue}, 70%, 60%)`;
+            } else if (scheme === 'coprime') {
+                // Binary: coprime vs non-coprime
+                return value === 1 ? '#00ff00' : '#ff0000';
+            } else if (scheme === 'plasma') {
+                // Plasma gradient
+                const t = value % 1;
+                const r = Math.floor(255 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t)));
+                const g = Math.floor(255 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t + 2)));
+                const b = Math.floor(255 * (0.5 + 0.5 * Math.sin(2 * Math.PI * t + 4)));
+                return `rgb(${r},${g},${b})`;
+            } else if (scheme === 'viridis') {
+                // Viridis-like gradient
+                const t = value % 1;
+                const r = Math.floor(255 * (0.267 + 0.329 * t));
+                const g = Math.floor(255 * (0.005 + 0.880 * t));
+                const b = Math.floor(255 * (0.329 - 0.329 * t));
+                return `rgb(${r},${g},${b})`;
+            }
+            
+            return '#ffd700'; // Default gold
+        }
+
         // Helper functions for CSV export
         function getPrimeFactorCount(n) {
             let count = 0;
@@ -12080,12 +12709,17 @@ Generated: ${new Date().toLocaleString()}
             const n = state.modulus;
             const phase = state.phase * Math.PI / 180;
             
-            // Draw circle
-            ctx.strokeStyle = 'rgba(46, 204, 113, 0.3)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
-            ctx.stroke();
+            // Draw circle outline
+            if (state.showUnitDiskOutline) {
+                ctx.strokeStyle = 'rgba(46, 204, 113, 0.3)';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, 2 * Math.PI);
+                ctx.stroke();
+            }
+            
+            // Collect point positions for connections
+            const points = [];
             
             // Draw points colored by coprimality
             for (let i = 1; i < n; i++) {
@@ -12093,39 +12727,102 @@ Generated: ${new Date().toLocaleString()}
                 const x = cx + radius * Math.cos(angle);
                 const y = cy + radius * Math.sin(angle);
                 
-                const isCoprime = gcd(i, n) === 1;
-                ctx.fillStyle = isCoprime ? '#2ecc71' : 'rgba(231, 76, 60, 0.5)';
+                const g = gcd(i, n);
+                const isCoprime = g === 1;
+                
+                // Use color scheme
+                let pointColor;
+                if (state.showGcdColoring) {
+                    pointColor = getColorByScheme(g, 'gcd');
+                } else {
+                    pointColor = isCoprime ? '#2ecc71' : 'rgba(231, 76, 60, 0.5)';
+                }
+                
+                ctx.fillStyle = pointColor;
                 ctx.beginPath();
                 ctx.arc(x, y, isCoprime ? 5 : 3, 0, 2 * Math.PI);
                 ctx.fill();
                 
-                // Draw connections between coprimes
-                if (isCoprime && state.showConnections) {
-                    for (let j = i + 1; j < n; j++) {
-                        if (gcd(j, n) === 1) {
-                            const angle2 = 2 * Math.PI * j / n + phase;
-                            const x2 = cx + radius * Math.cos(angle2);
-                            const y2 = cy + radius * Math.sin(angle2);
-                            
-                            ctx.strokeStyle = 'rgba(46, 204, 113, 0.1)';
-                            ctx.lineWidth = 0.5;
-                            ctx.beginPath();
-                            ctx.moveTo(x, y);
-                            ctx.lineTo(x2, y2);
-                            ctx.stroke();
+                // Store point for connections
+                if (isCoprime || state.connectionFilter !== 'coprime') {
+                    points.push({ x, y, i, isCoprime, g });
+                }
+                
+                // Draw labels
+                if (state.labelMode !== 'none' && i % state.labelFreq === 0) {
+                    let labelText = '';
+                    if (state.labelMode === 'residue' || state.labelMode === 'both') {
+                        labelText = i.toString();
+                    }
+                    if (state.labelMode === 'primes' && isPrime(i)) {
+                        labelText = i.toString();
+                    }
+                    if (state.labelMode === 'farey') {
+                        labelText = `gcd=${g}`;
+                    }
+                    
+                    if (labelText) {
+                        drawLabel(ctx, x, y, labelText, {
+                            color: isCoprime ? '#00ff00' : '#ff6666'
+                        });
+                    }
+                }
+            }
+            
+            // Draw connections based on mode
+            if (state.connectionMode !== 'none') {
+                for (let i = 0; i < points.length; i++) {
+                    const p1 = points[i];
+                    
+                    if (state.connectionMode === 'coprime' && p1.isCoprime) {
+                        // Connect all coprime pairs
+                        for (let j = i + 1; j < points.length; j++) {
+                            const p2 = points[j];
+                            if (p2.isCoprime && gcd(p1.i, p2.i) === 1) {
+                                drawConnection(ctx, p1.x, p1.y, p2.x, p2.y, {
+                                    color: '#2ecc71'
+                                });
+                            }
+                        }
+                    } else if (state.connectionMode === 'samegcd') {
+                        // Connect points with same GCD
+                        for (let j = i + 1; j < points.length; j++) {
+                            const p2 = points[j];
+                            if (p1.g === p2.g) {
+                                const color = getColorByScheme(p1.g, 'gcd');
+                                drawConnection(ctx, p1.x, p1.y, p2.x, p2.y, {
+                                    color: color,
+                                    opacity: 0.2
+                                });
+                            }
+                        }
+                    } else if (state.connectionMode === 'farey') {
+                        // Connect to next coprime (Farey neighbor)
+                        if (p1.isCoprime) {
+                            for (let j = i + 1; j < points.length; j++) {
+                                const p2 = points[j];
+                                if (p2.isCoprime) {
+                                    drawConnection(ctx, p1.x, p1.y, p2.x, p2.y, {
+                                        color: '#00ffff'
+                                    });
+                                    break; // Only connect to next
+                                }
+                            }
                         }
                     }
                 }
             }
             
             // Center label
-            ctx.fillStyle = '#2ecc71';
-            ctx.font = 'bold 24px monospace';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(`φ(${n}) = ${phi(n)}`, cx, cy - 20);
-            ctx.font = '16px monospace';
-            ctx.fillText(`${phi(n)}/${n} = ${(phi(n)/n).toFixed(4)}`, cx, cy + 10);
+            if (state.showReductionStatistics) {
+                ctx.fillStyle = '#2ecc71';
+                ctx.font = 'bold 24px monospace';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(`φ(${n}) = ${phi(n)}`, cx, cy - 20);
+                ctx.font = '16px monospace';
+                ctx.fillText(`Density: ${(phi(n)/n).toFixed(4)}`, cx, cy + 10);
+            }
         }
 
         // ========================================
@@ -12298,7 +12995,7 @@ Generated: ${new Date().toLocaleString()}
             ctx.fillRect(0, 0, w, h);
             
             const n = Math.min(state.modulus, 50);
-            const margin = 60;
+            const margin = 80;  // Increased for labels
             const gridSize = Math.min((w - 2 * margin) / n, (h - 2 * margin) / n);
             
             // Draw grid
@@ -12310,17 +13007,73 @@ Generated: ${new Date().toLocaleString()}
                     const g = gcd(i, j);
                     const isCoprime = g === 1;
                     
-                    ctx.fillStyle = isCoprime ? 
-                        'rgba(99, 102, 241, 0.8)' : 
-                        `rgba(99, 102, 241, ${0.1 + (1 / g) * 0.3})`;
+                    // Use color scheme
+                    let cellColor;
+                    if (state.showGcdColoring) {
+                        cellColor = getColorByScheme(g, 'gcd');
+                        // Adjust opacity based on coprimality
+                        const alpha = isCoprime ? 0.8 : 0.3;
+                        const rgb = cellColor.match(/\d+/g);
+                        if (rgb) {
+                            cellColor = `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${alpha})`;
+                        }
+                    } else {
+                        cellColor = isCoprime ? 
+                            'rgba(99, 102, 241, 0.8)' : 
+                            `rgba(99, 102, 241, ${0.1 + (1 / g) * 0.3})`;
+                    }
+                    
+                    ctx.fillStyle = cellColor;
                     ctx.fillRect(x, y, gridSize - 1, gridSize - 1);
                     
                     // Mark diagonal
-                    if (i === j) {
+                    if (i === j && state.showGridLines) {
                         ctx.strokeStyle = '#f1c40f';
                         ctx.lineWidth = 2;
                         ctx.strokeRect(x, y, gridSize - 1, gridSize - 1);
                     }
+                    
+                    // Draw labels if enabled and grid is not too dense
+                    if (state.labelMode !== 'none' && gridSize > 15) {
+                        let labelText = '';
+                        if (state.labelMode === 'both' || state.labelMode === 'residue') {
+                            labelText = `${i},${j}`;
+                        }
+                        if (state.labelMode === 'farey') {
+                            labelText = `gcd=${g}`;
+                        }
+                        if (state.labelMode === 'primes' && (isPrime(i) || isPrime(j))) {
+                            labelText = `${i},${j}`;
+                        }
+                        
+                        if (labelText && (i % state.labelFreq === 0 && j % state.labelFreq === 0)) {
+                            drawLabel(ctx, x + gridSize/2, y + gridSize/2, labelText, {
+                                size: Math.min(state.labelSize, gridSize * 0.8),
+                                position: 'center',
+                                color: isCoprime ? '#00ff00' : '#ffffff'
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // Axis labels
+            if (state.labelMode !== 'none') {
+                ctx.fillStyle = '#6366f1';
+                ctx.font = '12px monospace';
+                ctx.textAlign = 'center';
+                
+                // Bottom axis (i values)
+                for (let i = 1; i < n; i += Math.ceil(n / 10)) {
+                    const x = margin + i * gridSize;
+                    ctx.fillText(i.toString(), x + gridSize/2, h - margin + 20);
+                }
+                
+                // Left axis (j values)
+                ctx.textAlign = 'right';
+                for (let j = 1; j < n; j += Math.ceil(n / 10)) {
+                    const y = margin + j * gridSize;
+                    ctx.fillText(j.toString(), margin - 10, y + gridSize/2);
                 }
             }
             
@@ -12330,7 +13083,7 @@ Generated: ${new Date().toLocaleString()}
             ctx.textAlign = 'center';
             ctx.fillText('Coprime Pairs Matrix', w / 2, 35);
             ctx.font = '14px monospace';
-            ctx.fillText('Brighter = Coprime', w / 2, 55);
+            ctx.fillText(`gcd(i,j) for 1 ≤ i,j < ${n}`, w / 2, 55);
         }
 
         // ========================================
