@@ -10259,10 +10259,12 @@ Generated: ${new Date().toLocaleString()}
 
             const info = canvasInfo[canvasId] || { title: 'Canvas Export', color: '#ffd700' };
 
-            // Create a 2K export canvas with space for title and legend
+            // Create a 2K export canvas with space for title and legend on the right
             const exportCanvas = document.createElement('canvas');
-            const exportWidth = 2000;
-            const exportHeight = 2200; // Extra space for title and legend
+            const mainWidth = 2000;
+            const legendWidth = 400; // Stats panel on right
+            const exportWidth = mainWidth + legendWidth;
+            const exportHeight = 2200; // Extra space for title
             exportCanvas.width = exportWidth;
             exportCanvas.height = exportHeight;
             
@@ -10272,28 +10274,28 @@ Generated: ${new Date().toLocaleString()}
             ctx.fillStyle = '#0a0e27';
             ctx.fillRect(0, 0, exportWidth, exportHeight);
             
-            // Draw title at top
+            // Draw title at top (centered on main area)
             ctx.fillStyle = info.color;
             ctx.font = 'bold 48px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText(info.title, exportWidth / 2, 60);
+            ctx.fillText(info.title, mainWidth / 2, 60);
             
             // Draw subtitle
             ctx.fillStyle = '#ffffff';
             ctx.font = '28px Arial';
-            ctx.fillText(`Modulus M = ${state.modulus} | Phase = ${state.phase.toFixed(1)}°`, exportWidth / 2, 105);
+            ctx.fillText(`Modulus M = ${state.modulus} | Phase = ${state.phase.toFixed(1)}°`, mainWidth / 2, 105);
             
             // Draw author credit
             ctx.font = '20px Arial';
             ctx.fillStyle = 'rgba(255,255,255,0.7)';
-            ctx.fillText('By Wessen Getachew', exportWidth / 2, 140);
+            ctx.fillText('By Wessen Getachew', mainWidth / 2, 140);
             
-            // Calculate scaling to fit canvas content
+            // Calculate scaling to fit canvas content (in main area only)
             const contentTop = 170;
             const contentHeight = exportHeight - contentTop - 50;
             const canvasAspect = canvas.width / canvas.height;
             
-            let drawWidth = exportWidth - 100;
+            let drawWidth = mainWidth - 100;
             let drawHeight = drawWidth / canvasAspect;
             
             if (drawHeight > contentHeight) {
@@ -10301,20 +10303,118 @@ Generated: ${new Date().toLocaleString()}
                 drawWidth = drawHeight * canvasAspect;
             }
             
-            const drawX = (exportWidth - drawWidth) / 2;
+            const drawX = (mainWidth - drawWidth) / 2;
             const drawY = contentTop;
             
             // Draw the canvas content
             ctx.drawImage(canvas, drawX, drawY, drawWidth, drawHeight);
             
-            // Draw legend/info box at bottom
+            // ===== STATISTICS LEGEND PANEL (RIGHT SIDE) =====
+            const legendX = mainWidth;
+            const legendY = contentTop;
+            const legendH = contentHeight;
+            
+            // Legend background
+            ctx.fillStyle = 'rgba(10, 14, 39, 0.95)';
+            ctx.fillRect(legendX, legendY, legendWidth, legendH);
+            
+            // Legend border
+            ctx.strokeStyle = info.color;
+            ctx.lineWidth = 3;
+            ctx.strokeRect(legendX, legendY, legendWidth, legendH);
+            
+            // Legend title
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 24px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('STATISTICS', legendX + legendWidth / 2, legendY + 40);
+            
+            // Gather statistics
+            const phiN = phi(state.modulus);
+            const primeCount = countPrimesUpTo(state.modulus);
+            const coprimeCount = phiN;
+            const totalPoints = state.modulus;
+            const coprimePercent = (phiN / state.modulus * 100).toFixed(1);
+            
+            // Draw stats text
+            ctx.textAlign = 'left';
+            ctx.font = '18px monospace';
+            ctx.fillStyle = '#ffffff';
+            let statY = legendY + 80;
+            const statX = legendX + 20;
+            const lineHeight = 30;
+            
+            // Core parameters
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('Parameters:', statX, statY);
+            statY += lineHeight;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '18px monospace';
+            ctx.fillText(`Modulus: ${state.modulus}`, statX, statY);
+            statY += lineHeight;
+            ctx.fillText(`Phase: ${state.phase.toFixed(1)}°`, statX, statY);
+            statY += lineHeight;
+            ctx.fillText(`Min Ring: ${state.minRing}`, statX, statY);
+            statY += lineHeight;
+            ctx.fillText(`Max Ring: ${state.maxRing}`, statX, statY);
+            statY += lineHeight + 10;
+            
+            // Euler phi function
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('Coprimality:', statX, statY);
+            statY += lineHeight;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '18px monospace';
+            ctx.fillText(`φ(${state.modulus}) = ${phiN}`, statX, statY);
+            statY += lineHeight;
+            ctx.fillText(`Coprime: ${coprimePercent}%`, statX, statY);
+            statY += lineHeight;
+            ctx.fillText(`Total: ${totalPoints}`, statX, statY);
+            statY += lineHeight + 10;
+            
+            // Prime information
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('Primes:', statX, statY);
+            statY += lineHeight;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '18px monospace';
+            ctx.fillText(`π(${state.modulus}) = ${primeCount}`, statX, statY);
+            statY += lineHeight;
+            
+            // Display settings
+            statY += 10;
+            ctx.fillStyle = info.color;
+            ctx.font = 'bold 20px Arial';
+            ctx.fillText('Display:', statX, statY);
+            statY += lineHeight;
+            
+            ctx.fillStyle = '#ffffff';
+            ctx.font = '18px monospace';
+            ctx.fillText(`Labels: ${state.labelMode}`, statX, statY);
+            statY += lineHeight;
+            ctx.fillText(`Colors: ${state.nestedColorScheme}`, statX, statY);
+            statY += lineHeight;
+            
+            // Timestamp at bottom of legend
+            ctx.fillStyle = 'rgba(255,255,255,0.5)';
+            ctx.font = '14px monospace';
+            ctx.textAlign = 'center';
+            const timestamp = new Date().toISOString().split('T')[0];
+            ctx.fillText(timestamp, legendX + legendWidth / 2, legendY + legendH - 20);
+            
+            // Draw legend/info box at bottom (full width)
             ctx.fillStyle = 'rgba(0,0,0,0.7)';
-            ctx.fillRect(50, exportHeight - 40, exportWidth - 100, 35);
+            ctx.fillRect(50, exportHeight - 40, exportWidth - legendWidth - 100, 35);
             ctx.fillStyle = info.color;
             ctx.font = '18px Arial';
             ctx.textAlign = 'center';
-            const timestamp = new Date().toISOString().split('T')[0];
-            ctx.fillText(`Interactive Modular Arithmetic Research Suite | ${timestamp}`, exportWidth / 2, exportHeight - 15);
+            ctx.fillText(`Interactive Modular Arithmetic Research Suite | ${timestamp}`, mainWidth / 2, exportHeight - 15);
             
             // Download
             exportCanvas.toBlob(blob => {
@@ -13259,14 +13359,14 @@ Generated: ${new Date().toLocaleString()}
                 }
             }
             
-            // Center label
+            // Title at top instead of center
             if (state.showReductionStatistics) {
                 ctx.fillStyle = '#27ae60';
                 ctx.font = 'bold 18px monospace';
                 ctx.textAlign = 'center';
-                ctx.fillText('Nested Density Rings', cx, cy - 10);
+                ctx.fillText('Nested Density Rings', cx, 30);
                 ctx.font = '14px monospace';
-                ctx.fillText(`mod 1 to ${maxN}`, cx, cy + 15);
+                ctx.fillText(`mod 1 to ${maxN}`, cx, 50);
             }
         }
 
@@ -13343,16 +13443,16 @@ Generated: ${new Date().toLocaleString()}
                 }
             }
             
-            // Center labels
+            // Title at top instead of center
             ctx.fillStyle = '#9c27b0';
             ctx.font = 'bold 20px monospace';
             ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText('Dirichlet Characters', cx, cy - 30);
+            ctx.textBaseline = 'top';
+            ctx.fillText('Dirichlet Characters', cx, 20);
             ctx.font = '16px monospace';
-            ctx.fillText(`mod ${m}`, cx, cy);
+            ctx.fillText(`mod ${m}`, cx, 45);
             ctx.font = '14px monospace';
-            ctx.fillText(`φ(${m}) = ${phiM}`, cx, cy + 25);
+            ctx.fillText(`φ(${m}) = ${phiM}`, cx, 70);
         }
 
         // ========================================
