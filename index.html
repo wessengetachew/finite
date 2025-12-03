@@ -1751,9 +1751,14 @@
                         <div class="panel-title">Modular Reduction Projection</div>
                         <div class="panel-subtitle">Farey Channel Decomposition: r/M → r'/M' where M' = M/gcd(r,M)</div>
                     </div>
-                    <button class="btn btn-small" onclick="exportSingleCanvas('reductionCanvas', 'modular_reduction_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
-                        📥 Export 2K
-                    </button>
+                    <div style="display: flex; gap: 6px;">
+                        <button class="btn btn-small" onclick="exportSingleCanvas('reductionCanvas', 'modular_reduction_4k.png')" style="padding: 6px 12px; font-size: 0.85em;">
+                            📥 PNG
+                        </button>
+                        <button class="btn btn-small" onclick="exportCanvasCSV(4)" style="padding: 6px 12px; font-size: 0.85em; background: #2ecc71;">
+                            📊 CSV
+                        </button>
+                    </div>
                 </div>
                 <canvas id="reductionCanvas" width="1000" height="1000"></canvas>
             </div>
@@ -4310,62 +4315,7 @@
             populateOrderDropdown();
         }
 
-        function populateOrderDropdown() {
-            const m = state.modulus;
-            const phi = eulerPhi(m);
-            const select = document.getElementById('orderElementSelect');
-            
-            // Clear existing options except first
-            select.innerHTML = '<option value="">-- Select element by order --</option>';
-            
-            // Calculate orders for all coprime elements
-            const orderGroups = {};
-            for (let g = 1; g < m; g++) {
-                if (gcd(g, m) !== 1) continue;
-                
-                const order = getOrderOfElement(g, m);
-                if (!orderGroups[order]) {
-                    orderGroups[order] = [];
-                }
-                orderGroups[order].push(g);
-            }
-            
-            // Sort by order
-            const sortedOrders = Object.keys(orderGroups).map(Number).sort((a, b) => a - b);
-            
-            // Add options grouped by order
-            sortedOrders.forEach(order => {
-                const elements = orderGroups[order];
-                const isPrimitive = (order === phi);
-                
-                // Create optgroup for this order
-                const optgroup = document.createElement('optgroup');
-                optgroup.label = `Order ${order}${isPrimitive ? ' ★ (Primitive)' : ''} - ${elements.length} element${elements.length > 1 ? 's' : ''}`;
-                
-                elements.forEach(g => {
-                    const option = document.createElement('option');
-                    option.value = g;
-                    option.textContent = `g=${g} (ord=${order})${isPrimitive ? ' ★' : ''}`;
-                    optgroup.appendChild(option);
-                });
-                
-                select.appendChild(optgroup);
-            });
-            
-            // Update help text
-            const primitiveRoots = findAllPrimitiveRoots(m);
-            document.getElementById('orderSelectHelp').textContent = 
-                primitiveRoots.length > 0 
-                    ? `Cyclic group: ${primitiveRoots.length} primitive root${primitiveRoots.length > 1 ? 's' : ''}`
-                    : `Not cyclic: no primitive roots exist`;
-        }
 
-        function selectElementFromOrder(value) {
-            if (!value) return;
-            
-            const g = parseInt(value);
-            updateGenerator(g);
-        }
 
         // Auto-populate dropdown when modulus changes
         function updateModulusWithDropdown(value) {
@@ -6780,11 +6730,6 @@ Generated: ${new Date().toLocaleString()}
             updateAll();
         }
         
-        function updatePlotOrder() {
-            const value = document.getElementById('plotOrder').value;
-            state.plotOrder = value;
-            updateAll();
-        }
         
         function updateDisplay() {
             // Update all display toggles
@@ -7095,6 +7040,33 @@ Generated: ${new Date().toLocaleString()}
             gcdCache.set(`${origB},${origA}`, a); // Symmetric cache
             
             return a;
+        }
+
+        // Euler's totient function φ(n)
+        function phi(n) {
+            if (n === 1) return 1;
+            
+            let result = n;
+            let temp = n;
+            
+            // For each prime factor p, multiply result by (1 - 1/p)
+            for (let p = 2; p * p <= temp; p++) {
+                if (temp % p === 0) {
+                    // Remove all factors of p
+                    while (temp % p === 0) {
+                        temp /= p;
+                    }
+                    // result = result * (1 - 1/p) = result * (p-1) / p
+                    result -= result / p;
+                }
+            }
+            
+            // If temp > 1, then it's a prime factor
+            if (temp > 1) {
+                result -= result / temp;
+            }
+            
+            return Math.floor(result);
         }
 
         function primeFactorization(n) {
@@ -7447,15 +7419,6 @@ Generated: ${new Date().toLocaleString()}
             }
         }
 
-        function isPrime(n) {
-            if (n < 2) return false;
-            if (n === 2) return true;
-            if (n % 2 === 0) return false;
-            for (let i = 3; i * i <= n; i += 2) {
-                if (n % i === 0) return false;
-            }
-            return true;
-        }
 
         function getSmallestPrimeFactor(n) {
             if (n < 2) return n;
@@ -7749,17 +7712,6 @@ Generated: ${new Date().toLocaleString()}
             }
 
             // Coordinate conversion functions for Cayley plane
-            function mathToScreen(wp) {
-                const reMin = -state.cayleyHRange / (2 * state.cayleyZoom);
-                const reMax = state.cayleyHRange / (2 * state.cayleyZoom);
-                const imMin = state.cayleyVOffset;
-                const imMax = (state.cayleyVRange / state.cayleyZoom) + state.cayleyVOffset;
-                
-                const x = ((wp.re - reMin) / (reMax - reMin)) * w;
-                const y = (1 - (wp.im - imMin) / (imMax - imMin)) * h;
-                
-                return { x, y };
-            }
 
             const phase = state.phase * Math.PI / 180;
             const showGeodesic = document.getElementById('toggleGeodesic').checked;
@@ -8552,12 +8504,6 @@ Generated: ${new Date().toLocaleString()}
             }
 
             // Coordinate conversion - full complex plane view
-            function mathToScreen(wp) {
-                const scale = Math.min(w, h) * 0.15 * state.fullPlaneZoom;
-                const x = w / 2 + wp.re * scale;
-                const y = h / 2 - wp.im * scale;
-                return { x, y };
-            }
 
             const phase = state.phase * Math.PI / 180;
 
@@ -10004,13 +9950,6 @@ Generated: ${new Date().toLocaleString()}
         function startAnimation() {
             if (state.animationId !== null) return;
 
-            function animate() {
-                state.phase = (state.phase + state.animSpeed * 0.5) % 360;
-                document.getElementById('phaseSlider').value = state.phase;
-                document.getElementById('phaseValue').textContent = state.phase.toFixed(1) + '°';
-                updateAll();
-                state.animationId = requestAnimationFrame(animate);
-            }
 
             animate();
         }
@@ -10105,17 +10044,6 @@ Generated: ${new Date().toLocaleString()}
             }
         }
 
-        function toggleIntro() {
-            const panel = document.getElementById('introPanel');
-            const toggle = document.getElementById('introToggle');
-            if (panel.style.display === 'none') {
-                panel.style.display = 'block';
-                toggle.innerHTML = '&#9660;';
-            } else {
-                panel.style.display = 'none';
-                toggle.innerHTML = '&#9654;';
-            }
-        }
 
 
         function resetDefaults() {
@@ -10947,16 +10875,6 @@ Generated: ${new Date().toLocaleString()}
             return order === phi(m);
         }
         
-        function modPow(base, exp, mod) {
-            let result = 1;
-            base = base % mod;
-            while (exp > 0) {
-                if (exp % 2 === 1) result = (result * base) % mod;
-                exp = Math.floor(exp / 2);
-                base = (base * base) % mod;
-            }
-            return result;
-        }
 
         function exportVisualization() {
             // Create export dialog if it doesn't exist
